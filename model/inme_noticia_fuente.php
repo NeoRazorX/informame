@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_model('inme_fuente.php');
+
 /**
  * Description of inme_noticia_fuente
  *
@@ -78,6 +80,9 @@ class inme_noticia_fuente extends fs_model
    
    protected function install()
    {
+      /// forzamos la comprobaciones de la tabla de fuentes
+      new inme_fuente();
+      
       return '';
    }
    
@@ -192,6 +197,37 @@ class inme_noticia_fuente extends fs_model
       $nlist = array();
       
       $data = $this->db->select_limit("SELECT * FROM inme_noticias_fuente ORDER BY ".$order, FS_ITEM_LIMIT, $offset);
+      if($data)
+      {
+         foreach($data as $d)
+            $nlist[] = new inme_noticia_fuente($d);
+      }
+      
+      return $nlist;
+   }
+   
+   public function all_from_fuente($codfuente, $offset = 0)
+   {
+      $nlist = array();
+      $sql = "SELECT * FROM inme_noticias_fuente WHERE codfuente = ".$this->var2str($codfuente)." ORDER BY fecha DESC";
+      
+      $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
+      if($data)
+      {
+         foreach($data as $d)
+            $nlist[] = new inme_noticia_fuente($d);
+      }
+      
+      return $nlist;
+   }
+   
+   public function search($query, $offset = 0)
+   {
+      $nlist = array();
+      $query = $this->no_html( strtolower($query) );
+      $sql = "SELECT * FROM inme_noticias_fuente WHERE lower(texto) LIKE '%".$query."%'  ORDER BY popularidad DESC";
+      
+      $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)

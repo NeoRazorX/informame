@@ -6,6 +6,7 @@
    <div class="row">
       <div class="col-sm-9">
          <ul class="nav nav-tabs">
+            {if="$fsc->buscar=='' AND $fsc->codfuente==''"}
             <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
                <a href="{$fsc->url()}">
                   <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
@@ -16,45 +17,79 @@
                <a href="{$fsc->url()}&mostrar=todo">
                   <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                   &nbsp; Últimas noticias
+                  <span class="badge">{$fsc->total_noticias()}</span>
                </a>
             </li>
+            {else}
+            <li role="presentation" class="active">
+               <a href="{$fsc->url()}">
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                  &nbsp; Resultados
+                  {if="$fsc->buscar"}
+                  de <b>{$fsc->buscar}</b>
+                  {elseif="$fsc->codfuente"}
+                  de <b>{$fsc->codfuente}</b>
+                  {/if}
+               </a>
+            </li>
+            <li role="presentation">
+               <a href="{$fsc->url()}">
+                  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+               </a>
+            </li>
+            <li role="presentation">
+               <a href="{$fsc->url()}&mostrar=todo">
+                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+               </a>
+            </li>
+            {/if}
          </ul>
          {loop="$fsc->noticias"}
          <blockquote>
+            <!--{$fsc->preview->load($value->url, $value->texto)}-->
+            {if condition="$fsc->preview->type"}
+            <div class="pull-left">
+               <a href="{$value->url}">
+                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 100px; max-width: 120px; margin-right: 10px;">
+               </a>
+            </div>
+            {/if}
             {if="$counter==0"}
             <h2 style="margin-top: 0px;">
-               <a href="{$value->url}">{$value->titulo}</a>
+               <a href="{$value->url}" target="_blank">{$value->titulo}</a>
             </h2>
             {else}
             <h3 style="margin-top: 0px;">
-               <a href="{$value->url}">{$value->titulo}</a>
+               <a href="{$value->url}" target="_blank">{$value->titulo}</a>
             </h3>
             {/if}
             <p class="text-justify">{$value->texto}</p>
             <footer>
                {$value->fecha}
                &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-               &nbsp; {$value->codfuente}
+               &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
             </footer>
          </blockquote>
          {else}
          <blockquote>
             <h2 style="margin-top: 0px;">Vas a tener que picar</h2>
-            <p>Parece que no hay ninguna noticia en portada, vas a tener que picar un rato :D</p>
+            <p>
+               No se ha encontrado ninguna noticia, vas a tener que picar un rato :D
+            </p>
             <footer>Picando, que es gerundio...</footer>
          </blockquote>
          {/loop}
          <ul class="pager">
             {if="$fsc->offset>0"}
             <li class="previous">
-               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&offset={$fsc->offset-FS_ITEM_LIMIT}">
+               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&buscar={$fsc->buscar}&codfuente={$fsc->codfuente}&offset={$fsc->offset-FS_ITEM_LIMIT}">
                   <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
                </a>
             </li>
             {/if}
             {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
             <li class="next">
-               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&offset={$fsc->offset+FS_ITEM_LIMIT}">
+               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&buscar={$fsc->buscar}&codfuente={$fsc->codfuente}&offset={$fsc->offset+FS_ITEM_LIMIT}">
                   Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
                </a>
             </li>
@@ -62,14 +97,25 @@
          </ul>
       </div>
       <div class="col-sm-3">
+         <form action="{$fsc->url()}" method="post" class="form">
+            <div class="input-group">
+               <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar" autocomplete="off"/>
+               <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit">
+                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                  </button>
+               </span>
+            </div>
+         </form>
+         <br/>
          <div class="thumbnail">
             <img src="plugins/informame/view/img/picar.png" alt="picar"/>
             <div class="caption">
                <h4>¡A picar!</h4>
+               <p>Para estar <b>bien informados</b>, primero debemos estar informados.</p>
                <p>
-                  Para estar <b>bien</b> informados, primero debemos <b>buscar</b>
-                  información, luego la agrupamos, la valoramos y finalmente
-                  nos quedamos con lo mejor. A este proceso lo llamamos picar.
+                  Debemos <b>buscar información</b>, agruparla, valorarla y finalmente
+                  quedarnos con lo mejor. A este proceso lo llamamos <b>picar</b>.
                </p>
                <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
                   <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>

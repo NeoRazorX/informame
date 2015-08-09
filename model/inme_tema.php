@@ -69,20 +69,29 @@ class inme_tema extends fs_model
    
    public function save()
    {
-      if( $this->exists() )
+      if( strlen($this->codfuente) > 1 AND strlen($this->codfuente) <= 50 )
       {
-         $sql = "UPDATE inme_temas SET titulo = ".$this->var2str($this->titulo)
-                 .", texto = ".$this->var2str($this->texto)
-                 ."  WHERE codtema = ".$this->var2str($this->codtema).";";
+         if( $this->exists() )
+         {
+            $sql = "UPDATE inme_temas SET titulo = ".$this->var2str($this->titulo)
+                    .", texto = ".$this->var2str($this->texto)
+                    ."  WHERE codtema = ".$this->var2str($this->codtema).";";
+         }
+         else
+         {
+            $sql = "INSERT INTO inme_temas (codtema,titulo,texto) VALUES (".$this->var2str($this->codtema).
+                    ",".$this->var2str($this->titulo).
+                    ",".$this->var2str($this->texto).");";
+         }
+         
+         return $this->db->exec($sql);
       }
       else
       {
-         $sql = "INSERT INTO inme_temas (codtema,titulo,texto) VALUES (".$this->var2str($this->codtema).
-                 ",".$this->var2str($this->titulo).
-                 ",".$this->var2str($this->texto).");";
+         $this->new_error_msg('Código del tema no válido. Debe tener entre 1 y 50 caracteres.');
+         
+         return FALSE;
       }
-      
-      return $this->db->exec($sql);
    }
    
    public function delete()

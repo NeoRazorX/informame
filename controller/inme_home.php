@@ -19,6 +19,7 @@
  */
 
 require_model('inme_noticia_fuente.php');
+require_model('inme_noticia_preview.php');
 
 /**
  * Description of informame_home
@@ -27,8 +28,11 @@ require_model('inme_noticia_fuente.php');
  */
 class inme_home extends fs_controller
 {
+   public $codfuente;
+   public $buscar;
    public $noticias;
    public $mostrar;
+   public $preview;
    public $offset;
    
    public function __construct()
@@ -50,15 +54,36 @@ class inme_home extends fs_controller
          $this->mostrar = $_GET['mostrar'];
       }
       
+      $this->buscar = '';
+      if( isset($_REQUEST['buscar']) )
+      {
+         $this->buscar = $_REQUEST['buscar'];
+      }
+      
+      $this->codfuente = '';
+      if( isset($_GET['codfuente']) )
+      {
+         $this->codfuente = $_GET['codfuente'];
+      }
+      
       $this->offset = 0;
       if( isset($_GET['offset']) )
       {
          $this->offset = intval($_GET['offset']);
       }
       
-      $noti = new inme_noticia_fuente();
+      $this->preview = new inme_noticia_preview();
       
-      if($this->mostrar == 'portada')
+      $noti = new inme_noticia_fuente();
+      if($this->buscar != '')
+      {
+         $this->noticias = $noti->search($this->buscar, $this->offset);
+      }
+      else if($this->codfuente != '')
+      {
+         $this->noticias = $noti->all_from_fuente($this->codfuente, $this->offset);
+      }
+      else if($this->mostrar == 'portada')
       {
          $this->noticias = $noti->all($this->offset, 'publicada DESC');
       }
@@ -78,15 +103,36 @@ class inme_home extends fs_controller
          $this->mostrar = $_GET['mostrar'];
       }
       
+      $this->buscar = '';
+      if( isset($_REQUEST['buscar']) )
+      {
+         $this->buscar = $_REQUEST['buscar'];
+      }
+      
+      $this->codfuente = '';
+      if( isset($_GET['codfuente']) )
+      {
+         $this->codfuente = $_GET['codfuente'];
+      }
+      
       $this->offset = 0;
       if( isset($_GET['offset']) )
       {
          $this->offset = intval($_GET['offset']);
       }
       
-      $noti = new inme_noticia_fuente();
+      $this->preview = new inme_noticia_preview();
       
-      if($this->mostrar == 'portada')
+      $noti = new inme_noticia_fuente();
+      if($this->buscar != '')
+      {
+         $this->noticias = $noti->search($this->buscar, $this->offset);
+      }
+      else if($this->codfuente != '')
+      {
+         $this->noticias = $noti->all_from_fuente($this->codfuente, $this->offset);
+      }
+      else if($this->mostrar == 'portada')
       {
          $this->noticias = $noti->all($this->offset, 'publicada DESC');
       }
@@ -94,5 +140,18 @@ class inme_home extends fs_controller
       {
          $this->noticias = $noti->all($this->offset);
       }
+   }
+   
+   public function total_noticias()
+   {
+      $total = 0;
+      
+      $data = $this->db->select("SELECT COUNT(id) as total FROM inme_noticias_fuente;");
+      if($data)
+      {
+         $total = intval($data[0]['total']);
+      }
+      
+      return $total;
    }
 }

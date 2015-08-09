@@ -71,18 +71,27 @@ class inme_fuente extends fs_model
    
    public function save()
    {
-      if( $this->exists() )
+      if( strlen($this->codfuente) > 1 AND strlen($this->codfuente) <= 50 )
       {
-         $sql = "UPDATE inme_fuentes SET url = ".$this->var2str($this->url)
-                 ."  WHERE codfuente = ".$this->var2str($this->codfuente).";";
+         if( $this->exists() )
+         {
+            $sql = "UPDATE inme_fuentes SET url = ".$this->var2str($this->url)
+                    ."  WHERE codfuente = ".$this->var2str($this->codfuente).";";
+         }
+         else
+         {
+            $sql = "INSERT INTO inme_fuentes (codfuente,url) VALUES (".$this->var2str($this->codfuente).
+                    ",".$this->var2str($this->url).");";
+         }
+         
+         return $this->db->exec($sql);
       }
       else
       {
-         $sql = "INSERT INTO inme_fuentes (codfuente,url) VALUES (".$this->var2str($this->codfuente).
-                 ",".$this->var2str($this->url).");";
+         $this->new_error_msg('Código de la fuente no válido. Debe tener entre 1 y 50 caracteres.');
+         
+         return FALSE;
       }
-      
-      return $this->db->exec($sql);
    }
    
    public function delete()
