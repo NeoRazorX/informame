@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : inme_fuentes.xml
+    Description:
+        Estructura de la tabla inme_fuentes.
+-->
+<tabla>
+   <columna>
+      <nombre>codfuente</nombre>
+      <tipo>character varying(50)</tipo>
+   </columna>
+   <columna>
+      <nombre>url</nombre>
+      <tipo>character varying(300)</tipo>
+   </columna>
+   <restriccion>
+      <nombre>inme_fuentes_pkey</nombre>
+      <consulta>PRIMARY KEY (codfuente)</consulta>
+   </restriccion>
+</tabla>

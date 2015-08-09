@@ -1,0 +1,87 @@
+{include="header"}
+
+<br/>
+
+<div class="container">
+   <div class="row">
+      <div class="col-sm-9">
+         <ul class="nav nav-tabs">
+            <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
+               <a href="{$fsc->url()}">
+                  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                  &nbsp; Portada
+               </a>
+            </li>
+            <li role="presentation"{if="$fsc->mostrar!='portada'"} class="active"{/if}>
+               <a href="{$fsc->url()}&mostrar=todo">
+                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                  &nbsp; Últimas noticias
+               </a>
+            </li>
+         </ul>
+         {loop="$fsc->noticias"}
+         <blockquote>
+            {if="$counter==0"}
+            <h2 style="margin-top: 0px;">
+               <a href="{$value->url}">{$value->titulo}</a>
+            </h2>
+            {else}
+            <h3 style="margin-top: 0px;">
+               <a href="{$value->url}">{$value->titulo}</a>
+            </h3>
+            {/if}
+            <p class="text-justify">{$value->texto}</p>
+            <footer>
+               {$value->fecha}
+               &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
+               &nbsp; {$value->codfuente}
+            </footer>
+         </blockquote>
+         {else}
+         <blockquote>
+            <h2 style="margin-top: 0px;">Vas a tener que picar</h2>
+            <p>Parece que no hay ninguna noticia en portada, vas a tener que picar un rato :D</p>
+            <footer>Picando, que es gerundio...</footer>
+         </blockquote>
+         {/loop}
+         <ul class="pager">
+            {if="$fsc->offset>0"}
+            <li class="previous">
+               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&offset={$fsc->offset-FS_ITEM_LIMIT}">
+                  <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
+               </a>
+            </li>
+            {/if}
+            {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
+            <li class="next">
+               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&offset={$fsc->offset+FS_ITEM_LIMIT}">
+                  Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
+               </a>
+            </li>
+            {/if}
+         </ul>
+      </div>
+      <div class="col-sm-3">
+         <div class="thumbnail">
+            <img src="plugins/informame/view/img/picar.png" alt="picar"/>
+            <div class="caption">
+               <h4>¡A picar!</h4>
+               <p>
+                  Para estar <b>bien</b> informados, primero debemos <b>buscar</b>
+                  información, luego la agrupamos, la valoramos y finalmente
+                  nos quedamos con lo mejor. A este proceso lo llamamos picar.
+               </p>
+               <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+                  &nbsp; Picar
+               </a>
+               <a href="index.php?page=inme_picar" class="btn btn-default" title="¿Qué es eso de picar?">
+                  <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{include="footer"}

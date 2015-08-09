@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : inme_temas.xml
+    Description:
+        Estructura de la tabla inme_temas.
+-->
+<tabla>
+   <columna>
+      <nombre>codtema</nombre>
+      <tipo>character varying(50)</tipo>
+   </columna>
+   <columna>
+      <nombre>titulo</nombre>
+      <tipo>character varying(100)</tipo>
+   </columna>
+   <columna>
+      <nombre>texto</nombre>
+      <tipo>text</tipo>
+   </columna>
+   <restriccion>
+      <nombre>inme_temas_pkey</nombre>
+      <consulta>PRIMARY KEY (codtema)</consulta>
+   </restriccion>
+</tabla>

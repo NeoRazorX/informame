@@ -1,0 +1,28 @@
+{include="header"}
+
+<div class="container">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>Picar...</h1>
+         </div>
+         <ol>
+            {loop="$fsc->log"}
+            <li>{$value}</li>
+            {else}
+            <li>Sin resultados.</li>
+            {/loop}
+         </ol>
+      </div>
+      <a href="index.php?page=inme_home" class="btn btn-default">
+         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+         &nbsp; Volver
+      </a>
+      <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
+         <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+         &nbsp; Picar
+      </a>
+   </div>
+</div>
+
+{include="footer"}

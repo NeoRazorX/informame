@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : inme_noticias_fuente.xml
+    Description:
+        Estructura de la tabla inme_noticias_fuente.
+-->
+<tabla>
+   <columna>
+      <nombre>id</nombre>
+      <tipo>serial</tipo>
+      <nulo>NO</nulo>
+      <defecto>nextval('inme_noticias_fuente_id_seq'::regclass)</defecto>
+   </columna>
+   <columna>
+      <nombre>url</nombre>
+      <tipo>character varying(300)</tipo>
+      <nulo>NO</nulo>
+   </columna>
+   <columna>
+      <nombre>titulo</nombre>
+      <tipo>character varying(140)</tipo>
+   </columna>
+   <columna>
+      <nombre>texto</nombre>
+      <tipo>text</tipo>
+   </columna>
+   <columna>
+      <nombre>fecha</nombre>
+      <tipo>timestamp</tipo>
+      <nulo>NO</nulo>
+   </columna>
+   <columna>
+      <nombre>publicada</nombre>
+      <tipo>timestamp</tipo>
+   </columna>
+   <columna>
+      <nombre>codfuente</nombre>
+      <tipo>character varying(50)</tipo>
+   </columna>
+   <columna>
+      <nombre>likes</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <columna>
+      <nombre>tweets</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <columna>
+      <nombre>meneos</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <columna>
+      <nombre>popularidad</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <restriccion>
+      <nombre>inme_noticias_fuente_pkey</nombre>
+      <consulta>PRIMARY KEY (id)</consulta>
+   </restriccion>
+   <restriccion>
+      <nombre>inme_noticias_fuente</nombre>
+      <consulta>FOREIGN KEY (codfuente) REFERENCES inme_fuentes (codfuente) ON DELETE CASCADE ON UPDATE CASCADE</consulta>
+   </restriccion>
+</tabla>

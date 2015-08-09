@@ -1,0 +1,98 @@
+{include="header"}
+
+<script type="text/javascript">
+   $(document).ready(function() {
+      $("#b_nuevo_tema").click(function(event) {
+         event.preventDefault();
+         $("#modal_nuevo_tema").modal('show');
+         document.f_nuevo_tema.codtema.focus();
+      });
+   });
+</script>
+
+<div class="container" style="margin-top: 15px;">
+   <div class="row">
+      <div class="col-sm-6 col-xs-6">
+         <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="{$fsc->url()}" title="Recargar la página">
+               <span class="glyphicon glyphicon-refresh"></span>
+            </a>
+            {if="$fsc->page->is_default()"}
+            <a class="btn btn-sm btn-default active" href="{$fsc->url()}&amp;default_page=FALSE" title="desmarcar como página de inicio">
+               <span class="glyphicon glyphicon-home"></span>
+            </a>
+            {else}
+            <a class="btn btn-sm btn-default" href="{$fsc->url()}&amp;default_page=TRUE" title="marcar como página de inicio">
+               <span class="glyphicon glyphicon-home"></span>
+            </a>
+            {/if}
+         </div>
+         
+         <a id="b_nuevo_tema" class="btn btn-sm btn-success" href="#">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span class="hidden-xs">&nbsp; Nuevo</span>
+         </a>
+      </div>
+      <div class="col-sm-6 col-xs-6 text-right">
+         <h2 style="margin-top: 0px;">Temas</h2>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="table-responsive">
+            <table class="table table-hover">
+               <thead>
+                  <tr>
+                     <th>Código + Título</th>
+                     <th>Texto</th>
+                  </tr>
+               </thead>
+               {loop="$fsc->resultados"}
+               <tr>
+                  <td>{$value->codtema} {$value->titulo}</td>
+                  <td>{$value->texto}</td>
+               </tr>
+               {else}
+               <tr>
+                  <td class="bg-warning" colspan="2">Sin resultados.</td>
+               </tr>
+               {/loop}
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+
+<form name="f_nuevo_tema" action="{$fsc->url()}" method="post" class="form">
+   <div class="modal" id="modal_nuevo_tema" tabindex="-1">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+               <h4 class="modal-title">Nuevo tema</h4>
+            </div>
+            <div class="modal-body">
+               <div class="form-group">
+                  <input type="text" name="codtema" class="form-control" placeholder="código" autocomplete="off"/>
+               </div>
+               <div class="form-group">
+                  <input type="text" name="titulo" class="form-control" placeholder="Título" autocomplete="off"/>
+               </div>
+               <div class="form-group">
+                  <textarea name="texto" rows="5" class="form-control" placeholder="Texto"></textarea>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-floppy-disk"></span>
+                  &nbsp; Guardar
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+
+{include="footer"}
