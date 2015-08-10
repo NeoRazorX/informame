@@ -20,6 +20,8 @@
 
 require_model('inme_fuente.php');
 require_model('inme_noticia_fuente.php');
+require_model('inme_noticia_preview.php');
+require_model('inme_tema.php');
 
 /**
  * Description of inme_picar
@@ -29,6 +31,8 @@ require_model('inme_noticia_fuente.php');
 class inme_picar extends fs_controller
 {
    public $log;
+   private $noticia;
+   private $tema;
    
    public function __construct()
    {
@@ -38,6 +42,8 @@ class inme_picar extends fs_controller
    protected function private_core()
    {
       $this->log = array();
+      $this->noticia = new inme_noticia_fuente();
+      $this->tema = new inme_tema();
       
       if( isset($_GET['picar']) )
       {
@@ -56,6 +62,8 @@ class inme_picar extends fs_controller
       $this->template = 'inme_public/picar';
       
       $this->log = array();
+      $this->noticia = new inme_noticia_fuente();
+      $this->tema = new inme_tema();
       
       if( isset($_GET['picar']) )
       {
@@ -81,7 +89,7 @@ class inme_picar extends fs_controller
          case 0:
             /// buscamos noticias en las fuente
             $fuente0 = new inme_fuente();
-            $fuentes  = $fuente0->all();
+            $fuentes = $fuente0->all();
             
             if($fuentes)
             {
@@ -99,8 +107,7 @@ class inme_picar extends fs_controller
             /// marcamos noticias como publicadas
             $this->log[] = 'Seleccionando noticias para portada...';
             
-            $noti0 = new inme_noticia_fuente();
-            foreach($noti0->all(0, 'popularidad DESC') as $noti)
+            foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
             {
                if( is_null($noti->publicada) AND $noti->popularidad() > 10 )
                {
@@ -108,7 +115,8 @@ class inme_picar extends fs_controller
                   if( $noti->save() )
                   {
                      $this->log[] = 'Se ha publicado la noticia: <a href="'.$noti->url
-                             .'" target="_blank">'.$noti->titulo.'</a>';
+                             .'" target="_blank">'.$noti->titulo.'</a> <span class="badge">'
+                             .$noti->popularidad().'</span>';
                   }
                   else
                   {
@@ -118,60 +126,60 @@ class inme_picar extends fs_controller
             }
             break;
          
+         case 2:
+            $this->log[] = 'Buscamos imágenes en las noticias...';
+            $this->preview_noticias();
+            break;
+         
          default:
             /// actualizamos popularidad de noticias
             $this->log[] = 'Recalculando popularidad de noticias...';
             
-            $noti0 = new inme_noticia_fuente();
-            
             /// escogemos un punto aleatorio en la lista de noticias
             $offset = mt_rand( 0, max( array( 0 ,$this->total_noticias() - FS_ITEM_LIMIT ) ) );
             
-            foreach($noti0->all($offset) as $noti)
+            foreach($this->noticia->all($offset) as $noti)
             {
-               if( is_null($noti->publicada) )
+               $popularidad = $noti->popularidad();
+               
+               switch( mt_rand(0,9) )
                {
-                  $popularidad = $noti->popularidad();
+                  case 0:
+                     $noti->tweets = $this->tweet_count($noti->url);
+                     break;
+                     
+                  case 1:
+                     $noti->likes = $this->facebook_count($noti->url);
+                     break;
+                     
+                  case 2:
+                     $noti->meneos = $this->meneame_count($noti->url);
+                     break;
+                     
+                  default:
+                     break;
+               }
+               
+               if( $noti->popularidad() == $popularidad )
+               {
                   
-                  switch( mt_rand(0,9) )
+               }
+               else if( $noti->save() )
+               {
+                  if( $noti->popularidad() >= $popularidad )
                   {
-                     case 0:
-                        $noti->tweets = $this->tweet_count($noti->url);
-                        break;
-                     
-                     case 1:
-                        $noti->likes = $this->facebook_count($noti->url);
-                        break;
-                     
-                     case 2:
-                        $noti->meneos = $this->meneame_count($noti->url);
-                        break;
-                     
-                     default:
-                        break;
-                  }
-                  
-                  if( $noti->popularidad() == $popularidad )
-                  {
-                     
-                  }
-                  else if( $noti->save() )
-                  {
-                     if( $noti->popularidad() >= $popularidad )
-                     {
-                        $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
-                                .'</a> <b>+'.abs($noti->popularidad() - $popularidad).'</b> popularidad.';
-                     }
-                     else
-                     {
-                        $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
-                                .'</a> <mark>-'.abs($noti->popularidad() - $popularidad).'</mark> popularidad.';
-                     }
+                     $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
+                             .'</a> <b>+'.abs($noti->popularidad() - $popularidad).'</b> popularidad.';
                   }
                   else
                   {
-                     $this->log[] = 'Error al actualizada la popularidad de la noticia: '.$noti->titulo;
+                     $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
+                             .'</a> <mark>-'.abs($noti->popularidad() - $popularidad).'</mark> popularidad.';
                   }
+               }
+               else
+               {
+                  $this->log[] = 'Error al actualizada la popularidad de la noticia: '.$noti->titulo;
                }
             }
             break;
@@ -315,8 +323,7 @@ class inme_picar extends fs_controller
       
       /// ¿Ya existe la noticia en la bd?
       $nueva = FALSE;
-      $noti0 = new inme_noticia_fuente();
-      $noticia = $noti0->get_by_url($url);
+      $noticia = $this->noticia->get_by_url($url);
       if(!$noticia)
       {
          $nueva = TRUE;
@@ -387,9 +394,29 @@ class inme_picar extends fs_controller
             $description = $aux;
          }
          
-         /// eliminamos el html
+         /// eliminamos el html de la descripción
          $description = strip_tags( html_entity_decode($description, ENT_QUOTES, 'UTF-8') );
          $noticia->texto = $description;
+         
+         /// procesamos las keywords
+         if($item->category)
+         {
+            foreach($item->category as $cat)
+            {
+               if( strlen( (string)$cat ) > 1 )
+               {
+                  $tema = $this->tema->get( (string)$cat );
+                  if(!$tema)
+                  {
+                     $tema = new inme_tema();
+                     $tema->codtema = $tema->texto = (string)$cat;
+                     $tema->save();
+                  }
+                  
+                  $noticia->set_keyword( (string)$cat );
+               }
+            }
+         }
       }
       
       if($meneos > 0)
@@ -492,5 +519,68 @@ class inme_picar extends fs_controller
       }
       
       return $total;
+   }
+   
+   private function preview_noticias()
+   {
+      $preview = new inme_noticia_preview();
+      $preview->set_downloads(10);
+      
+      foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
+      {
+         $preview->load($noti->titulo, $noti->texto.' '.$noti->preview);
+         if(!$preview->type)
+         {
+            $html = $preview->curl_download($noti->url);
+            $urls = array();
+            if( preg_match_all('@<meta property="og:image" content="([^"]+)@', $html, $urls) )
+            {
+               foreach($urls[1] as $url)
+               {
+                  $preview->load($url);
+                  if($preview->type AND stripos($url, 'logo') === FALSE)
+                  {
+                     $noti->preview = $preview->link;
+                     $noti->save();
+                     $this->log[] = 'Encontrada imagen: <a href="'.$preview->link
+                             .'" target="_blank">'.$preview->link.'</a>';
+                     break;
+                  }
+               }
+            }
+            
+            if( !$preview->type )
+            {
+               /// buscamos vídeos de youtube
+               $urls = array();
+               if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $html, $urls) )
+               {
+                  foreach($urls[0] as $url)
+                  {
+                     foreach( array('youtube', 'youtu.be', 'vimeo') as $domain )
+                     {
+                        if( strpos($url, $domain) !== FALSE )
+                        {
+                           $preview->load($url);
+                           if( in_array($preview->type, array('youtube', 'vimeo')) )
+                           {
+                              $noti->preview = $preview->link;
+                              $noti->save();
+                              $this->log[] = 'Encontrada vídeo: <a href="'.$preview->link
+                                      .'" target="_blank">'.$preview->link.'</a>';
+                              break;
+                           }
+                        }
+                     }
+                     
+                     if($preview->type)
+                     {
+                        break;
+                     }
+                  }
+               }
+            }
+         }
+      }
    }
 }

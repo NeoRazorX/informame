@@ -53,6 +53,14 @@
       <nombre>popularidad</nombre>
       <tipo>integer</tipo>
    </columna>
+   <columna>
+      <nombre>keywords</nombre>
+      <tipo>character varying(300)</tipo>
+   </columna>
+   <columna>
+      <nombre>preview</nombre>
+      <tipo>character varying(300)</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_noticias_fuente_pkey</nombre>
       <consulta>PRIMARY KEY (id)</consulta>

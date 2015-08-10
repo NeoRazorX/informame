@@ -45,7 +45,7 @@ class inme_home extends fs_controller
       if(FS_HOMEPAGE != __CLASS__)
       {
          $this->new_advice('Debes poner <b>'.__CLASS__.'</b> como portada en la'
-                 . ' pestaña avanzado del <a href="index.php?page=admin_home">panel de control</a>.');
+                 . ' pestaña avanzado del <a href="index.php?page=admin_home#avanzado">panel de control</a>.');
       }
       
       $this->mostrar = 'portada';
@@ -86,6 +86,10 @@ class inme_home extends fs_controller
       else if($this->mostrar == 'portada')
       {
          $this->noticias = $noti->all($this->offset, 'publicada DESC');
+      }
+      else if($this->mostrar == 'populares')
+      {
+         $this->noticias = $noti->all($this->offset, 'popularidad DESC');
       }
       else
       {
@@ -135,6 +139,10 @@ class inme_home extends fs_controller
       else if($this->mostrar == 'portada')
       {
          $this->noticias = $noti->all($this->offset, 'publicada DESC');
+      }
+      else if($this->mostrar == 'populares')
+      {
+         $this->noticias = $noti->all($this->offset, 'popularidad DESC');
       }
       else
       {

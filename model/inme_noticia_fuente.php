@@ -38,6 +38,8 @@ class inme_noticia_fuente extends fs_model
    public $tweets;
    public $meneos;
    private $popularidad;
+   private $keywords;
+   public $preview;
    
    public function __construct($n = FALSE)
    {
@@ -61,6 +63,8 @@ class inme_noticia_fuente extends fs_model
          $this->tweets = intval($n['tweets']);
          $this->meneos = intval($n['meneos']);
          $this->popularidad = intval($n['popularidad']);
+         $this->keywords = $n['keywords'];
+         $this->preview = $n['preview'];
       }
       else
       {
@@ -75,6 +79,8 @@ class inme_noticia_fuente extends fs_model
          $this->tweets = 0;
          $this->meneos = 0;
          $this->popularidad = 0;
+         $this->keywords = '';
+         $this->preview = '';
       }
    }
    
@@ -106,6 +112,34 @@ class inme_noticia_fuente extends fs_model
          $this->popularidad = 0;
       
       return $this->popularidad;
+   }
+   
+   public function keywords()
+   {
+      $keys = array();
+      
+      $aux = explode(',', $this->keywords);
+      if($aux)
+      {
+         foreach($aux as $i => $value)
+         {
+            $keys[] = str_replace( array('[',']') , array('',''), $value);
+         }
+      }
+      
+      return $keys;
+   }
+   
+   public function set_keyword($k)
+   {
+      if($this->keywords == '')
+      {
+         $this->keywords = '['.$k.']';
+      }
+      else
+      {
+         $this->keywords .= ',['.$k.']';
+      }
    }
    
    public function get($id)
@@ -163,6 +197,8 @@ class inme_noticia_fuente extends fs_model
                  .", tweets = ".$this->var2str($this->tweets)
                  .", meneos = ".$this->var2str($this->meneos)
                  .", popularidad = ".$this->var2str($this->popularidad)
+                 .", keywords = ".$this->var2str($this->keywords)
+                 .", preview = ".$this->var2str($this->preview)
                  ."  WHERE id = ".$this->var2str($this->id).";";
          
          return $this->db->exec($sql);
@@ -170,7 +206,7 @@ class inme_noticia_fuente extends fs_model
       else
       {
          $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,fecha,publicada"
-                 . ",codfuente,likes,tweets,meneos,popularidad) VALUES ("
+                 . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview) VALUES ("
                  .$this->var2str($this->url).","
                  .$this->var2str($this->titulo).","
                  .$this->var2str($this->texto).","
@@ -180,7 +216,9 @@ class inme_noticia_fuente extends fs_model
                  .$this->var2str($this->likes).","
                  .$this->var2str($this->texto).","
                  .$this->var2str($this->meneos).","
-                 .$this->var2str($this->popularidad).");";
+                 .$this->var2str($this->popularidad).","
+                 .$this->var2str($this->keywords).","
+                 .$this->var2str($this->preview).");";
          
          if( $this->db->exec($sql) )
          {
@@ -232,7 +270,8 @@ class inme_noticia_fuente extends fs_model
    {
       $nlist = array();
       $query = $this->no_html( strtolower($query) );
-      $sql = "SELECT * FROM inme_noticias_fuente WHERE lower(texto) LIKE '%".$query."%'  ORDER BY popularidad DESC";
+      $sql = "SELECT * FROM inme_noticias_fuente WHERE lower(titulo) LIKE '%".$query."%'"
+              . " OR lower(texto) LIKE '%".$query."%'  ORDER BY popularidad DESC";
       
       $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)

@@ -41,14 +41,41 @@ class inme_fuentes extends fs_controller
       
       if( isset($_POST['codfuente']) )
       {
-         $this->fuente->codfuente = $_POST['codfuente'];
-         $this->fuente->url = $_POST['url'];
-         if( $this->fuente->save() )
+         /// crear/editar fuente
+         $fuente2 = $this->fuente->get($_POST['codfuente']);
+         if(!$fuente2)
          {
-            $this->new_message('Fuente guardada correctamente.');
+            $fuente2 = new inme_fuente();
+            $fuente2->codfuente = $_POST['codfuente'];
+         }
+         
+         $fuente2->url = $_POST['url'];
+         if( $fuente2->save() )
+         {
+            $this->new_message('Fuente '.$fuente2->codfuente.' guardada correctamente.');
          }
          else
-            $this->new_error_msg('Error al guardar la fuente.');
+            $this->new_error_msg('Error al guardar la fuente '.$fuente2->codfuente);
+      }
+      else if( isset($_GET['delete']) )
+      {
+         /// eliminar fuente
+         $fuente2 = $this->fuente->get($_GET['delete']);
+         if($fuente2)
+         {
+            if( $fuente2->delete() )
+            {
+               $this->new_message('Fuente '.$fuente2->codfuente.' eliminada correctamente.');
+            }
+            else
+            {
+               $this->new_error_msg('Error al eliminar la fuente '.$fuente2->codfuente);
+            }
+         }
+         else
+         {
+            $this->new_error_msg('Fuente '.$_GET['delete'].' No encontrada');
+         }
       }
       
       $this->resultados = $this->fuente->all();

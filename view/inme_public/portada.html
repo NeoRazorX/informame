@@ -13,10 +13,16 @@
                   &nbsp; Portada
                </a>
             </li>
-            <li role="presentation"{if="$fsc->mostrar!='portada'"} class="active"{/if}>
+            <li role="presentation"{if="$fsc->mostrar=='populares'"} class="active"{/if}>
+               <a href="{$fsc->url()}&mostrar=populares" title="Populares">
+                  <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+               </a>
+            </li>
+            <li role="presentation"{if="$fsc->mostrar=='todo'"} class="active"{/if}>
                <a href="{$fsc->url()}&mostrar=todo">
                   <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-                  &nbsp; Últimas noticias
+                  &nbsp; Lo último
+                  <span class="badge">{$fsc->total_noticias()}</span>
                </a>
             </li>
             {else}
@@ -32,12 +38,17 @@
                </a>
             </li>
             <li role="presentation">
-               <a href="{$fsc->url()}">
+               <a href="{$fsc->url()}" title="Portada">
                   <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                </a>
             </li>
             <li role="presentation">
-               <a href="{$fsc->url()}&mostrar=todo">
+               <a href="{$fsc->url()}&mostrar=populares" title="Populares">
+                  <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+               </a>
+            </li>
+            <li role="presentation">
+               <a href="{$fsc->url()}&mostrar=todo" title="Lo último">
                   <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                </a>
             </li>
@@ -45,7 +56,7 @@
          </ul>
          {loop="$fsc->noticias"}
          <blockquote>
-            <!--{$fsc->preview->load($value->url, $value->texto)}-->
+            <!--{$fsc->preview->load($value->url, $value->texto.' '.$value->preview)}-->
             {if condition="$fsc->preview->type"}
             <div class="pull-left">
                <a href="{$value->url}">

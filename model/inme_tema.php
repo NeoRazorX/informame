@@ -55,6 +55,17 @@ class inme_tema extends fs_model
       return '';
    }
    
+   public function get($cod)
+   {
+      $data = $this->db->select("SELECT * FROM inme_temas WHERE codtema = ".$this->var2str($cod).";");
+      if($data)
+      {
+         return new inme_tema($data[0]);
+      }
+      else
+         return FALSE;
+   }
+   
    public function exists()
    {
       if( is_null($this->codtema) )
@@ -69,7 +80,7 @@ class inme_tema extends fs_model
    
    public function save()
    {
-      if( strlen($this->codfuente) > 1 AND strlen($this->codfuente) <= 50 )
+      if( strlen($this->codtema) > 1 AND strlen($this->codtema) <= 50 )
       {
          if( $this->exists() )
          {
@@ -88,7 +99,8 @@ class inme_tema extends fs_model
       }
       else
       {
-         $this->new_error_msg('Código del tema no válido. Debe tener entre 1 y 50 caracteres.');
+         $this->new_error_msg('Código del tema no válido: '.$this->codtema
+                 .'. Debe tener entre 1 y 50 caracteres.');
          
          return FALSE;
       }

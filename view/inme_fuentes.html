@@ -1,94 +1,77 @@
 {include="header"}
 
 <script type="text/javascript">
-   $(document).ready(function() {
-      $("#b_nueva_fuente").click(function(event) {
-         event.preventDefault();
-         $("#modal_nueva_fuente").modal('show');
-         document.f_nueva_fuente.codfuente.focus();
-      });
-   });
+   function delete_fuente(cod)
+   {
+      if( confirm("¿Realmente desea eliminar la fuente "+cod+"?") )
+         window.location.href = '{$fsc->url()}&delete='+cod;
+   }
 </script>
 
 <div class="container" style="margin-top: 15px;">
    <div class="row">
-      <div class="col-sm-6 col-xs-6">
-         <div class="btn-group">
-            <a class="btn btn-sm btn-default" href="{$fsc->url()}" title="Recargar la página">
-               <span class="glyphicon glyphicon-refresh"></span>
-            </a>
-            {if="$fsc->page->is_default()"}
-            <a class="btn btn-sm btn-default active" href="{$fsc->url()}&amp;default_page=FALSE" title="desmarcar como página de inicio">
-               <span class="glyphicon glyphicon-home"></span>
-            </a>
-            {else}
-            <a class="btn btn-sm btn-default" href="{$fsc->url()}&amp;default_page=TRUE" title="marcar como página de inicio">
-               <span class="glyphicon glyphicon-home"></span>
-            </a>
-            {/if}
-         </div>
-         <a id="b_nueva_fuente" class="btn btn-sm btn-success" href="#">
-            <span class="glyphicon glyphicon-pencil"></span>
-            <span class="hidden-xs">&nbsp; Nueva</span>
-         </a>
-      </div>
-      <div class="col-sm-6 col-xs-6 text-right">
-         <h2 style="margin-top: 0px;">Fuentes</h2>
-      </div>
-   </div>
-   <div class="row">
       <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               Fuentes
+               <a class="btn btn-xs btn-default" href="{$fsc->url()}" title="Recargar la página">
+                  <span class="glyphicon glyphicon-refresh"></span>
+               </a>
+            </h1>
+         </div>
          <div class="table-responsive">
             <table class="table table-hover">
                <thead>
                   <tr>
                      <th>Código</th>
                      <th>URL</th>
+                     <th class="text-right">Acciones</th>
                   </tr>
                </thead>
                {loop="$fsc->resultados"}
-               <tr>
-                  <td>{$value->codfuente}</td>
-                  <td>{$value->url}</td>
-               </tr>
-               {else}
-               <tr>
-                  <td class="bg-warning" colspan="2">Sin resultados.</td>
-               </tr>
+               <form action="{$fsc->url()}" method="post" class="form">
+                  <input type="hidden" name="codfuente" value="{$value->codfuente}"/>
+                  <tr>
+                     <td>
+                        <div class="form-control">
+                           <a href="index.php?page=inme_home&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                        </div>
+                     </td>
+                     <td>
+                        <input type="text" name="url" value="{$value->url}" class="form-control" autocomplete="off"/>
+                     </td>
+                     <td class="text-right">
+                        <div class="btn-group">
+                           <a href="#" class="btn btn-sm btn-danger" title="Eliminar" onclick="delete_fuente('{$value->codfuente}')">
+                              <span class="glyphicon glyphicon-trash"></span>
+                           </a>
+                           <button type="submit" class="btn btn-sm btn-primary" title="Guardar">
+                              <span class="glyphicon glyphicon-floppy-disk"></span>
+                           </button>
+                        </div>
+                     </td>
+                  </tr>
+               </form>
                {/loop}
+               <form action="{$fsc->url()}" method="post" class="form">
+                  <tr class="info">
+                     <td>
+                        <input type="text" name="codfuente" class="form-control" placeholder="código" autocomplete="off"/>
+                     </td>
+                     <td>
+                        <input type="text" name="url" class="form-control" placeholder="URL" autocomplete="off"/>
+                     </td>
+                     <td class="text-right">
+                        <button type="submit" class="btn btn-sm btn-primary" title="Guardar">
+                           <span class="glyphicon glyphicon-floppy-disk"></span>
+                        </button>
+                     </td>
+                  </tr>
+               </form>
             </table>
          </div>
       </div>
    </div>
 </div>
-
-<form name="f_nueva_fuente" action="{$fsc->url()}" method="post" class="form">
-   <div class="modal" id="modal_nueva_fuente" tabindex="-1">
-      <div class="modal-dialog">
-         <div class="modal-content">
-            <div class="modal-header">
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-               </button>
-               <h4 class="modal-title">Nueva fuente</h4>
-            </div>
-            <div class="modal-body">
-               <div class="form-group">
-                  <input type="text" name="codfuente" class="form-control" placeholder="código" autocomplete="off"/>
-               </div>
-               <div class="form-group">
-                  <input type="text" name="url" class="form-control" placeholder="url" autocomplete="off"/>
-               </div>
-            </div>
-            <div class="modal-footer">
-               <button type="submit" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-floppy-disk"></span>
-                  &nbsp; Guardar
-               </button>
-            </div>
-         </div>
-      </div>
-   </div>
-</form>
 
 {include="footer"}

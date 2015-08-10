@@ -57,6 +57,17 @@ class inme_fuente extends fs_model
       return ( mb_substr($this->url, 0, 23) == 'http://www.meneame.net/' OR mb_substr($this->url, 0, 24) == 'https://www.meneame.net/' );
    }
    
+   public function get($cod)
+   {
+      $data = $this->db->select("SELECT * FROM inme_fuentes WHERE codfuente = ".$this->var2str($cod).";");
+      if($data)
+      {
+         return new inme_fuente($data[0]);
+      }
+      else
+         return FALSE;
+   }
+   
    public function exists()
    {
       if( is_null($this->codfuente) )
