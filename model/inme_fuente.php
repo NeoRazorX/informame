@@ -103,7 +103,7 @@ class inme_fuente extends fs_model
    {
       $tlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_fuentes ORDER BY url ASC", FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select_limit("SELECT * FROM inme_fuentes ORDER BY lower(codfuente) ASC", FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)

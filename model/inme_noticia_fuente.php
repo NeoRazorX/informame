@@ -91,8 +91,15 @@ class inme_noticia_fuente extends fs_model
       $tclics = $this->tweets + $this->likes + $this->meneos;
       $dias = 1 + intval( (time() - strtotime($this->fecha)) / 86400 );
       $semanas = pow(2, intval($dias/7));
-      if($tclics > 0)
+      
+      if( strlen($this->titulo) < 2 OR strlen($this->texto) < 10 )
       {
+         /// si el título o el texto es muy corto, no nos interesa valorarlo.
+         $this->popularidad = 0;
+      }
+      else if($tclics > 0)
+      {
+         /// la popularidad debe bajar con el paso del tiempo
          $this->popularidad = intval( $tclics / $dias * $semanas );
       }
       else

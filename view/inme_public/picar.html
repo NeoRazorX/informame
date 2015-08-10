@@ -4,8 +4,12 @@
    <div class="row">
       <div class="col-sm-12">
          <div class="page-header">
-            <h1>Picar...</h1>
+            <h1>Picando...</h1>
          </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-9">
          <ol>
             {loop="$fsc->log"}
             <li>{$value}</li>
@@ -15,15 +19,20 @@
          </ol>
          <br/>
       </div>
+      <div class="col-sm-3">
+         <div class="thumbnail">
+            <img src="plugins/informame/view/img/pikapika.png" alt="pikapika"/>
+         </div>
+      </div>
    </div>
    <div class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-5">
          <a href="index.php?page=inme_home" class="btn btn-default">
             <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
             &nbsp; Volver
          </a>
       </div>
-      <div class="col-xs-6 text-right">
+      <div class="col-xs-4 text-right">
          <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
             <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
             &nbsp; Picar

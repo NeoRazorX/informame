@@ -102,7 +102,7 @@ class inme_picar extends fs_controller
             $noti0 = new inme_noticia_fuente();
             foreach($noti0->all(0, 'popularidad DESC') as $noti)
             {
-               if( is_null($noti->publicada) )
+               if( is_null($noti->publicada) AND $noti->popularidad() > 10 )
                {
                   $noti->publicada = date('d-m-Y H:i:s');
                   if( $noti->save() )
@@ -125,7 +125,7 @@ class inme_picar extends fs_controller
             $noti0 = new inme_noticia_fuente();
             
             /// escogemos un punto aleatorio en la lista de noticias
-            $offset = mt_rand( 0, $this->total_noticias() );
+            $offset = mt_rand( 0, max( array( 0 ,$this->total_noticias() - FS_ITEM_LIMIT ) ) );
             
             foreach($noti0->all($offset) as $noti)
             {
@@ -151,13 +151,13 @@ class inme_picar extends fs_controller
                         break;
                   }
                   
-                  if( $noti->save() )
+                  if( $noti->popularidad() == $popularidad )
                   {
-                     if( $noti->popularidad() == $popularidad )
-                     {
-                        
-                     }
-                     else if( $noti->popularidad() >= $popularidad )
+                     
+                  }
+                  else if( $noti->save() )
+                  {
+                     if( $noti->popularidad() >= $popularidad )
                      {
                         $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
                                 .'</a> <b>+'.abs($noti->popularidad() - $popularidad).'</b> popularidad.';
