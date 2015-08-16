@@ -12,6 +12,10 @@
       <defecto>nextval('inme_noticias_fuente_id_seq'::regclass)</defecto>
    </columna>
    <columna>
+      <nombre>id_relacionada</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <columna>
       <nombre>url</nombre>
       <tipo>character varying(300)</tipo>
       <nulo>NO</nulo>
@@ -23,6 +27,10 @@
    <columna>
       <nombre>texto</nombre>
       <tipo>text</tipo>
+   </columna>
+   <columna>
+      <nombre>resumen</nombre>
+      <tipo>character varying(300)</tipo>
    </columna>
    <columna>
       <nombre>fecha</nombre>
@@ -60,6 +68,11 @@
    <columna>
       <nombre>preview</nombre>
       <tipo>character varying(300)</tipo>
+   </columna>
+   <columna>
+      <nombre>editada</nombre>
+      <tipo>boolean</tipo>
+      <defecto>false</defecto>
    </columna>
    <restriccion>
       <nombre>inme_noticias_fuente_pkey</nombre>

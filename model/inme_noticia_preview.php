@@ -385,7 +385,7 @@ class inme_noticia_preview
       return $status;
    }
    
-   public function curl_download($url, $googlebot=TRUE, $timeout=5)
+   public function curl_download($url, $googlebot=TRUE, $timeout=3)
    {
       $ch0 = curl_init($url);
       curl_setopt($ch0, CURLOPT_TIMEOUT, $timeout);
@@ -407,7 +407,7 @@ class inme_noticia_preview
       $fp = fopen($filename, 'wb');
       curl_setopt($ch, CURLOPT_FILE, $fp);
       curl_setopt($ch, CURLOPT_HEADER, 0);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 3);
       
       if($followlocation)
          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);

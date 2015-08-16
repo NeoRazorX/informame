@@ -47,7 +47,7 @@ class inme_picar extends fs_controller
       
       if( isset($_GET['picar']) )
       {
-         $this->picar( mt_rand(0,3) );
+         $this->picar( mt_rand(0, 9) );
       }
       else
       {
@@ -87,6 +87,9 @@ class inme_picar extends fs_controller
       switch($opcion)
       {
          case 0:
+         case 1:
+         case 2:
+         case 3:
             /// buscamos noticias en las fuente
             $fuente0 = new inme_fuente();
             $fuentes = $fuente0->all();
@@ -103,9 +106,10 @@ class inme_picar extends fs_controller
             
             break;
          
-         case 1:
+         case 4:
             /// marcamos noticias como publicadas
             $this->log[] = 'Seleccionando noticias para portada...';
+            $seleccionadas = FALSE;
             
             foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
             {
@@ -114,6 +118,7 @@ class inme_picar extends fs_controller
                   $noti->publicada = date('d-m-Y H:i:s');
                   if( $noti->save() )
                   {
+                     $seleccionadas = TRUE;
                      $this->log[] = 'Se ha publicado la noticia: <a href="'.$noti->url
                              .'" target="_blank">'.$noti->titulo.'</a> <span class="badge">'
                              .$noti->popularidad().'</span>';
@@ -124,9 +129,15 @@ class inme_picar extends fs_controller
                   }
                }
             }
+            
+            if(!$seleccionadas)
+            {
+               $this->log[] = 'Ninguna noticia seleccionada.';
+            }
             break;
          
-         case 2:
+         case 5:
+         case 6:
             $this->log[] = 'Buscamos imágenes en las noticias...';
             $this->preview_noticias();
             break;
@@ -397,8 +408,9 @@ class inme_picar extends fs_controller
          /// eliminamos el html de la descripción
          $description = strip_tags( html_entity_decode($description, ENT_QUOTES, 'UTF-8') );
          $noticia->texto = $description;
+         $noticia->resumen = substr($noticia->texto, 0, 300);
          
-         /// procesamos las keywords
+         /// procesamos las keywords de categorías
          if($item->category)
          {
             foreach($item->category as $cat)
@@ -414,6 +426,26 @@ class inme_picar extends fs_controller
                   }
                   
                   $noticia->set_keyword( (string)$cat );
+               }
+            }
+         }
+         
+         /// procesamos las keywords y las imágenes de media
+         foreach($item->children('media', TRUE) as $element)
+         {
+            if($element->getName() == 'thumbnail')
+            {
+               $noticia->preview = (string)$element;
+            }
+            else if($element->getName() == 'keywords')
+            {
+               $aux = explode(',', (string)$element);
+               if($aux)
+               {
+                  foreach($aux as $a)
+                  {
+                     $noticia->set_keyword( trim($a) );
+                  }
                }
             }
          }
@@ -524,9 +556,9 @@ class inme_picar extends fs_controller
    private function preview_noticias()
    {
       $preview = new inme_noticia_preview();
-      $preview->set_downloads(10);
+      $preview->set_downloads(5);
       
-      foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
+      foreach($this->noticia->all( mt_rand(0, 100), 'popularidad DESC' ) as $noti)
       {
          $preview->load($noti->titulo, $noti->texto.' '.$noti->preview);
          if(!$preview->type)
@@ -538,9 +570,10 @@ class inme_picar extends fs_controller
                foreach($urls[1] as $url)
                {
                   $preview->load($url);
-                  if($preview->type AND stripos($url, 'logo') === FALSE)
+                  if($preview->type AND stripos($url, 'logo') === FALSE AND $noti->preview != $preview->link)
                   {
                      $noti->preview = $preview->link;
+                     $noti->texto .= "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
                      $noti->save();
                      $this->log[] = 'Encontrada imagen: <a href="'.$preview->link
                              .'" target="_blank">'.$preview->link.'</a>';

@@ -28,9 +28,11 @@ require_model('inme_fuente.php');
 class inme_noticia_fuente extends fs_model
 {
    public $id;
+   public $id_relacionada;
    public $url;
    public $titulo;
    public $texto;
+   public $resumen;
    public $fecha;
    public $publicada;
    public $codfuente;
@@ -40,6 +42,7 @@ class inme_noticia_fuente extends fs_model
    private $popularidad;
    private $keywords;
    public $preview;
+   public $editada;
    
    public function __construct($n = FALSE)
    {
@@ -47,9 +50,11 @@ class inme_noticia_fuente extends fs_model
       if($n)
       {
          $this->id = $this->intval($n['id']);
+         $this->id_relacionada = $this->intval($n['id_relacionada']);
          $this->url = $n['url'];
          $this->titulo = $n['titulo'];
          $this->texto = $n['texto'];
+         $this->resumen = $n['resumen'];
          $this->fecha = date('d-m-Y H:i:s', strtotime($n['fecha']));
          
          $this->publicada = NULL;
@@ -65,13 +70,16 @@ class inme_noticia_fuente extends fs_model
          $this->popularidad = intval($n['popularidad']);
          $this->keywords = $n['keywords'];
          $this->preview = $n['preview'];
+         $this->editada = $this->str2bool($n['editada']);
       }
       else
       {
          $this->id = NULL;
+         $this->id_relacionada = NULL;
          $this->url = NULL;
          $this->titulo = NULL;
          $this->texto = NULL;
+         $this->resumen = NULL;
          $this->fecha = date('d-m-Y H:i:s');
          $this->publicada = NULL;
          $this->codfuente = NULL;
@@ -81,6 +89,7 @@ class inme_noticia_fuente extends fs_model
          $this->popularidad = 0;
          $this->keywords = '';
          $this->preview = '';
+         $this->editada = FALSE;
       }
    }
    
@@ -90,6 +99,21 @@ class inme_noticia_fuente extends fs_model
       new inme_fuente();
       
       return '';
+   }
+   
+   public function url()
+   {
+      if($this->editada)
+      {
+         return $this->edit_url();
+      }
+      else
+         return $this->url;
+   }
+   
+   public function edit_url()
+   {
+      return 'index.php?page=inme_editar_noticia&id='.$this->id;
    }
    
    public function popularidad()
@@ -114,7 +138,7 @@ class inme_noticia_fuente extends fs_model
       return $this->popularidad;
    }
    
-   public function keywords()
+   public function keywords($plain = FALSE)
    {
       $keys = array();
       
@@ -127,19 +151,31 @@ class inme_noticia_fuente extends fs_model
          }
       }
       
-      return $keys;
+      if($plain)
+      {
+         return join(', ', $keys);
+      }
+      else
+      {
+         return $keys;
+      }
    }
    
    public function set_keyword($k)
    {
       if($this->keywords == '')
       {
-         $this->keywords = '['.$k.']';
+         $this->keywords = '['.strtolower($k).']';
       }
       else
       {
-         $this->keywords .= ',['.$k.']';
+         $this->keywords .= ',['.strtolower($k).']';
       }
+   }
+   
+   public function clean_keywords()
+   {
+      $this->keywords = NULL;
    }
    
    public function get($id)
@@ -182,6 +218,9 @@ class inme_noticia_fuente extends fs_model
    
    public function save()
    {
+      $this->titulo = $this->no_html($this->titulo);
+      $this->resumen = $this->no_html($this->resumen);
+      
       /// calculamos la popularidad
       $this->popularidad();
       
@@ -190,6 +229,7 @@ class inme_noticia_fuente extends fs_model
          $sql = "UPDATE inme_noticias_fuente SET url = ".$this->var2str($this->url)
                  .", titulo = ".$this->var2str($this->titulo)
                  .", texto = ".$this->var2str($this->texto)
+                 .", resumen = ".$this->var2str($this->resumen)
                  .", fecha = ".$this->var2str($this->fecha)
                  .", publicada = ".$this->var2str($this->publicada)
                  .", codfuente = ".$this->var2str($this->codfuente)
@@ -199,17 +239,21 @@ class inme_noticia_fuente extends fs_model
                  .", popularidad = ".$this->var2str($this->popularidad)
                  .", keywords = ".$this->var2str($this->keywords)
                  .", preview = ".$this->var2str($this->preview)
+                 .", editada = ".$this->var2str($this->editada)
+                 .", id_relacionada = ".$this->var2str($this->id_relacionada)
                  ."  WHERE id = ".$this->var2str($this->id).";";
          
          return $this->db->exec($sql);
       }
       else
       {
-         $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,fecha,publicada"
-                 . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview) VALUES ("
+         $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,resumen,fecha,publicada"
+                 . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview,editada,"
+                 . "id_relacionada) VALUES ("
                  .$this->var2str($this->url).","
                  .$this->var2str($this->titulo).","
                  .$this->var2str($this->texto).","
+                 .$this->var2str($this->resumen).","
                  .$this->var2str($this->fecha).","
                  .$this->var2str($this->publicada).","
                  .$this->var2str($this->codfuente).","
@@ -218,7 +262,9 @@ class inme_noticia_fuente extends fs_model
                  .$this->var2str($this->meneos).","
                  .$this->var2str($this->popularidad).","
                  .$this->var2str($this->keywords).","
-                 .$this->var2str($this->preview).");";
+                 .$this->var2str($this->preview).","
+                 .$this->var2str($this->editada).","
+                 .$this->var2str($this->id_relacionada).");";
          
          if( $this->db->exec($sql) )
          {
@@ -266,12 +312,27 @@ class inme_noticia_fuente extends fs_model
       return $nlist;
    }
    
+   public function all_from_keyword($key, $offset = 0)
+   {
+      $nlist = array();
+      $sql = "SELECT * FROM inme_noticias_fuente WHERE keywords LIKE '%[".$key."]%' ORDER BY popularidad DESC";
+      
+      $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
+      if($data)
+      {
+         foreach($data as $d)
+            $nlist[] = new inme_noticia_fuente($d);
+      }
+      
+      return $nlist;
+   }
+   
    public function search($query, $offset = 0)
    {
       $nlist = array();
       $query = $this->no_html( strtolower($query) );
       $sql = "SELECT * FROM inme_noticias_fuente WHERE lower(titulo) LIKE '%".$query."%'"
-              . " OR lower(texto) LIKE '%".$query."%'  ORDER BY popularidad DESC";
+              . " OR lower(resumen) LIKE '%".$query."%'  ORDER BY popularidad DESC";
       
       $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)

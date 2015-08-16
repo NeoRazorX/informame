@@ -2,11 +2,11 @@
 
 <br/>
 
-<div class="container">
+<div class="container-fluid">
    <div class="row">
-      <div class="col-sm-9">
+      <div class="col-sm-9 col-md-10">
          <ul class="nav nav-tabs">
-            {if="$fsc->buscar=='' AND $fsc->codfuente==''"}
+            {if="$fsc->buscar=='' AND $fsc->codfuente=='' AND $fsc->keyword==''"}
             <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
                <a href="{$fsc->url()}">
                   <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
@@ -34,6 +34,8 @@
                   de <b>{$fsc->buscar}</b>
                   {elseif="$fsc->codfuente"}
                   de <b>{$fsc->codfuente}</b>
+                  {elseif="$fsc->keyword"}
+                  de <b>{$fsc->keyword}</b>
                   {/if}
                </a>
             </li>
@@ -54,63 +56,8 @@
             </li>
             {/if}
          </ul>
-         {loop="$fsc->noticias"}
-         <blockquote>
-            <!--{$fsc->preview->load($value->url, $value->texto.' '.$value->preview)}-->
-            {if condition="$fsc->preview->type"}
-            <div class="pull-left">
-               <a href="{$value->url}">
-                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 100px; max-width: 120px; margin-right: 10px;">
-               </a>
-            </div>
-            {/if}
-            {if="$counter==0"}
-            <h2 style="margin-top: 0px;">
-               <a href="{$value->url}" target="_blank">{$value->titulo}</a>
-            </h2>
-            {else}
-            <h3 style="margin-top: 0px;">
-               <a href="{$value->url}" target="_blank">{$value->titulo}</a>
-            </h3>
-            {/if}
-            <p>{$value->texto}</p>
-            <footer>
-               {$value->fecha}
-               &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-               &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
-               <br/>
-               {loop="$value->keywords()"}
-               <span class="label label-default">{$value}</span>
-               {/loop}
-            </footer>
-         </blockquote>
-         {else}
-         <blockquote>
-            <h2 style="margin-top: 0px;">Vas a tener que picar</h2>
-            <p>
-               No se ha encontrado ninguna noticia, vas a tener que picar un rato :D
-            </p>
-            <footer>Picando, que es gerundio...</footer>
-         </blockquote>
-         {/loop}
-         <ul class="pager">
-            {if="$fsc->offset>0"}
-            <li class="previous">
-               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&buscar={$fsc->buscar}&codfuente={$fsc->codfuente}&offset={$fsc->offset-FS_ITEM_LIMIT}">
-                  <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
-               </a>
-            </li>
-            {/if}
-            {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
-            <li class="next">
-               <a href="{$fsc->url()}&mostrar={$fsc->mostrar}&buscar={$fsc->buscar}&codfuente={$fsc->codfuente}&offset={$fsc->offset+FS_ITEM_LIMIT}">
-                  Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
-               </a>
-            </li>
-            {/if}
-         </ul>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-3 col-md-2">
          <form action="{$fsc->url()}" method="post" class="form">
             <div class="input-group">
                <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar" autocomplete="off"/>
@@ -121,6 +68,80 @@
                </span>
             </div>
          </form>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-5 col-md-5">
+      {loop="$fsc->noticias"}
+         {if="$counter<24"}
+         <blockquote>
+            <!--{$fsc->preview->load($value->url, $value->preview)}-->
+            {if condition="$fsc->preview->type"}
+            <div class="pull-left">
+               <a href="{$value->url()}">
+                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 100px; max-width: 120px; margin-right: 10px;">
+               </a>
+            </div>
+            {/if}
+            {if="$counter==0"}
+            <h2 style="margin-top: 0px;">
+               <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
+            </h2>
+            {else}
+            <h3 style="margin-top: 0px;">
+               <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
+            </h3>
+            {/if}
+            <p>{$value->resumen}</p>
+            <footer>
+               {$value->fecha}
+               &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
+               &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+               &nbsp;
+               {loop="$value->keywords()"}
+               <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
+               {/loop}
+               <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+               </a>
+            </footer>
+         </blockquote>
+         {/if}
+      {else}
+         <blockquote>
+            <h2 style="margin-top: 0px;">Vas a tener que picar</h2>
+            <p>
+               No se ha encontrado ninguna noticia, vas a tener que picar un rato :D
+            </p>
+            <footer>Picando, que es gerundio...</footer>
+         </blockquote>
+      {/loop}
+      </div>
+      <div class="col-sm-4 col-md-5">
+      {loop="$fsc->noticias"}
+         {if="$counter>=24"}
+         <blockquote>
+            <h4 style="margin-top: 0px;">
+               <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
+            </h4>
+            <p>{$value->resumen}</p>
+            <footer>
+               {$value->fecha}
+               &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
+               &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+               &nbsp;
+               {loop="$value->keywords()"}
+               <a href="{$fsc->url()}&keyword={$value}" class="label label-default">{$value}</a>
+               {/loop}
+               <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+               </a>
+            </footer>
+         </blockquote>
+         {/if}
+      {/loop}
+      </div>
+      <div class="col-sm-3 col-md-2">
          <br/>
          <div class="thumbnail">
             <img src="plugins/informame/view/img/picar.png" alt="picar"/>
@@ -140,6 +161,26 @@
                </a>
             </div>
          </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12 col-md-12">
+         <ul class="pager">
+            {if="$fsc->offset>0"}
+            <li class="previous">
+               <a href="{$fsc->anterior_url()}">
+                  <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
+               </a>
+            </li>
+            {/if}
+            {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
+            <li class="next">
+               <a href="{$fsc->siguiente_url()}">
+                  Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
+               </a>
+            </li>
+            {/if}
+         </ul>
       </div>
    </div>
 </div>

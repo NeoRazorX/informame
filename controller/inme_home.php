@@ -30,8 +30,9 @@ class inme_home extends fs_controller
 {
    public $codfuente;
    public $buscar;
-   public $noticias;
+   public $keyword;
    public $mostrar;
+   public $noticias;
    public $preview;
    public $offset;
    
@@ -66,6 +67,12 @@ class inme_home extends fs_controller
          $this->codfuente = $_GET['codfuente'];
       }
       
+      $this->keyword = '';
+      if( isset($_GET['keyword']) )
+      {
+         $this->keyword = $_GET['keyword'];
+      }
+      
       $this->offset = 0;
       if( isset($_GET['offset']) )
       {
@@ -82,6 +89,10 @@ class inme_home extends fs_controller
       else if($this->codfuente != '')
       {
          $this->noticias = $noti->all_from_fuente($this->codfuente, $this->offset);
+      }
+      else if($this->keyword != '')
+      {
+         $this->noticias = $noti->all_from_keyword($this->keyword, $this->offset);
       }
       else if($this->mostrar == 'portada')
       {
@@ -161,5 +172,17 @@ class inme_home extends fs_controller
       }
       
       return $total;
+   }
+   
+   public function anterior_url()
+   {
+      return $this->url().'&mostrar='.$this->mostrar.'&buscar='.$this->buscar.'&codfuente='.
+              $this->codfuente.'&keyword='.$this->keyword.'&offset='.($this->offset-FS_ITEM_LIMIT);
+   }
+   
+   public function siguiente_url()
+   {
+      return $this->url().'&mostrar='.$this->mostrar.'&buscar='.$this->buscar.'&codfuente='.
+              $this->codfuente.'&keyword='.$this->keyword.'&offset='.($this->offset+FS_ITEM_LIMIT);
    }
 }
