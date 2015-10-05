@@ -74,7 +74,7 @@
       <div class="col-sm-5 col-md-5">
       {loop="$fsc->noticias"}
          {if="$counter<24"}
-         <blockquote>
+         <div>
             <!--{$fsc->preview->load($value->url, $value->preview)}-->
             {if condition="$fsc->preview->type"}
             <div class="pull-left">
@@ -84,60 +84,73 @@
             </div>
             {/if}
             {if="$counter==0"}
-            <h2 style="margin-top: 0px;">
+            <h2>
                <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
             </h2>
             {else}
-            <h3 style="margin-top: 0px;">
+            <h3 style="margin-bottom: 0px;">
                <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
             </h3>
             {/if}
-            <p>{$value->resumen}</p>
-            <footer>
-               {$value->fecha}
-               &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-               &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
-               &nbsp;
-               {loop="$value->keywords()"}
-               <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
-               {/loop}
-               <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
-                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-               </a>
-            </footer>
-         </blockquote>
+            <p>
+               {$value->resumen}
+               <br/>
+               <span class="small">
+                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
+                  &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
+                  &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  &nbsp;
+                  {loop="$value->keywords()"}
+                  <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
+                  {/loop}
+                  <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
+                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                  </a>
+               </span>
+            </p>
+         </div>
+         <hr/>
          {/if}
       {else}
-         <blockquote>
-            <h2 style="margin-top: 0px;">Vas a tener que picar</h2>
-            <p>
-               No se ha encontrado ninguna noticia, vas a tener que picar un rato :D
-            </p>
-            <footer>Picando, que es gerundio...</footer>
-         </blockquote>
+         <div>
+            <h2>Vas a tener que picar</h2>
+            <p>No se ha encontrado ninguna noticia, vas a tener que picar un rato :D</p>
+            <small>Picando, que es gerundio...</small>
+         </div>
       {/loop}
       </div>
       <div class="col-sm-4 col-md-5">
       {loop="$fsc->noticias"}
          {if="$counter>=24"}
-         <blockquote>
-            <h4 style="margin-top: 0px;">
+         <div style="margin-bottom: 20px;">
+            <!--{$fsc->preview->load($value->url, $value->preview)}-->
+            {if condition="$fsc->preview->type"}
+            <div class="pull-right">
+               <a href="{$value->url()}">
+                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 80px; max-width: 100px; margin-left: 10px;">
+               </a>
+            </div>
+            {/if}
+            <h4 style="margin-bottom: 0px;">
                <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
             </h4>
-            <p>{$value->resumen}</p>
-            <footer>
-               {$value->fecha}
-               &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-               &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
-               &nbsp;
-               {loop="$value->keywords()"}
-               <a href="{$fsc->url()}&keyword={$value}" class="label label-default">{$value}</a>
-               {/loop}
-               <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
-                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-               </a>
-            </footer>
-         </blockquote>
+            <p class="text-justify">
+               {$value->resumen}
+               <br/>
+               <span class="small">
+                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
+                  &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
+                  &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  <br/>
+                  {loop="$value->keywords()"}
+                  <a href="{$fsc->url()}&keyword={$value}" class="label label-default">{$value}</a>
+                  {/loop}
+                  <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
+                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                  </a>
+               </span>
+            </p>
+         </div>
          {/if}
       {/loop}
       </div>
@@ -152,14 +165,24 @@
                   Debemos <b>buscar información</b>, agruparla, valorarla y finalmente
                   quedarnos con lo mejor. A este proceso lo llamamos <b>picar</b>.
                </p>
-               <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
-                  &nbsp; Picar
-               </a>
-               <a href="index.php?page=inme_picar" class="btn btn-default" title="¿Qué es eso de picar?">
-                  <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-               </a>
+               <div class="btn-group">
+                  <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
+                     <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+                     &nbsp; Picar
+                  </a>
+                  <a href="index.php?page=inme_picar" class="btn btn-default" title="¿Qué es eso de picar?">
+                     <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                  </a>
+               </div>
             </div>
+         </div>
+         <div class="list-group">
+            {loop="$fsc->temas_populares"}
+            <a href="{$value->url()}" class="list-group-item">
+               <span class="badge">{$value->articulos}</span>
+               {$value->titulo}
+            </a>
+            {/loop}
          </div>
       </div>
    </div>

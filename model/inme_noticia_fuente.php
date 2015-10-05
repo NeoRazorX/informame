@@ -88,7 +88,7 @@ class inme_noticia_fuente extends fs_model
          $this->meneos = 0;
          $this->popularidad = 0;
          $this->keywords = '';
-         $this->preview = '';
+         $this->preview = NULL;
          $this->editada = FALSE;
       }
    }
@@ -120,9 +120,8 @@ class inme_noticia_fuente extends fs_model
    {
       $tclics = $this->tweets + $this->likes + $this->meneos;
       $dias = 1 + intval( (time() - strtotime($this->fecha)) / 86400 );
-      $semanas = pow(2, intval($dias/7));
       
-      if( strlen($this->titulo) < 2 OR strlen($this->texto) < 10 )
+      if( strlen($this->titulo) < 10 OR strlen($this->texto) < 100 )
       {
          /// si el título o el texto es muy corto, no nos interesa valorarlo.
          $this->popularidad = 0;
@@ -130,7 +129,14 @@ class inme_noticia_fuente extends fs_model
       else if($tclics > 0)
       {
          /// la popularidad debe bajar con el paso del tiempo
-         $this->popularidad = intval( $tclics / $dias * $semanas );
+         $this->popularidad = intval( $tclics / $dias );
+         
+         /// aun así hay noticias con millones de clics, así que dividimos por semanas
+         if($dias > 7)
+         {
+            $semanas = pow(2, intval($dias/7));
+            $this->popularidad = intval($this->popularidad / $semanas);
+         }
       }
       else
          $this->popularidad = 0;
@@ -147,7 +153,11 @@ class inme_noticia_fuente extends fs_model
       {
          foreach($aux as $i => $value)
          {
-            $keys[] = str_replace( array('[',']') , array('',''), $value);
+            $key = str_replace( array('[',']') , array('',''), $value);
+            if($key)
+            {
+               $keys[] = $key;
+            }
          }
       }
       
@@ -167,7 +177,7 @@ class inme_noticia_fuente extends fs_model
       {
          $this->keywords = '['.strtolower($k).']';
       }
-      else
+      else if( !in_array( $k, $this->keywords() ) )
       {
          $this->keywords .= ',['.strtolower($k).']';
       }
@@ -220,6 +230,11 @@ class inme_noticia_fuente extends fs_model
    {
       $this->titulo = $this->no_html($this->titulo);
       $this->resumen = $this->no_html($this->resumen);
+      
+      if($this->preview == '')
+      {
+         $this->preview = NULL;
+      }
       
       /// calculamos la popularidad
       $this->popularidad();

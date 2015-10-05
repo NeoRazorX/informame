@@ -10,31 +10,26 @@
    });
 </script>
 
-<div class="container" style="margin-top: 15px;">
+<div class="container">
    <div class="row">
-      <div class="col-sm-6 col-xs-6">
-         <div class="btn-group">
-            <a class="btn btn-sm btn-default" href="{$fsc->url()}" title="Recargar la página">
-               <span class="glyphicon glyphicon-refresh"></span>
-            </a>
-            {if="$fsc->page->is_default()"}
-            <a class="btn btn-sm btn-default active" href="{$fsc->url()}&amp;default_page=FALSE" title="desmarcar como página de inicio">
-               <span class="glyphicon glyphicon-home"></span>
-            </a>
-            {else}
-            <a class="btn btn-sm btn-default" href="{$fsc->url()}&amp;default_page=TRUE" title="marcar como página de inicio">
-               <span class="glyphicon glyphicon-home"></span>
-            </a>
-            {/if}
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               <span class="glyphicon glyphicon-book"></span>
+               Temas
+               <small>{$fsc->tema->count()}</small>
+               <a class="btn btn-xs btn-default" href="{$fsc->url()}" title="Recargar la página">
+                  <span class="glyphicon glyphicon-refresh"></span>
+               </a>
+               <a id="b_nuevo_tema" class="btn btn-xs btn-success" href="#">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  <span class="hidden-xs">&nbsp; Nuevo</span>
+               </a>
+            </h1>
+            <p class="help-block">
+               Los temas sirven para agrupar noticias, proporcionar más información e imágenes.
+            </p>
          </div>
-         
-         <a id="b_nuevo_tema" class="btn btn-sm btn-success" href="#">
-            <span class="glyphicon glyphicon-pencil"></span>
-            <span class="hidden-xs">&nbsp; Nuevo</span>
-         </a>
-      </div>
-      <div class="col-sm-6 col-xs-6 text-right">
-         <h2 style="margin-top: 0px;">Temas</h2>
       </div>
    </div>
    <div class="row">
@@ -45,20 +40,44 @@
                   <tr>
                      <th>Código + Título</th>
                      <th>Texto</th>
+                     <th class="text-right">Artículos</th>
+                     <th></th>
                   </tr>
                </thead>
                {loop="$fsc->resultados"}
-               <tr>
-                  <td>{$value->codtema} {$value->titulo}</td>
+               <tr class='clickableRow{if="!$value->activo"} danger{/if}' href='{$value->url()}'>
+                  <td><b>{$value->codtema}</b> {$value->titulo}</td>
                   <td>{$value->texto}</td>
+                  <td class="text-right">{$value->articulos}</td>
+                  <td>
+                     {if="$value->imagen"}
+                     <span class="glyphicon glyphicon-picture"></span>
+                     {/if}
+                  </td>
                </tr>
                {else}
                <tr>
-                  <td class="bg-warning" colspan="2">Sin resultados.</td>
+                  <td class="warning" colspan="4">Sin resultados.</td>
                </tr>
                {/loop}
             </table>
          </div>
+         <ul class="pager">
+            {if="$fsc->offset>0"}
+            <li class="previous">
+               <a href="{$fsc->url()}&offset={$fsc->offset-FS_ITEM_LIMIT}">
+                  <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
+               </a>
+            </li>
+            {/if}
+            {if="count($fsc->resultados)==FS_ITEM_LIMIT"}
+            <li class="next">
+               <a href="{$fsc->url()}&offset={$fsc->offset+FS_ITEM_LIMIT}">
+                  Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
+               </a>
+            </li>
+            {/if}
+         </ul>
       </div>
    </div>
 </div>

@@ -27,6 +27,7 @@ require_model('inme_tema.php');
  */
 class inme_temas extends fs_controller
 {
+   public $offset;
    public $resultados;
    public $tema;
    
@@ -37,7 +38,14 @@ class inme_temas extends fs_controller
    
    protected function private_core()
    {
+      $this->offset = 0;
+      if( isset($_GET['offset']) )
+      {
+         $this->offset = intval($_GET['offset']);
+      }
+      
       $this->tema = new inme_tema();
+      $this->tema->cron_job();
       
       if( isset($_POST['codtema']) )
       {
@@ -52,6 +60,6 @@ class inme_temas extends fs_controller
             $this->new_error_msg('Error al guardar el tema.');
       }
       
-      $this->resultados = $this->tema->all();
+      $this->resultados = $this->tema->all($this->offset);
    }
 }

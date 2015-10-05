@@ -68,6 +68,17 @@ class inme_fuente extends fs_model
          return FALSE;
    }
    
+   public function get_by_url($url)
+   {
+      $data = $this->db->select("SELECT * FROM inme_fuentes WHERE url = ".$this->var2str($url).";");
+      if($data)
+      {
+         return new inme_fuente($data[0]);
+      }
+      else
+         return FALSE;
+   }
+   
    public function exists()
    {
       if( is_null($this->codfuente) )
@@ -110,11 +121,11 @@ class inme_fuente extends fs_model
       return $this->db->exec("DELETE FROM inme_fuentes WHERE codfuente = ".$this->var2str($this->codfuente).";");
    }
    
-   public function all($offset = 0)
+   public function all()
    {
       $tlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_fuentes ORDER BY lower(codfuente) ASC", FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select("SELECT * FROM inme_fuentes ORDER BY lower(codfuente) ASC;");
       if($data)
       {
          foreach($data as $d)

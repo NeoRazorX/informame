@@ -32,6 +32,9 @@ class inme_tema extends fs_model
    public $codtema;
    public $titulo;
    public $texto;
+   public $imagen;
+   public $articulos;
+   public $activo;
    
    public function __construct($t = FALSE)
    {
@@ -41,18 +44,29 @@ class inme_tema extends fs_model
          $this->codtema = $t['codtema'];
          $this->titulo = $t['titulo'];
          $this->texto = $t['texto'];
+         $this->imagen = $t['imagen'];
+         $this->articulos = intval($t['articulos']);
+         $this->activo = $this->str2bool($t['activo']);
       }
       else
       {
          $this->codtema = NULL;
          $this->titulo = '';
          $this->texto = '';
+         $this->imagen = NULL;
+         $this->articulos = 0;
+         $this->activo = TRUE;
       }
    }
    
    protected function install()
    {
       return '';
+   }
+   
+   public function url()
+   {
+      return 'index.php?page=inme_editar_tema&cod='.$this->codtema;
    }
    
    public function get($cod)
@@ -86,13 +100,20 @@ class inme_tema extends fs_model
          {
             $sql = "UPDATE inme_temas SET titulo = ".$this->var2str($this->titulo)
                     .", texto = ".$this->var2str($this->texto)
+                    .", imagen = ".$this->var2str($this->imagen)
+                    .", articulos = ".$this->var2str($this->articulos)
+                    .", activo = ".$this->var2str($this->activo)
                     ."  WHERE codtema = ".$this->var2str($this->codtema).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_temas (codtema,titulo,texto) VALUES (".$this->var2str($this->codtema).
-                    ",".$this->var2str($this->titulo).
-                    ",".$this->var2str($this->texto).");";
+            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,imagen,articulos,activo) VALUES "
+                    . "(".$this->var2str($this->codtema)
+                    . ",".$this->var2str($this->titulo)
+                    . ",".$this->var2str($this->texto)
+                    . ",".$this->var2str($this->imagen)
+                    . ",".$this->var2str($this->articulos)
+                    . ",".$this->var2str($this->activo).");";
          }
          
          return $this->db->exec($sql);
@@ -115,7 +136,7 @@ class inme_tema extends fs_model
    {
       $tlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_temas ORDER BY titulo ASC", FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select_limit("SELECT * FROM inme_temas ORDER BY lower(titulo) ASC", FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)
@@ -123,5 +144,50 @@ class inme_tema extends fs_model
       }
       
       return $tlist;
+   }
+   
+   public function populares($offset = 0)
+   {
+      $tlist = array();
+      
+      $data = $this->db->select_limit("SELECT * FROM inme_temas WHERE activo ORDER BY articulos DESC", FS_ITEM_LIMIT, $offset);
+      if($data)
+      {
+         foreach($data as $d)
+            $tlist[] = new inme_tema($d);
+      }
+      
+      return $tlist;
+   }
+   
+   public function count()
+   {
+      $data = $this->db->select("SELECT COUNT(codtema) as num FROM inme_temas;");
+      if($data)
+      {
+         return intval($data[0]['num']);
+      }
+      else
+      {
+         return 0;
+      }
+   }
+   
+   public function cron_job()
+   {
+      $total = $this->count();
+      
+      foreach($this->all( mt_rand(0, $total) ) as $tema)
+      {
+         $tema->articulos = 0;
+         $sql = "SELECT COUNT(*) as num FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+         $data = $this->db->select($sql);
+         if($data)
+         {
+            $tema->articulos = intval($data[0]['num']);
+         }
+         
+         $tema->save();
+      }
    }
 }

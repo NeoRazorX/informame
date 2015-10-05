@@ -1,0 +1,117 @@
+{include="header"}
+
+{if="$fsc->tema"}
+<div class="container">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               <a class="btn btn-xs btn-default" href="index.php?page=inme_temas" title="Todos los temas">
+                  <span class="glyphicon glyphicon-arrow-left"></span>
+               </a>
+               {$fsc->tema->titulo}
+               <small>
+                  <a href="http://localhost/FS_2015/index.php?page=inme_home&keyword={$fsc->tema->codtema}">{$fsc->tema->articulos}</a>
+               </small>
+               <a class="btn btn-xs btn-default" href="{$fsc->tema->url()}" title="Recargar la página">
+                  <span class="glyphicon glyphicon-refresh"></span>
+               </a>
+            </h1>
+         </div>
+         <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+               <a href="#tema" aria-controls="tema" role="tab" data-toggle="tab">Tema</a>
+            </li>
+            <li role="presentation">
+               <a href="#editar" aria-controls="editar" role="tab" data-toggle="tab">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                  <span class="hidden-xs">&nbsp; Editar</span>
+               </a>
+            </li>
+         </ul>
+         <br/>
+      </div>
+   </div>
+   <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="tema">
+         <div class="row">
+            <div class="col-sm-9">
+               <p>{$fsc->tema->texto}</p>
+            </div>
+            <div class="col-sm-3">
+               {if="$fsc->tema->imagen"}
+               <a href="#" class="thumbnail">
+                  <img src="{$fsc->tema->imagen}" alt="{$fsc->tema->titulo}"/>
+               </a>
+               {/if}
+            </div>
+         </div>
+         {loop="$fsc->noticias"}
+         <div class="well well-sm">
+            <div class="row">
+               <div class="col-sm-10">
+                  <h3>
+                     <a href="{$value->edit_url()}">{$value->titulo}</a>
+                  </h3>
+                  <p>{$value->resumen}</p>
+               </div>
+               <div class="col-sm-2">
+                  {if="$value->preview"}
+                  <a href="{$value->edit_url()}" class="thumbnail">
+                     <img src="{$value->preview}" alt="{$value->titulo}"/>
+                  </a>
+                  {/if}
+               </div>
+            </div>
+         </div>
+         {/loop}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="editar">
+         <form action="{$fsc->tema->url()}" method="post" class="form">
+            <div class="row">
+               <div class="col-sm-12">
+                  <div class="form-group">
+                     <div class="input-group">
+                        <span class="input-group-addon">Título</span>
+                        <input type="text" name="titulo" value="{$fsc->tema->titulo}" class="form-control" autocomplete="off"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <textarea name="texto" rows="4" class="form-control">{$fsc->tema->texto}</textarea>
+                  </div>
+                  <div class="form-group">
+                     <div class="input-group">
+                        <div class="input-group-addon">
+                           <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                        </div>
+                        <input type="text" name="imagen" value="{$fsc->tema->imagen}" class="form-control" placeholder="URL" autocomplete="off"/>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-sm-6">
+                  <div class="checkbox">
+                     <label>
+                        {if="$fsc->tema->activo"}
+                        <input type="checkbox" name="activo" value="TRUE" checked=""/>
+                        {else}
+                        <input type="checkbox" name="activo" value="TRUE"/>
+                        {/if}
+                        Activo
+                     </label>
+                  </div>
+               </div>
+               <div class="col-sm-6 text-right">
+                  <button type="submit" class="btn btn-sm btn-primary">
+                     <span class="glyphicon glyphicon-floppy-disk"></span> &nbsp; Guardar
+                  </button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{/if}
+
+{include="footer"}

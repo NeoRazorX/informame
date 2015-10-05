@@ -19,6 +19,7 @@
  */
 
 require_model('inme_fuente.php');
+require_model('inme_noticia_fuente.php');
 
 /**
  * Description of informame_fuentes
@@ -77,7 +78,104 @@ class inme_fuentes extends fs_controller
             $this->new_error_msg('Fuente '.$_GET['delete'].' No encontrada');
          }
       }
+      else if( isset($_GET['import']) )
+      {
+         $this->importar_de_feedstorm($_GET['import']);
+      }
       
       $this->resultados = $this->fuente->all();
+   }
+   
+   private function importar_de_feedstorm($web = 'locierto.es')
+   {
+      switch($web)
+      {
+         case 'kelinux.net':
+            $html = file_get_contents('http://www.kelinux.net/export.php');
+            break;
+         
+         default:
+            $html = file_get_contents('http://www.locierto.es/export.php');
+            break;
+      }
+      
+      if($html)
+      {
+         $xml = simplexml_load_string($html);
+         if($xml)
+         {
+            if( $xml->item )
+            {
+               $fuentes = 0;
+               $noticias = 0;
+               $urls = array();
+               
+               /// importamos fuentes
+               foreach($xml->item as $item)
+               {
+                  $url = base64_decode( (string)$item->feed );
+                  
+                  if( !in_array($url, $urls) )
+                  {
+                     if( $this->fuente->get_by_url($url) )
+                     {
+                        /// ya existe la fuente
+                     }
+                     else
+                     {
+                        $aux = explode('/', substr( str_replace('www.', '', $url), 7));
+                        if($aux)
+                        {
+                           $fuente = new inme_fuente();
+                           
+                           if( $this->fuente->get($aux[0]) )
+                           {
+                              $fuente->codfuente = $this->random_string(10);
+                           }
+                           else
+                           {
+                              $fuente->codfuente = $aux[0];
+                           }
+                           
+                           $fuente->url = $url;
+                           if( $fuente->save() )
+                           {
+                              $urls[] = $url;
+                              $fuentes++;
+                           }
+                           else
+                           {
+                              $this->new_error_msg('Error al añadir la fuente '.$url);
+                           }
+                        }
+                     }
+                  }
+               }
+               
+               /// importamos las noticias más populares
+               $noti0 = new inme_noticia_fuente();
+               foreach($xml->story as $item)
+               {
+                  $noti2 = $noti0->get_by_url( base64_decode( (string)$item->link ) );
+                  if(!$noti2)
+                  {
+                     $noti2 = new inme_noticia_fuente();
+                     $noti2->titulo = base64_decode( (string)$item->title );
+                     $noti2->texto = $noti2->resumen = base64_decode( (string)$item->description );
+                     $noti2->url = base64_decode( (string)$item->link );
+                     $noti2->publicada = $noti2->fecha = date('d-m-Y H:i:s', intval( (string)$item->date ));
+                     $noti2->save();
+                     $noticias++;
+                  }
+               }
+               
+               $this->new_message($fuentes.' fuentes y '.$noticias.' noticias importadas.');
+            }
+            else
+               $this->new_error_msg("Estructura irreconocible.");
+         }
+         else
+            $this->new_error_msg("Error al leer el archivo.");
+      }
    }
 }

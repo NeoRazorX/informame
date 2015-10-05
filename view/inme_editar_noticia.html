@@ -9,14 +9,15 @@
          <a class="btn btn-sm btn-default" href="index.php?page=inme_home">
             <span class="glyphicon glyphicon-home"></span> &nbsp; Portada
          </a>
+         <a class="btn btn-sm btn-default" href="{$fsc->noticia->edit_url()}" title="Recargar la página">
+            <span class="glyphicon glyphicon-refresh"></span>
+         </a>
          <h1>
             <a href="{$fsc->noticia->url}">{$fsc->noticia->titulo}</a>
-            <a class="btn btn-xs btn-default" href="{$fsc->noticia->edit_url()}" title="Recargar la página">
-               <span class="glyphicon glyphicon-refresh"></span>
-            </a>
          </h1>
          <p>{$fsc->noticia->texto}</p>
-         <small>
+         <p class="help-block">
+            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
             {$fsc->noticia->fecha}
             &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->noticia->popularidad()}
             &nbsp; <a href="index.php?page=inme_home&codfuente={$fsc->noticia->codfuente}">{$fsc->noticia->codfuente}</a>
@@ -24,7 +25,17 @@
             {loop="$fsc->noticia->keywords()"}
             <a href="index.php?page=inme_home&keyword={$value}" class="label label-default">{$value}</a>
             {/loop}
-         </small>
+         </p>
+         <br/>
+         <a href="#" class="btn btn-sm btn-info">
+            Twitter: {$fsc->noticia->tweets}
+         </a>
+         <a href="#" class="btn btn-sm btn-primary">
+            Facebook: {$fsc->noticia->likes}
+         </a>
+         <a href="#" class="btn btn-sm btn-warning">
+            Menéame: {$fsc->noticia->meneos}
+         </a>
       </div>
       <div class="col-sm-6">
          <ul class="nav nav-tabs" role="tablist">
@@ -43,11 +54,37 @@
                {if="$fsc->relacionada"}
                <h2><a href="{$fsc->relacionada->edit_url()}">{$fsc->relacionada->titulo}</a></h2>
                <p>{$fsc->relacionada->resumen}</p>
-               <small>
+               <p class="help-block">
+                  
                   {$fsc->relacionada->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->relacionada->popularidad()}
                   &nbsp; <a href="index.php?page=inme_home&codfuente={$fsc->relacionada->codfuente}">{$fsc->relacionada->codfuente}</a>
-               </small>
+               </p>
+               <hr/>
+               {else}
+               <br/>
+               <div class="container-fluid">
+                  {loop="$fsc->temas"}
+                  <div class="row">
+                     <div class="col-sm-10">
+                        <a href="{$value->url()}" class="label label-default">{$value->titulo}</a>
+                        <p class="help-block">{$value->texto}</p>
+                     </div>
+                     <div class="col-sm-2">
+                        {if="$value->imagen"}
+                        <a href="{$value->url()}" class="thumbnail">
+                           <img src="{$value->imagen}" alt="{$value->titulo}"/>
+                        </a>
+                        {else}
+                        <a href="{$value->url()}" class="btn btn-sm btn-default btn-block">
+                           <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                           &nbsp; añadir imagen
+                        </a>
+                        {/if}
+                     </div>
+                  </div>
+                  {/loop}
+               </div>
                {/if}
             </div>
             <div role="tabpanel" class="tab-pane" id="editar">

@@ -20,6 +20,7 @@
 
 require_model('inme_noticia_fuente.php');
 require_model('inme_noticia_preview.php');
+require_model('inme_tema.php');
 
 /**
  * Description of informame_home
@@ -33,8 +34,9 @@ class inme_home extends fs_controller
    public $keyword;
    public $mostrar;
    public $noticias;
-   public $preview;
    public $offset;
+   public $preview;
+   public $temas_populares;
    
    public function __construct()
    {
@@ -106,6 +108,9 @@ class inme_home extends fs_controller
       {
          $this->noticias = $noti->all($this->offset);
       }
+      
+      $tema = new inme_tema();
+      $this->temas_populares = $tema->populares();
    }
    
    protected function public_core()
@@ -130,6 +135,12 @@ class inme_home extends fs_controller
          $this->codfuente = $_GET['codfuente'];
       }
       
+      $this->keyword = '';
+      if( isset($_GET['keyword']) )
+      {
+         $this->keyword = $_GET['keyword'];
+      }
+      
       $this->offset = 0;
       if( isset($_GET['offset']) )
       {
@@ -147,6 +158,10 @@ class inme_home extends fs_controller
       {
          $this->noticias = $noti->all_from_fuente($this->codfuente, $this->offset);
       }
+      else if($this->keyword != '')
+      {
+         $this->noticias = $noti->all_from_keyword($this->keyword, $this->offset);
+      }
       else if($this->mostrar == 'portada')
       {
          $this->noticias = $noti->all($this->offset, 'publicada DESC');
@@ -159,6 +174,9 @@ class inme_home extends fs_controller
       {
          $this->noticias = $noti->all($this->offset);
       }
+      
+      $tema = new inme_tema();
+      $this->temas_populares = $tema->populares();
    }
    
    public function total_noticias()

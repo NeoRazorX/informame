@@ -17,6 +17,18 @@
       <nombre>texto</nombre>
       <tipo>text</tipo>
    </columna>
+   <columna>
+      <nombre>imagen</nombre>
+      <tipo>character varying(255)</tipo>
+   </columna>
+   <columna>
+      <nombre>articulos</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <columna>
+      <nombre>activo</nombre>
+      <tipo>boolean</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_temas_pkey</nombre>
       <consulta>PRIMARY KEY (codtema)</consulta>

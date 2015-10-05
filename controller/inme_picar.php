@@ -32,6 +32,7 @@ class inme_picar extends fs_controller
 {
    public $log;
    private $noticia;
+   public $recargar;
    private $tema;
    
    public function __construct()
@@ -43,11 +44,17 @@ class inme_picar extends fs_controller
    {
       $this->log = array();
       $this->noticia = new inme_noticia_fuente();
+      $this->recargar = 0;
       $this->tema = new inme_tema();
       
       if( isset($_GET['picar']) )
       {
          $this->picar( mt_rand(0, 9) );
+         
+         if( intval($_GET['picar']) >= 30 )
+         {
+            $this->recargar = intval($_GET['picar']);
+         }
       }
       else
       {
@@ -113,13 +120,13 @@ class inme_picar extends fs_controller
             
             foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
             {
-               if( is_null($noti->publicada) AND $noti->popularidad() > 10 )
+               if( is_null($noti->publicada) AND $noti->popularidad() > 1 )
                {
                   $noti->publicada = date('d-m-Y H:i:s');
                   if( $noti->save() )
                   {
                      $seleccionadas = TRUE;
-                     $this->log[] = 'Se ha publicado la noticia: <a href="'.$noti->url
+                     $this->log[] = 'Se ha publicado la noticia: <a href="'.$noti->edit_url()
                              .'" target="_blank">'.$noti->titulo.'</a> <span class="badge">'
                              .$noti->popularidad().'</span>';
                   }
@@ -128,12 +135,19 @@ class inme_picar extends fs_controller
                      $this->log[] = 'Error al publicar la noticia: '.$noti->titulo;
                   }
                }
+               else
+               {
+                  $noti->save();
+               }
             }
             
             if(!$seleccionadas)
             {
                $this->log[] = 'Ninguna noticia seleccionada.';
             }
+            
+            /// también podemos aprovechar para procesar temas
+            $this->tema->cron_job();
             break;
          
          case 5:
@@ -179,12 +193,12 @@ class inme_picar extends fs_controller
                {
                   if( $noti->popularidad() >= $popularidad )
                   {
-                     $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
+                     $this->log[] = '<a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo
                              .'</a> <b>+'.abs($noti->popularidad() - $popularidad).'</b> popularidad.';
                   }
                   else
                   {
-                     $this->log[] = '<a href="'.$noti->url.'" target="_blank">'.$noti->titulo
+                     $this->log[] = '<a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo
                              .'</a> <mark>-'.abs($noti->popularidad() - $popularidad).'</mark> popularidad.';
                   }
                }
@@ -207,11 +221,12 @@ class inme_picar extends fs_controller
       
       try
       {
-         $this->curl_save($fuente->url, 'tmp/'.$fuente->codfuente.'.xml', TRUE, TRUE);
-         if( file_exists('tmp/'.$fuente->codfuente.'.xml') )
+         $filename = 'tmp/'.str_replace('/', '_', $fuente->codfuente).'.xml';
+         $this->curl_save($fuente->url, $filename, TRUE, TRUE);
+         if( file_exists($filename) )
          {
             libxml_use_internal_errors(TRUE);
-            $xml = simplexml_load_file('tmp/'.$fuente->codfuente.'.xml');
+            $xml = simplexml_load_file($filename);
             if($xml)
             {
                /// intentamos leer las noticias
@@ -335,7 +350,42 @@ class inme_picar extends fs_controller
       /// ¿Ya existe la noticia en la bd?
       $nueva = FALSE;
       $noticia = $this->noticia->get_by_url($url);
-      if(!$noticia)
+      if($noticia)
+      {
+         /// procesamos las keywords de categorías
+         if($item->category)
+         {
+            foreach($item->category as $cat)
+            {
+               if( strlen( (string)$cat ) > 1 )
+               {
+                  $codtema = $this->sanitize_url( (string)$cat, 50 );
+                  
+                  $tema = $this->tema->get($codtema);
+                  if(!$tema)
+                  {
+                     $tema = new inme_tema();
+                     $tema->codtema = $codtema;
+                     $tema->titulo = $tema->texto = (string)$cat;
+                  }
+                  
+                  if($tema->activo)
+                  {
+                     $tema->articulos++;
+                     $tema->save();
+                     
+                     if( is_null($noticia->preview) OR $noticia->preview == '' )
+                     {
+                        $noticia->preview = $tema->imagen;
+                     }
+                     
+                     $noticia->set_keyword($codtema);
+                  }
+               }
+            }
+         }
+      }
+      else
       {
          $nueva = TRUE;
          
@@ -353,7 +403,7 @@ class inme_picar extends fs_controller
             $noticia->fecha = date('d-m-Y H:i:s', min( array( strtotime( (string)$item->published ), time() ) ) );
          }
          
-         $noticia->titulo = (string)$item->title;
+         $noticia->titulo = $this->true_text_break( (string)$item->title, 140 );
          
          if( $item->description )
          {
@@ -407,8 +457,8 @@ class inme_picar extends fs_controller
          
          /// eliminamos el html de la descripción
          $description = strip_tags( html_entity_decode($description, ENT_QUOTES, 'UTF-8') );
-         $noticia->texto = $description;
-         $noticia->resumen = substr($noticia->texto, 0, 300);
+         $noticia->texto = trim($description);
+         $noticia->resumen = $this->true_text_break($noticia->texto, 300);
          
          /// procesamos las keywords de categorías
          if($item->category)
@@ -417,15 +467,28 @@ class inme_picar extends fs_controller
             {
                if( strlen( (string)$cat ) > 1 )
                {
-                  $tema = $this->tema->get( (string)$cat );
+                  $codtema = $this->sanitize_url( (string)$cat, 50 );
+                  
+                  $tema = $this->tema->get($codtema);
                   if(!$tema)
                   {
                      $tema = new inme_tema();
-                     $tema->codtema = $tema->texto = (string)$cat;
-                     $tema->save();
+                     $tema->codtema = $codtema;
+                     $tema->titulo = $tema->texto = (string)$cat;
                   }
                   
-                  $noticia->set_keyword( (string)$cat );
+                  if($tema->activo)
+                  {
+                     $tema->articulos++;
+                     $tema->save();
+                     
+                     if( is_null($noticia->preview) OR $noticia->preview == '' )
+                     {
+                        $noticia->preview = $tema->imagen;
+                     }
+                     
+                     $noticia->set_keyword($codtema);
+                  }
                }
             }
          }
@@ -460,7 +523,7 @@ class inme_picar extends fs_controller
       {
          if($nueva)
          {
-            $this->log[] = 'Encontrada noticia: <a href="'.$noticia->url
+            $this->log[] = 'Encontrada noticia: <a href="'.$noticia->edit_url()
                     .'" target="_blank">'.$noticia->titulo.'</a>';
          }
       }
@@ -490,23 +553,26 @@ class inme_picar extends fs_controller
    {
       $ch = curl_init($url);
       $fp = fopen($filename, 'wb');
-      curl_setopt($ch, CURLOPT_FILE, $fp);
-      curl_setopt($ch, CURLOPT_HEADER, 0);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-      
-      if($followlocation)
+      if($fp)
       {
-         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+         curl_setopt($ch, CURLOPT_FILE, $fp);
+         curl_setopt($ch, CURLOPT_HEADER, 0);
+         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+         
+         if($followlocation)
+         {
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+         }
+         
+         if($googlebot)
+         {
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+         }
+         
+         curl_exec($ch);
+         curl_close($ch);
+         fclose($fp);
       }
-      
-      if($googlebot)
-      {
-         curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-      }
-      
-      curl_exec($ch);
-      curl_close($ch);
-      fclose($fp);
    }
    
    private function tweet_count($link)
@@ -556,8 +622,6 @@ class inme_picar extends fs_controller
    private function preview_noticias()
    {
       $preview = new inme_noticia_preview();
-      $preview->set_downloads(5);
-      
       foreach($this->noticia->all( mt_rand(0, 100), 'popularidad DESC' ) as $noti)
       {
          $preview->load($noti->titulo, $noti->texto.' '.$noti->preview);
@@ -614,6 +678,61 @@ class inme_picar extends fs_controller
                }
             }
          }
+      }
+   }
+   
+   private function sanitize_url($text, $len = 85)
+   {
+      $text = strtolower( $this->true_text_break($text, $len) );
+      $changes = array('/à/' => 'a', '/á/' => 'a', '/â/' => 'a', '/ã/' => 'a', '/ä/' => 'a',
+          '/å/' => 'a', '/æ/' => 'ae', '/ç/' => 'c', '/è/' => 'e', '/é/' => 'e', '/ê/' => 'e',
+          '/ë/' => 'e', '/ì/' => 'i', '/í/' => 'i', '/î/' => 'i', '/ï/' => 'i', '/ð/' => 'd',
+          '/ñ/' => 'n', '/ò/' => 'o', '/ó/' => 'o', '/ô/' => 'o', '/õ/' => 'o', '/ö/' => 'o',
+          '/ő/' => 'o', '/ø/' => 'o', '/ù/' => 'u', '/ú/' => 'u', '/û/' => 'u', '/ü/' => 'u',
+          '/ű/' => 'u', '/ý/' => 'y', '/þ/' => 'th', '/ÿ/' => 'y', '/ñ/' => 'ny',
+          '/&quot;/' => '-', '/&#39;/' => ''
+      );
+      $text = preg_replace(array_keys($changes), $changes, $text);
+      $text = preg_replace('/[^a-z0-9]/i', '-', $text);
+      $text = preg_replace('/-+/', '-', $text);
+      
+      if( substr($text, 0, 1) == '-' )
+         $text = substr($text, 1);
+      
+      if( substr($text, -1) == '-' )
+         $text = substr($text, 0, -1);
+      
+      return $text;
+   }
+   
+   private function true_text_break($str, $max_t_width=500)
+   {
+      $desc = $this->tema->no_html($str);
+      
+      if( mb_strlen($desc) <= $max_t_width )
+      {
+         return trim($desc);
+      }
+      else
+      {
+         $description = '';
+         
+         foreach(explode(' ', $desc) as $aux)
+         {
+            if( mb_strlen($description.' '.$aux) < $max_t_width-3 )
+            {
+               if($description == '')
+               {
+                  $description = $aux;
+               }
+               else
+                  $description .= ' ' . $aux;
+            }
+            else
+               break;
+         }
+         
+         return trim($description).'...';
       }
    }
 }
