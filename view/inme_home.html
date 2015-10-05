@@ -179,6 +179,9 @@
          <div class="list-group">
             {loop="$fsc->temas_populares"}
             <a href="{$value->url()}" class="list-group-item">
+               {if="$value->imagen"}
+               <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+               {/if}
                <span class="badge">{$value->articulos}</span>
                {$value->titulo}
             </a>

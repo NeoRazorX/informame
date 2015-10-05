@@ -153,6 +153,7 @@ class inme_fuentes extends fs_controller
                }
                
                /// importamos las noticias más populares
+               /*
                $noti0 = new inme_noticia_fuente();
                foreach($xml->story as $item)
                {
@@ -168,6 +169,8 @@ class inme_fuentes extends fs_controller
                      $noticias++;
                   }
                }
+                * 
+                */
                
                $this->new_message($fuentes.' fuentes y '.$noticias.' noticias importadas.');
             }

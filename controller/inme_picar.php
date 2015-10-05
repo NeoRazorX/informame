@@ -372,14 +372,15 @@ class inme_picar extends fs_controller
                   if($tema->activo)
                   {
                      $tema->articulos++;
-                     $tema->save();
-                     
-                     if( is_null($noticia->preview) OR $noticia->preview == '' )
+                     if( $tema->save() )
                      {
-                        $noticia->preview = $tema->imagen;
+                        if( is_null($noticia->preview) OR $noticia->preview == '' )
+                        {
+                           $noticia->preview = $tema->imagen;
+                        }
+                        
+                        $noticia->set_keyword($codtema);
                      }
-                     
-                     $noticia->set_keyword($codtema);
                   }
                }
             }
@@ -480,14 +481,15 @@ class inme_picar extends fs_controller
                   if($tema->activo)
                   {
                      $tema->articulos++;
-                     $tema->save();
-                     
-                     if( is_null($noticia->preview) OR $noticia->preview == '' )
+                     if( $tema->save() )
                      {
-                        $noticia->preview = $tema->imagen;
+                        if( is_null($noticia->preview) OR $noticia->preview == '' )
+                        {
+                           $noticia->preview = $tema->imagen;
+                        }
+                        
+                        $noticia->set_keyword($codtema);
                      }
-                     
-                     $noticia->set_keyword($codtema);
                   }
                }
             }

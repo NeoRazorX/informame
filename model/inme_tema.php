@@ -61,7 +61,23 @@ class inme_tema extends fs_model
    
    protected function install()
    {
-      return '';
+      return "INSERT INTO inme_temas (codtema,titulo,texto,imagen,activo) VALUES"
+              . " ('espanya','España','España (Reino de España)','http://i.imgur.com/nDoxKF3.jpg',true)"
+              . ",('corrupcion','Corrupción','Corrupción','http://i.imgur.com/wYe54PC.jpg',true)"
+              . ",('ee-uu','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
+              . ",('eeuu','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
+              . ",('usa','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
+              . ",('estados-unidos','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
+              . ",('alemania','Alemania','Alemania','http://i.imgur.com/I8f9WXM.jpg',true)"
+              . ",('china','China','China','http://i.imgur.com/T5KsW3L.jpg',true)"
+              . ",('grafeno','Grafeno','Grafeno','http://i.imgur.com/jjlcWYu.jpg',true)"
+              . ",('grecia','Grecia','Grecia','http://i.imgur.com/FyyQJho.jpg',true)"
+              . ",('isis','ISIS','ISIS','http://i.imgur.com/qXgdYox.jpg',true)"
+              . ",('israel','Israel','Israel','http://i.imgur.com/2uRAhdA.png',true)"
+              . ",('linux','Linux','Linux','http://i.imgur.com/zF5yVoQ.png',true)"
+              . ",('rusia','Rusia','Rusia','http://i.imgur.com/7WZu7fl.jpg',true)"
+              . ",('venezuela','Venezuela','Venezuela','http://i.imgur.com/jAB2UDd.jpg',true)"
+              . ";";
    }
    
    public function url()

@@ -33,7 +33,7 @@ class inme_editar_tema extends fs_controller
    
    public function __construct()
    {
-      parent::__construct(__CLASS__, 'Editar tema', 'informame');
+      parent::__construct(__CLASS__, 'Editar tema', 'informame', FALSE, FALSE);
    }
    
    protected function private_core()

@@ -49,7 +49,9 @@ class inme_fuente extends fs_model
    
    protected function install()
    {
-      return '';
+      return "INSERT INTO inme_fuentes (codfuente,url) VALUES"
+              . " ('meneame','http://www.meneame.net/rss2.php')"
+              . ",('meneame-cola','http://www.meneame.net/rss2.php?status=queued');";
    }
    
    public function meneame()
