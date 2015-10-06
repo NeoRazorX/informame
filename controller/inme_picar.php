@@ -47,7 +47,11 @@ class inme_picar extends fs_controller
       $this->recargar = 0;
       $this->tema = new inme_tema();
       
-      if( isset($_GET['picar']) )
+      if( !function_exists('curl_init') )
+      {
+         $this->new_error_msg('No se encuentra la extensión php-curl, tienes que instalarla.');
+      }
+      else if( isset($_GET['picar']) )
       {
          $this->picar( mt_rand(0, 9) );
          
@@ -72,7 +76,11 @@ class inme_picar extends fs_controller
       $this->noticia = new inme_noticia_fuente();
       $this->tema = new inme_tema();
       
-      if( isset($_GET['picar']) )
+      if( !function_exists('curl_init') )
+      {
+         $this->new_error_msg('No se encuentra la extensión php-curl, tienes que instalarla.');
+      }
+      else if( isset($_GET['picar']) )
       {
          /// no nos interesa que los anónimos estén todo el día picando
          $opcion = mt_rand(0, 20);
@@ -371,7 +379,11 @@ class inme_picar extends fs_controller
                   
                   if($tema->activo)
                   {
-                     $tema->articulos++;
+                     if( !in_array($codtema, $noticia->keywords()) )
+                     {
+                        $tema->articulos++;
+                     }
+                     
                      if( $tema->save() )
                      {
                         if( is_null($noticia->preview) OR $noticia->preview == '' )

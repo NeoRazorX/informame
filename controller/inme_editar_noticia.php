@@ -129,6 +129,48 @@ class inme_editar_noticia extends fs_controller
          $this->new_error_msg('Noticia no encontrada.');
    }
    
+   protected function public_core()
+   {
+      $this->template = 'inme_public/editar_noticia';
+      
+      $this->noticia = FALSE;
+      $this->relacionada = FALSE;
+      $this->temas = array();
+      
+      if( isset($_REQUEST['id']) )
+      {
+         $noti0 = new inme_noticia_fuente();
+         $this->noticia = $noti0->get($_REQUEST['id']);
+      }
+      
+      if($this->noticia)
+      {
+         if( !is_null($this->noticia->id_relacionada) )
+         {
+            $this->relacionada = $noti0->get($this->noticia->id_relacionada);
+         }
+         
+         $tema0 = new inme_tema();
+         foreach($this->noticia->keywords() as $key)
+         {
+            $tema = $tema0->get($key);
+            if($tema)
+            {
+               if($tema->activo)
+               {
+                  $this->temas[] = $tema;
+               }
+            }
+            else
+            {
+               $this->new_error_msg('Tema '.$key.' no encontrado.');
+            }
+         }
+      }
+      else
+         $this->new_error_msg('Noticia no encontrada.');
+   }
+   
    private function sanitize_url($text, $len = 85)
    {
       $text = strtolower( $this->true_text_break($text, $len) );

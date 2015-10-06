@@ -77,6 +77,9 @@ class inme_tema extends fs_model
               . ",('linux','Linux','Linux','http://i.imgur.com/zF5yVoQ.png',true)"
               . ",('rusia','Rusia','Rusia','http://i.imgur.com/7WZu7fl.jpg',true)"
               . ",('venezuela','Venezuela','Venezuela','http://i.imgur.com/jAB2UDd.jpg',true)"
+              . ",('microsoft','Microsoft','Microsoft','http://i.imgur.com/LLX8ddu.jpg',true)"
+              . ",('google','Google','Google','http://i.imgur.com/Gh7Ib2o.png',true)"
+              . ",('apple','Apple','Apple','http://i.imgur.com/Qttksz6.jpg',true)"
               . ";";
    }
    
