@@ -95,6 +95,10 @@ class inme_editar_noticia extends fs_controller
                }
             }
             
+            $this->noticia->destacada = isset($_POST['destacada']);
+            $this->noticia->nativa = isset($_POST['nativa']);
+            $this->noticia->parodia = isset($_POST['parodia']);
+            
             if( $this->noticia->save() )
             {
                $this->new_message('Datos modificados correctamente.');

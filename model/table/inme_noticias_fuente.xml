@@ -74,6 +74,21 @@
       <tipo>boolean</tipo>
       <defecto>false</defecto>
    </columna>
+   <columna>
+      <nombre>destacada</nombre>
+      <tipo>boolean</tipo>
+      <defecto>false</defecto>
+   </columna>
+   <columna>
+      <nombre>nativa</nombre>
+      <tipo>boolean</tipo>
+      <defecto>true</defecto>
+   </columna>
+   <columna>
+      <nombre>parodia</nombre>
+      <tipo>boolean</tipo>
+      <defecto>false</defecto>
+   </columna>
    <restriccion>
       <nombre>inme_noticias_fuente_pkey</nombre>
       <consulta>PRIMARY KEY (id)</consulta>

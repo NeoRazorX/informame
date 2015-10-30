@@ -51,6 +51,9 @@ class inme_fuentes extends fs_controller
          }
          
          $fuente2->url = $_POST['url'];
+         $fuente2->nativa = isset($_POST['nativa']);
+         $fuente2->parodia = isset($_POST['parodia']);
+         
          if( $fuente2->save() )
          {
             $this->new_message('Fuente '.$fuente2->codfuente.' guardada correctamente.');
@@ -91,11 +94,11 @@ class inme_fuentes extends fs_controller
       switch($web)
       {
          case 'kelinux.net':
-            $html = file_get_contents('http://www.kelinux.net/export.php');
+            $html = $this->curl_download('http://www.kelinux.net/export.php');
             break;
          
          default:
-            $html = file_get_contents('http://www.locierto.es/export.php');
+            $html = $this->curl_download('http://www.locierto.es/export.php');
             break;
       }
       
@@ -138,6 +141,7 @@ class inme_fuentes extends fs_controller
                            }
                            
                            $fuente->url = $url;
+                           
                            if( $fuente->save() )
                            {
                               $urls[] = $url;
@@ -180,5 +184,21 @@ class inme_fuentes extends fs_controller
          else
             $this->new_error_msg("Error al leer el archivo.");
       }
+   }
+   
+   public function curl_download($url, $googlebot=TRUE, $timeout=5)
+   {
+      $ch0 = curl_init($url);
+      curl_setopt($ch0, CURLOPT_TIMEOUT, $timeout);
+      curl_setopt($ch0, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch0, CURLOPT_FOLLOWLOCATION, true);
+      
+      if($googlebot)
+         curl_setopt($ch0, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+      
+      $html = curl_exec($ch0);
+      curl_close($ch0);
+      
+      return $html;
    }
 }

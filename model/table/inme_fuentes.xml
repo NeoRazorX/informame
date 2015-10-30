@@ -13,6 +13,16 @@
       <nombre>url</nombre>
       <tipo>character varying(300)</tipo>
    </columna>
+   <columna>
+      <nombre>nativa</nombre>
+      <tipo>boolean</tipo>
+      <defecto>true</defecto>
+   </columna>
+   <columna>
+      <nombre>parodia</nombre>
+      <tipo>boolean</tipo>
+      <defecto>false</defecto>
+   </columna>
    <restriccion>
       <nombre>inme_fuentes_pkey</nombre>
       <consulta>PRIMARY KEY (codfuente)</consulta>

@@ -31,6 +31,8 @@ class inme_fuente extends fs_model
     */
    public $codfuente;
    public $url;
+   public $nativa;
+   public $parodia;
    
    public function __construct($t = FALSE)
    {
@@ -39,11 +41,15 @@ class inme_fuente extends fs_model
       {
          $this->codfuente = $t['codfuente'];
          $this->url = $t['url'];
+         $this->nativa = $this->str2bool($t['nativa']);
+         $this->parodia = $this->str2bool($t['parodia']);
       }
       else
       {
          $this->codfuente = NULL;
          $this->url = NULL;
+         $this->nativa = TRUE;
+         $this->parodia = FALSE;
       }
    }
    
@@ -100,12 +106,17 @@ class inme_fuente extends fs_model
          if( $this->exists() )
          {
             $sql = "UPDATE inme_fuentes SET url = ".$this->var2str($this->url)
-                    ."  WHERE codfuente = ".$this->var2str($this->codfuente).";";
+                    . ", nativa = ".$this->var2str($this->nativa)
+                    . ", parodia = ".$this->var2str($this->parodia)
+                    . "  WHERE codfuente = ".$this->var2str($this->codfuente).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_fuentes (codfuente,url) VALUES (".$this->var2str($this->codfuente).
-                    ",".$this->var2str($this->url).");";
+            $sql = "INSERT INTO inme_fuentes (codfuente,url,nativa,parodia) VALUES "
+                    . "(".$this->var2str($this->codfuente)
+                    . ",".$this->var2str($this->url)
+                    . ",".$this->var2str($this->nativa)
+                    . ",".$this->var2str($this->parodia).");";
          }
          
          return $this->db->exec($sql);

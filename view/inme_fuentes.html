@@ -33,6 +33,8 @@
                   <tr>
                      <th>Código</th>
                      <th>URL</th>
+                     <th class="text-center">¿En español?</th>
+                     <th class="text-center">Parodia</th>
                      <th class="text-right">Acciones</th>
                   </tr>
                </thead>
@@ -47,6 +49,28 @@
                      </td>
                      <td>
                         <input type="text" name="url" value="{$value->url}" class="form-control" autocomplete="off"/>
+                     </td>
+                     <td class="text-center">
+                        <div class="checkbox-inline">
+                           <label>
+                              {if="$value->nativa"}
+                              <input type="checkbox" name="nativa" value="TRUE" checked=""/>
+                              {else}
+                              <input type="checkbox" name="nativa" value="TRUE"/>
+                              {/if}
+                           </label>
+                        </div>
+                     </td>
+                     <td class="text-center">
+                        <div class="checkbox-inline">
+                           <label>
+                              {if="$value->parodia"}
+                              <input type="checkbox" name="parodia" value="TRUE" checked=""/>
+                              {else}
+                              <input type="checkbox" name="parodia" value="TRUE"/>
+                              {/if}
+                           </label>
+                        </div>
                      </td>
                      <td class="text-right">
                         <div class="btn-group">
@@ -68,6 +92,20 @@
                      </td>
                      <td>
                         <input type="text" name="url" class="form-control" placeholder="URL" autocomplete="off"/>
+                     </td>
+                     <td class="text-center">
+                        <div class="checkbox-inline">
+                           <label>
+                              <input type="checkbox" name="nativa" value="TRUE" checked=""/>
+                           </label>
+                        </div>
+                     </td>
+                     <td class="text-center">
+                        <div class="checkbox-inline">
+                           <label>
+                              <input type="checkbox" name="parodia" value="TRUE"/>
+                           </label>
+                        </div>
                      </td>
                      <td class="text-right">
                         <button type="submit" class="btn btn-sm btn-primary" title="Guardar">

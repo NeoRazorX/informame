@@ -113,7 +113,9 @@
          <div>
             <h2>Vas a tener que picar</h2>
             <p>No se ha encontrado ninguna noticia, vas a tener que picar un rato :D</p>
-            <small>Picando, que es gerundio...</small>
+            <small>
+                <a href="index.php?page=inme_picar">Picando, que es gerundio...</a>
+            </small>
          </div>
       {/loop}
       </div>
@@ -153,27 +155,6 @@
       {/loop}
       </div>
       <div class="col-sm-3 col-md-2">
-         <br/>
-         <div class="thumbnail">
-            <img src="plugins/informame/view/img/picar.png" alt="picar"/>
-            <div class="caption">
-               <h4>¡A picar!</h4>
-               <p>Para estar <b>bien informados</b>, primero debemos estar informados.</p>
-               <p>
-                  Debemos <b>buscar información</b>, agruparla, valorarla y finalmente
-                  quedarnos con lo mejor. A este proceso lo llamamos <b>picar</b>.
-               </p>
-               <div class="btn-group">
-                  <a href="index.php?page=inme_picar&picar=TRUE" class="btn btn-primary">
-                     <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
-                     &nbsp; Picar
-                  </a>
-                  <a href="index.php?page=inme_picar" class="btn btn-default" title="¿Qué es eso de picar?">
-                     <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                  </a>
-               </div>
-            </div>
-         </div>
          <div class="list-group">
             {loop="$fsc->temas_populares"}
             <a href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item">
@@ -205,5 +186,11 @@
       </div>
    </div>
 </div>
+
+{if="mt_rand(0,2)==0"}
+<div class="hidden">
+   <iframe src="index.php?page=inme_picar"></iframe>
+</div>
+{/if}
 
 {include="inme_public/footer"}

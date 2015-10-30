@@ -406,6 +406,8 @@ class inme_picar extends fs_controller
          $noticia = new inme_noticia_fuente();
          $noticia->url = $url;
          $noticia->codfuente = $fuente->codfuente;
+         $noticia->nativa = $fuente->nativa;
+         $noticia->parodia = $fuente->parodia;
          
          if( $item->pubDate )
          {
@@ -502,6 +504,12 @@ class inme_picar extends fs_controller
                         
                         $noticia->set_keyword($codtema);
                      }
+                  }
+                  
+                  /// ¿Parodia?
+                  if( strpos((string)$cat, 'humor') !== FALSE )
+                  {
+                     $noticia->parodia = TRUE;
                   }
                }
             }

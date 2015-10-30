@@ -43,6 +43,9 @@ class inme_noticia_fuente extends fs_model
    private $keywords;
    public $preview;
    public $editada;
+   public $destacada;
+   public $nativa;
+   public $parodia;
    
    public function __construct($n = FALSE)
    {
@@ -71,6 +74,9 @@ class inme_noticia_fuente extends fs_model
          $this->keywords = $n['keywords'];
          $this->preview = $n['preview'];
          $this->editada = $this->str2bool($n['editada']);
+         $this->destacada = $this->str2bool($n['destacada']);
+         $this->nativa = $this->str2bool($n['nativa']);
+         $this->parodia = $this->str2bool($n['parodia']);
       }
       else
       {
@@ -90,6 +96,9 @@ class inme_noticia_fuente extends fs_model
          $this->keywords = '';
          $this->preview = NULL;
          $this->editada = FALSE;
+         $this->destacada = FALSE;
+         $this->nativa = TRUE;
+         $this->parodia = FALSE;
       }
    }
    
@@ -255,6 +264,9 @@ class inme_noticia_fuente extends fs_model
                  .", keywords = ".$this->var2str($this->keywords)
                  .", preview = ".$this->var2str($this->preview)
                  .", editada = ".$this->var2str($this->editada)
+                 .", destacada = ".$this->var2str($this->destacada)
+                 .", nativa = ".$this->var2str($this->nativa)
+                 .", parodia = ".$this->var2str($this->parodia)
                  .", id_relacionada = ".$this->var2str($this->id_relacionada)
                  ."  WHERE id = ".$this->var2str($this->id).";";
          
@@ -264,7 +276,7 @@ class inme_noticia_fuente extends fs_model
       {
          $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,resumen,fecha,publicada"
                  . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview,editada,"
-                 . "id_relacionada) VALUES ("
+                 . "destacada,nativa,parodia,id_relacionada) VALUES ("
                  .$this->var2str($this->url).","
                  .$this->var2str($this->titulo).","
                  .$this->var2str($this->texto).","
@@ -279,6 +291,9 @@ class inme_noticia_fuente extends fs_model
                  .$this->var2str($this->keywords).","
                  .$this->var2str($this->preview).","
                  .$this->var2str($this->editada).","
+                 .$this->var2str($this->destacada).","
+                 .$this->var2str($this->nativa).","
+                 .$this->var2str($this->parodia).","
                  .$this->var2str($this->id_relacionada).");";
          
          if( $this->db->exec($sql) )

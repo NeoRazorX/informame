@@ -1,7 +1,5 @@
 {include="header"}
 
-<br/>
-
 <div class="container-fluid">
    <div class="row">
       <div class="col-sm-9 col-md-10">
@@ -100,6 +98,12 @@
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
                   &nbsp;
+                  {if="!$value->nativa"}
+                  <span class="label label-info"><s>Español</s></span>
+                  {/if}
+                  {if="$value->parodia"}
+                  <span class="label label-warning">Parodia</span>
+                  {/if}
                   {loop="$value->keywords()"}
                   <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
                   {/loop}
