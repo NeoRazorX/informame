@@ -23,6 +23,10 @@
       <tipo>boolean</tipo>
       <defecto>false</defecto>
    </columna>
+   <columna>
+      <nombre>fcomprobada</nombre>
+      <tipo>timestamp</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_fuentes_pkey</nombre>
       <consulta>PRIMARY KEY (codfuente)</consulta>

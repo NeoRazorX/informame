@@ -33,6 +33,7 @@ class inme_fuente extends fs_model
    public $url;
    public $nativa;
    public $parodia;
+   public $fcomprobada;
    
    public function __construct($t = FALSE)
    {
@@ -43,6 +44,7 @@ class inme_fuente extends fs_model
          $this->url = $t['url'];
          $this->nativa = $this->str2bool($t['nativa']);
          $this->parodia = $this->str2bool($t['parodia']);
+         $this->fcomprobada = date('d-m-Y H:i:s', strtotime($t['fcomprobada']));
       }
       else
       {
@@ -50,6 +52,7 @@ class inme_fuente extends fs_model
          $this->url = NULL;
          $this->nativa = TRUE;
          $this->parodia = FALSE;
+         $this->fcomprobada = NULL;
       }
    }
    
@@ -108,15 +111,17 @@ class inme_fuente extends fs_model
             $sql = "UPDATE inme_fuentes SET url = ".$this->var2str($this->url)
                     . ", nativa = ".$this->var2str($this->nativa)
                     . ", parodia = ".$this->var2str($this->parodia)
+                    . ", fcomprobada = ".$this->var2str($this->fcomprobada)
                     . "  WHERE codfuente = ".$this->var2str($this->codfuente).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_fuentes (codfuente,url,nativa,parodia) VALUES "
+            $sql = "INSERT INTO inme_fuentes (codfuente,url,nativa,parodia,fcomprobada) VALUES "
                     . "(".$this->var2str($this->codfuente)
                     . ",".$this->var2str($this->url)
                     . ",".$this->var2str($this->nativa)
-                    . ",".$this->var2str($this->parodia).");";
+                    . ",".$this->var2str($this->parodia)
+                    . ",".$this->var2str($this->fcomprobada).");";
          }
          
          return $this->db->exec($sql);
@@ -134,11 +139,11 @@ class inme_fuente extends fs_model
       return $this->db->exec("DELETE FROM inme_fuentes WHERE codfuente = ".$this->var2str($this->codfuente).";");
    }
    
-   public function all()
+   public function all($order = 'lower(codfuente) ASC')
    {
       $tlist = array();
       
-      $data = $this->db->select("SELECT * FROM inme_fuentes ORDER BY lower(codfuente) ASC;");
+      $data = $this->db->select("SELECT * FROM inme_fuentes ORDER BY ".$order.";");
       if($data)
       {
          foreach($data as $d)

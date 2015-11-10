@@ -80,6 +80,7 @@ class inme_tema extends fs_model
               . ",('microsoft','Microsoft','Microsoft','http://i.imgur.com/LLX8ddu.jpg',true)"
               . ",('google','Google','Google','http://i.imgur.com/Gh7Ib2o.png',true)"
               . ",('apple','Apple','Apple','http://i.imgur.com/Qttksz6.jpg',true)"
+              . ",('nazis','Nazismo','Nazismo','http://i.imgur.com/WYdIkd8.png',true)"
               . ";";
    }
    
@@ -169,7 +170,7 @@ class inme_tema extends fs_model
    {
       $tlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_temas WHERE activo ORDER BY articulos DESC", FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select_limit("SELECT * FROM inme_temas WHERE activo ORDER BY articulos DESC, titulo DESC", FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)

@@ -107,12 +107,12 @@ class inme_picar extends fs_controller
          case 3:
             /// buscamos noticias en las fuente
             $fuente0 = new inme_fuente();
-            $fuentes = $fuente0->all();
+            $fuentes = $fuente0->all('fcomprobada ASC');
             
             if($fuentes)
             {
-               /// leemos de una fuente aleatoria
-               $this->leer_fuente( $fuentes[ mt_rand(0, count($fuentes)-1) ] );
+               /// leemos de la fuente que hace más tiempo que no comprobamos
+               $this->leer_fuente($fuentes[0]);
             }
             else
             {
@@ -220,12 +220,15 @@ class inme_picar extends fs_controller
    }
    
    /**
-    * 
+    * Examinamos la fuente y extraemos las noticias.
     * @param inme_fuente $fuente
     */
    private function leer_fuente(&$fuente)
    {
       $this->log[] = 'Examinando fuente <mark>'.$fuente->codfuente.'</mark>';
+      
+      $fuente->fcomprobada = date('d-m-Y H:i:s');
+      $fuente->save();
       
       try
       {
