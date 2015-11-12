@@ -34,6 +34,7 @@ class inme_tema extends fs_model
    public $texto;
    public $imagen;
    public $articulos;
+   public $popularidad;
    public $activo;
    
    public function __construct($t = FALSE)
@@ -46,6 +47,7 @@ class inme_tema extends fs_model
          $this->texto = $t['texto'];
          $this->imagen = $t['imagen'];
          $this->articulos = intval($t['articulos']);
+         $this->popularidad = intval($t['popularidad']);
          $this->activo = $this->str2bool($t['activo']);
       }
       else
@@ -55,6 +57,7 @@ class inme_tema extends fs_model
          $this->texto = '';
          $this->imagen = NULL;
          $this->articulos = 0;
+         $this->popularidad = 0;
          $this->activo = TRUE;
       }
    }
@@ -122,17 +125,19 @@ class inme_tema extends fs_model
                     .", texto = ".$this->var2str($this->texto)
                     .", imagen = ".$this->var2str($this->imagen)
                     .", articulos = ".$this->var2str($this->articulos)
+                    .", popularidad = ".$this->var2str($this->popularidad)
                     .", activo = ".$this->var2str($this->activo)
                     ."  WHERE codtema = ".$this->var2str($this->codtema).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,imagen,articulos,activo) VALUES "
+            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,imagen,articulos,activo,popularidad) VALUES "
                     . "(".$this->var2str($this->codtema)
                     . ",".$this->var2str($this->titulo)
                     . ",".$this->var2str($this->texto)
                     . ",".$this->var2str($this->imagen)
                     . ",".$this->var2str($this->articulos)
+                    . ",".$this->var2str($this->popularidad)
                     . ",".$this->var2str($this->activo).");";
          }
          
@@ -170,7 +175,7 @@ class inme_tema extends fs_model
    {
       $tlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_temas WHERE activo ORDER BY articulos DESC, titulo DESC", FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select_limit("SELECT * FROM inme_temas WHERE activo ORDER BY popularidad DESC, titulo DESC", FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)
@@ -205,6 +210,14 @@ class inme_tema extends fs_model
          if($data)
          {
             $tema->articulos = intval($data[0]['num']);
+         }
+         
+         $tema->popularidad = 0;
+         $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+         $data = $this->db->select($sql);
+         if($data)
+         {
+            $tema->popularidad = intval($data[0]['total']);
          }
          
          $tema->save();

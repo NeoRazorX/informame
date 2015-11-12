@@ -41,6 +41,7 @@
                      <th>Código + Título</th>
                      <th>Texto</th>
                      <th class="text-right">Artículos</th>
+                     <th class="text-right">Popularidad</th>
                      <th></th>
                   </tr>
                </thead>
@@ -49,6 +50,7 @@
                   <td><b>{$value->codtema}</b> {$value->titulo}</td>
                   <td>{$value->texto}</td>
                   <td class="text-right">{$value->articulos}</td>
+                  <td class="text-right">{$value->popularidad}</td>
                   <td>
                      {if="$value->imagen"}
                      <span class="glyphicon glyphicon-picture"></span>
@@ -57,7 +59,7 @@
                </tr>
                {else}
                <tr>
-                  <td class="warning" colspan="4">Sin resultados.</td>
+                  <td class="warning" colspan="5">Sin resultados.</td>
                </tr>
                {/loop}
             </table>

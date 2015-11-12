@@ -27,6 +27,10 @@
       <nombre>fcomprobada</nombre>
       <tipo>timestamp</tipo>
    </columna>
+   <columna>
+      <nombre>popularidad</nombre>
+      <tipo>integer</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_fuentes_pkey</nombre>
       <consulta>PRIMARY KEY (codfuente)</consulta>

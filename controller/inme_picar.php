@@ -55,7 +55,7 @@ class inme_picar extends fs_controller
       {
          $this->picar( mt_rand(0, 9) );
          
-         if( intval($_GET['picar']) >= 30 )
+         if( intval($_GET['picar']) >= 15 )
          {
             $this->recargar = intval($_GET['picar']);
          }
@@ -154,8 +154,10 @@ class inme_picar extends fs_controller
                $this->log[] = 'Ninguna noticia seleccionada.';
             }
             
-            /// también podemos aprovechar para procesar temas
+            /// también podemos aprovechar para procesar temas y fuentes
             $this->tema->cron_job();
+            $fuente0 = new inme_fuente();
+            $fuente0->cron_job();
             break;
          
          case 5:

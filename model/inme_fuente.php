@@ -34,6 +34,7 @@ class inme_fuente extends fs_model
    public $nativa;
    public $parodia;
    public $fcomprobada;
+   public $popularidad;
    
    public function __construct($t = FALSE)
    {
@@ -45,6 +46,7 @@ class inme_fuente extends fs_model
          $this->nativa = $this->str2bool($t['nativa']);
          $this->parodia = $this->str2bool($t['parodia']);
          $this->fcomprobada = date('d-m-Y H:i:s', strtotime($t['fcomprobada']));
+         $this->popularidad = intval($t['popularidad']);
       }
       else
       {
@@ -53,6 +55,7 @@ class inme_fuente extends fs_model
          $this->nativa = TRUE;
          $this->parodia = FALSE;
          $this->fcomprobada = NULL;
+         $this->popularidad = 0;
       }
    }
    
@@ -112,16 +115,18 @@ class inme_fuente extends fs_model
                     . ", nativa = ".$this->var2str($this->nativa)
                     . ", parodia = ".$this->var2str($this->parodia)
                     . ", fcomprobada = ".$this->var2str($this->fcomprobada)
+                    . ", popularidad = ".$this->var2str($this->popularidad)
                     . "  WHERE codfuente = ".$this->var2str($this->codfuente).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_fuentes (codfuente,url,nativa,parodia,fcomprobada) VALUES "
+            $sql = "INSERT INTO inme_fuentes (codfuente,url,nativa,parodia,fcomprobada,popularidad) VALUES "
                     . "(".$this->var2str($this->codfuente)
                     . ",".$this->var2str($this->url)
                     . ",".$this->var2str($this->nativa)
                     . ",".$this->var2str($this->parodia)
-                    . ",".$this->var2str($this->fcomprobada).");";
+                    . ",".$this->var2str($this->fcomprobada)
+                    . ",".$this->var2str($this->popularidad).");";
          }
          
          return $this->db->exec($sql);
@@ -151,5 +156,22 @@ class inme_fuente extends fs_model
       }
       
       return $tlist;
+   }
+   
+   public function cron_job()
+   {
+      foreach($this->all() as $f)
+      {
+         $f->popularidad = 0;
+         $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente"
+                 . " WHERE codfuente = ".$this->var2str($f->codfuente).";";
+         $data = $this->db->select($sql);
+         if($data)
+         {
+            $f->popularidad = intval($data[0]['total']);
+         }
+         
+         $f->save();
+      }
    }
 }

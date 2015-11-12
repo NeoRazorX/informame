@@ -26,6 +26,10 @@
       <tipo>integer</tipo>
    </columna>
    <columna>
+      <nombre>popularidad</nombre>
+      <tipo>integer</tipo>
+   </columna>
+   <columna>
       <nombre>activo</nombre>
       <tipo>boolean</tipo>
    </columna>

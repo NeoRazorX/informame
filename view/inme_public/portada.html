@@ -90,7 +90,7 @@
                <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
             </h3>
             {/if}
-            <p>
+            <p class="text-justify">
                {$value->resumen}
                <br/>
                <span class="small">
@@ -158,7 +158,7 @@
          <div class="list-group">
             {loop="$fsc->temas_populares"}
             <a href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item">
-               <span class="badge">{$value->articulos}</span>
+               <span class="badge">{$value->popularidad}</span>
                {$value->titulo}
             </a>
             {/loop}

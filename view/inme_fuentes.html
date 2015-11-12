@@ -36,6 +36,7 @@
                      <th class="text-center">¿En español?</th>
                      <th class="text-center">Parodia</th>
                      <th class="text-center">Última comprobación</th>
+                     <th>Popularidad</th>
                      <th class="text-right">Acciones</th>
                   </tr>
                </thead>
@@ -76,6 +77,9 @@
                      <td class="text-center">
                         <div class="form-control">{$value->fcomprobada}</div>
                      </td>
+                     <td>
+                        <div class="form-control">{$value->popularidad}</div>
+                     </td>
                      <td class="text-right">
                         <div class="btn-group">
                            <a href="#" class="btn btn-sm btn-danger" title="Eliminar" onclick="delete_fuente('{$value->codfuente}')">
@@ -111,6 +115,7 @@
                            </label>
                         </div>
                      </td>
+                     <td></td>
                      <td></td>
                      <td class="text-right">
                         <button type="submit" class="btn btn-sm btn-primary" title="Guardar">

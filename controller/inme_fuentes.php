@@ -85,6 +85,10 @@ class inme_fuentes extends fs_controller
       {
          $this->importar_de_feedstorm($_GET['import']);
       }
+      else
+      {
+         $this->fuente->cron_job();
+      }
       
       $this->resultados = $this->fuente->all();
    }
