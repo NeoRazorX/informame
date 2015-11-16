@@ -55,11 +55,32 @@ class inme_temas extends fs_controller
          if( $this->tema->save() )
          {
             $this->new_message('Tema guardado correctamente.');
+            header('Location: '.$this->tema->url());
          }
          else
             $this->new_error_msg('Error al guardar el tema.');
       }
       
-      $this->resultados = $this->tema->all($this->offset);
+      if( isset($_GET['order']) )
+      {
+         switch($_GET['order'])
+         {
+            case 'articulos':
+               $this->resultados = $this->tema->all($this->offset, 'articulos DESC');
+               break;
+            
+            case 'popularidad':
+               $this->resultados = $this->tema->all($this->offset, 'popularidad DESC');
+               break;
+            
+            default:
+               $this->resultados = $this->tema->all($this->offset);
+               break;
+         }
+      }
+      else
+      {
+         $this->resultados = $this->tema->all($this->offset);
+      }
    }
 }

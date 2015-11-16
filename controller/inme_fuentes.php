@@ -161,7 +161,6 @@ class inme_fuentes extends fs_controller
                }
                
                /// importamos las noticias más populares
-               /*
                $noti0 = new inme_noticia_fuente();
                foreach($xml->story as $item)
                {
@@ -177,8 +176,6 @@ class inme_fuentes extends fs_controller
                      $noticias++;
                   }
                }
-                * 
-                */
                
                $this->new_message($fuentes.' fuentes y '.$noticias.' noticias importadas.');
             }
@@ -190,7 +187,7 @@ class inme_fuentes extends fs_controller
       }
    }
    
-   public function curl_download($url, $googlebot=TRUE, $timeout=5)
+   public function curl_download($url, $googlebot=TRUE, $timeout=50)
    {
       $ch0 = curl_init($url);
       curl_setopt($ch0, CURLOPT_TIMEOUT, $timeout);

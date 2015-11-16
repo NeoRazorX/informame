@@ -137,8 +137,8 @@ class inme_tema extends fs_model
                     . ",".$this->var2str($this->texto)
                     . ",".$this->var2str($this->imagen)
                     . ",".$this->var2str($this->articulos)
-                    . ",".$this->var2str($this->popularidad)
-                    . ",".$this->var2str($this->activo).");";
+                    . ",".$this->var2str($this->activo)
+                    . ",".$this->var2str($this->popularidad).");";
          }
          
          return $this->db->exec($sql);
@@ -157,11 +157,11 @@ class inme_tema extends fs_model
       return $this->db->exec("DELETE FROM inme_temas WHERE codtema = ".$this->var2str($this->codtema).";");
    }
    
-   public function all($offset = 0)
+   public function all($offset = 0, $order = 'lower(titulo) ASC')
    {
       $tlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_temas ORDER BY lower(titulo) ASC", FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select_limit("SELECT * FROM inme_temas ORDER BY ".$order, FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)
@@ -200,27 +200,29 @@ class inme_tema extends fs_model
    
    public function cron_job()
    {
-      $total = $this->count();
-      
-      foreach($this->all( mt_rand(0, $total) ) as $tema)
+      if( $this->db->table_exists('inme_noticias_fuente') )
       {
-         $tema->articulos = 0;
-         $sql = "SELECT COUNT(*) as num FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
-         $data = $this->db->select($sql);
-         if($data)
+         $total = $this->count();
+         foreach($this->all( mt_rand(0, $total) ) as $tema)
          {
-            $tema->articulos = intval($data[0]['num']);
+            $tema->articulos = 0;
+            $sql = "SELECT COUNT(*) as num FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+            $data = $this->db->select($sql);
+            if($data)
+            {
+               $tema->articulos = intval($data[0]['num']);
+            }
+            
+            $tema->popularidad = 0;
+            $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+            $data = $this->db->select($sql);
+            if($data)
+            {
+               $tema->popularidad = intval($data[0]['total']);
+            }
+            
+            $tema->save();
          }
-         
-         $tema->popularidad = 0;
-         $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
-         $data = $this->db->select($sql);
-         if($data)
-         {
-            $tema->popularidad = intval($data[0]['total']);
-         }
-         
-         $tema->save();
       }
    }
 }

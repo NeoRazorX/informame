@@ -45,7 +45,13 @@ class inme_fuente extends fs_model
          $this->url = $t['url'];
          $this->nativa = $this->str2bool($t['nativa']);
          $this->parodia = $this->str2bool($t['parodia']);
-         $this->fcomprobada = date('d-m-Y H:i:s', strtotime($t['fcomprobada']));
+         
+         $this->fcomprobada = NULL;
+         if($t['fcomprobada'])
+         {
+            $this->fcomprobada = date('d-m-Y H:i:s', strtotime($t['fcomprobada']));
+         }
+         
          $this->popularidad = intval($t['popularidad']);
       }
       else
@@ -160,18 +166,21 @@ class inme_fuente extends fs_model
    
    public function cron_job()
    {
-      foreach($this->all() as $f)
+      if( $this->db->table_exists('inme_noticias_fuente') )
       {
-         $f->popularidad = 0;
-         $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente"
-                 . " WHERE codfuente = ".$this->var2str($f->codfuente).";";
-         $data = $this->db->select($sql);
-         if($data)
+         foreach($this->all() as $f)
          {
-            $f->popularidad = intval($data[0]['total']);
+            $f->popularidad = 0;
+            $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente"
+                    . " WHERE codfuente = ".$this->var2str($f->codfuente).";";
+            $data = $this->db->select($sql);
+            if($data)
+            {
+               $f->popularidad = intval($data[0]['total']);
+            }
+            
+            $f->save();
          }
-         
-         $f->save();
       }
    }
 }
