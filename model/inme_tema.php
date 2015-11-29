@@ -84,12 +84,20 @@ class inme_tema extends fs_model
               . ",('google','Google','Google','http://i.imgur.com/Gh7Ib2o.png',true)"
               . ",('apple','Apple','Apple','http://i.imgur.com/Qttksz6.jpg',true)"
               . ",('nazis','Nazismo','Nazismo','http://i.imgur.com/WYdIkd8.png',true)"
+              . ",('pp','Partido Popular','Partido Popular','http://i.imgur.com/IjmbCcA.jpg',true)"
+              . ",('psoe','PSOE','Partido Socialista Obrero Español','https://epolitic.s3.amazonaws.com/uploads/group/avatar/5/logo-psoe.jpg',true)"
+              . ",('raspberry-pi','raspberry-pi','raspberry-pi','http://i.imgur.com/RZ7iexA.jpg',true)"
               . ";";
    }
    
    public function url()
    {
       return 'index.php?page=inme_editar_tema&cod='.$this->codtema;
+   }
+   
+   public function texto()
+   {
+      return nl2br($this->texto);
    }
    
    public function get($cod)

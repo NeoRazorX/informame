@@ -71,23 +71,25 @@
    <div class="row">
       <div class="col-sm-5 col-md-5">
       {loop="$fsc->noticias"}
+         <!--{$url=$value->url()}-->
+         {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
+         <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter<24"}
          <div>
-            <!--{$fsc->preview->load($value->url, $value->preview)}-->
-            {if condition="$fsc->preview->type"}
+            {if="$fsc->preview->type"}
             <div class="pull-left">
-               <a href="{$value->url()}">
+               <a href="{$url}">
                   <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 100px; max-width: 120px; margin-right: 10px;">
                </a>
             </div>
             {/if}
             {if="$counter==0"}
             <h2>
-               <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
+               <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h2>
             {else}
             <h3 style="margin-bottom: 0px;">
-               <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
+               <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h3>
             {/if}
             <p class="text-justify">
@@ -107,9 +109,11 @@
                   {loop="$value->keywords()"}
                   <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
                   {/loop}
+                  {if="!$value->editada"}
                   <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                   </a>
+                  {/if}
                </span>
             </p>
          </div>
@@ -127,18 +131,20 @@
       </div>
       <div class="col-sm-4 col-md-5">
       {loop="$fsc->noticias"}
+         <!--{$url=$value->url()}-->
+         {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
+         <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter>=24"}
          <div style="margin-bottom: 20px;">
-            <!--{$fsc->preview->load($value->url, $value->preview)}-->
             {if condition="$fsc->preview->type"}
             <div class="pull-right">
-               <a href="{$value->url()}">
+               <a href="{$url}">
                   <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 80px; max-width: 100px; margin-left: 10px;">
                </a>
             </div>
             {/if}
             <h4 style="margin-bottom: 0px;">
-               <a href="{$value->url()}" target="_blank">{$value->titulo}</a>
+               <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h4>
             <p class="text-justify">
                {$value->resumen}
@@ -151,12 +157,15 @@
                   {loop="$value->keywords()"}
                   <a href="{$fsc->url()}&keyword={$value}" class="label label-default">{$value}</a>
                   {/loop}
+                  {if="!$value->editada"}
                   <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                   </a>
+                  {/if}
                </span>
             </p>
          </div>
+         <hr class="visible-xs"/>
          {/if}
       {/loop}
       </div>
@@ -166,8 +175,8 @@
             <img src="plugins/informame/view/img/picar.png" alt="picar"/>
             <div class="caption">
                <h4>¡A picar!</h4>
-               <p>Para estar <b>bien informados</b>, primero debemos estar informados.</p>
-               <p>
+               <p class="help-block">Para estar <b>bien informados</b>, primero debemos estar informados.</p>
+               <p class="help-block">
                   Debemos <b>buscar información</b>, agruparla, valorarla y finalmente
                   quedarnos con lo mejor. A este proceso lo llamamos <b>picar</b>.
                </p>

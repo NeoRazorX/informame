@@ -229,4 +229,18 @@ class inme_editar_noticia extends fs_controller
          return trim($description).'...';
       }
    }
+   
+   public function populares()
+   {
+      $lista = array();
+      foreach($this->noticia->all(0, 'popularidad DESC') as $i => $noti)
+      {
+         if($i < 10)
+         {
+            $lista[] = $noti;
+         }
+      }
+      
+      return $lista;
+   }
 }

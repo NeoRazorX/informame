@@ -89,6 +89,10 @@
       <tipo>boolean</tipo>
       <defecto>false</defecto>
    </columna>
+   <columna>
+      <nombre>meneame_link</nombre>
+      <tipo>character varying(300)</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_noticias_fuente_pkey</nombre>
       <consulta>PRIMARY KEY (id)</consulta>

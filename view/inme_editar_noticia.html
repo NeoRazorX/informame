@@ -31,7 +31,7 @@
          <a href="#" class="btn btn-sm btn-primary">
             Facebook: {$fsc->noticia->likes}
          </a>
-         <a href="#" class="btn btn-sm btn-warning">
+         <a href="{$fsc->noticia->meneame_link}" target="_blank" class="btn btn-sm btn-warning">
             Menéame: {$fsc->noticia->meneos}
          </a>
       </div>
@@ -69,7 +69,7 @@
                   <div class="row">
                      <div class="col-xs-9">
                         <a href="{$value->url()}" class="label label-default">{$value->titulo}</a>
-                        <p class="help-block">{$value->texto}</p>
+                        <p class="help-block">{$value->texto()}</p>
                      </div>
                      <div class="col-xs-3">
                         {if="$value->imagen"}

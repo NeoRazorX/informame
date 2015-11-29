@@ -96,7 +96,7 @@ class inme_noticia_preview
             {
                $this->filename = $this->clean_youtube_id($parts[4]);
                $this->type = 'youtube';
-               $this->link = 'http://www.youtube.com/embed/'.$this->filename;
+               $this->link = '//www.youtube.com/embed/'.$this->filename;
             }
             break;
          }
@@ -108,7 +108,7 @@ class inme_noticia_preview
             {
                $this->filename = $this->clean_youtube_id($my_array_of_vars['v']);
                $this->type = 'youtube';
-               $this->link = 'http://www.youtube.com/embed/'.$this->filename;
+               $this->link = '//www.youtube.com/embed/'.$this->filename;
                break;
             }
          }
@@ -119,7 +119,7 @@ class inme_noticia_preview
             {
                $this->filename = $this->clean_youtube_id($parts[3]);
                $this->type = 'youtube';
-               $this->link = 'http://www.youtube.com/embed/'.$this->filename;
+               $this->link = '//www.youtube.com/embed/'.$this->filename;
             }
             break;
          }
@@ -150,7 +150,7 @@ class inme_noticia_preview
                                  $this->curl_save($hash[0]['thumbnail_medium'], 'tmp/vimeo/'.$video_id);
                                  $this->type = 'vimeo';
                                  $this->filename = $video_id;
-                                 $this->link = 'http://vimeo.com/'.$video_id;
+                                 $this->link = '//vimeo.com/'.$video_id;
                                  break;
                               }
                            }
@@ -167,7 +167,7 @@ class inme_noticia_preview
                   {
                      $this->type = 'vimeo';
                      $this->filename = $video_id;
-                     $this->link = 'http://vimeo.com/'.$video_id;
+                     $this->link = '//vimeo.com/'.$video_id;
                      break;
                   }
                }
@@ -176,7 +176,9 @@ class inme_noticia_preview
          else if( strpos($link, 'imgur.com/') !== FALSE )
          {
             if( !file_exists('tmp/imgur2') )
+            {
                mkdir('tmp/imgur2');
+            }
             
             $filename = 'tmp/imgur2/'.str_replace( '/', '_', str_replace( ':', '_', $link) );
             if( !file_exists($filename) )
@@ -191,7 +193,7 @@ class inme_noticia_preview
                      {
                         if( $this->is_valid_image_url('https://i.imgur.com/'.$urls[1][$i].'.'.$urls[2][$i]) )
                         {
-                           $this->filename = 'https://i.imgur.com/'.$urls[1][$i].'.'.$urls[2][$i];
+                           $this->filename = '//i.imgur.com/'.$urls[1][$i].'.'.$urls[2][$i];
                            break;
                         }
                      }
@@ -202,7 +204,7 @@ class inme_noticia_preview
                      {
                         if( $this->is_valid_image_url('https://i.imgur.com/'.$urls[1][$i].'.'.$urls[2][$i]) )
                         {
-                           $this->filename = 'http://i.imgur.com/'.$urls[1][$i].'.'.$urls[2][$i];
+                           $this->filename = '//i.imgur.com/'.$urls[1][$i].'.'.$urls[2][$i];
                            break;
                         }
                      }
@@ -262,7 +264,7 @@ class inme_noticia_preview
                   else if( preg_match_all('#data-expanded-url="https://www.youtube.com/watch\?v=([a-zA-Z0-9\-_]*)#', $html, $urls) )
                   {
                      $this->filename = $urls[1][0];
-                     $this->link = 'http://www.youtube.com/embed/'.$this->filename;
+                     $this->link = '//www.youtube.com/embed/'.$this->filename;
                      $this->type = 'youtube';
                   }
                   else if( preg_match_all('#https://pbs.twimg.com/profile_images/(\w*)/(\w*)_bigger.(\w*)#', $html, $urls) )

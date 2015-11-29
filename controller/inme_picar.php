@@ -53,7 +53,7 @@ class inme_picar extends fs_controller
       }
       else if( isset($_GET['picar']) )
       {
-         $this->picar( mt_rand(0, 9) );
+         $this->picar();
          
          if( intval($_GET['picar']) >= 15 )
          {
@@ -64,7 +64,7 @@ class inme_picar extends fs_controller
       {
          $this->log[] = "Para estar <b>bien informados</b> primero debemos estar informados.";
          $this->log[] = "Pica un poco para obtener noticias.";
-         $this->log[] = "Después las agrupamos, calculamos su popularidad y podemos pasar al siguiente paso..";
+         $this->log[] = "Después las agrupamos, calculamos su popularidad y podemos pasar al siguiente paso...";
       }
    }
    
@@ -82,142 +82,137 @@ class inme_picar extends fs_controller
       }
       else if( isset($_GET['picar']) )
       {
-         /// no nos interesa que los anónimos estén todo el día picando
-         $opcion = mt_rand(0, 20);
-         if($opcion < 10)
-         {
-            $this->picar($opcion);
-         }
+         $this->picar();
       }
       else
       {
          $this->log[] = "Para estar <b>bien informados</b> primero debemos estar informados.";
          $this->log[] = "Pica un poco para obtener noticias.";
-         $this->log[] = "Después las agrupamos, calculamos su popularidad y podemos pasar al siguiente paso..";
+         $this->log[] = "Después las agrupamos, calculamos su popularidad y podemos pasar al siguiente paso...";
       }
    }
    
-   private function picar($opcion)
+   private function picar()
    {
-      switch($opcion)
+      /// buscamos noticias en las fuentes
+      $fuente0 = new inme_fuente();
+      $fuentes = $fuente0->all('fcomprobada ASC');
+      if($fuentes)
       {
-         case 0:
-         case 1:
-         case 2:
-         case 3:
-            /// buscamos noticias en las fuente
-            $fuente0 = new inme_fuente();
-            $fuentes = $fuente0->all('fcomprobada ASC');
-            
-            if($fuentes)
+         /// no leeremos fuentes que ya hayamos leido hace menos de 3 horas
+         if( strtotime($fuentes[0]->fcomprobada) < time() - 10800 )
+         {
+            $this->leer_fuente($fuentes[0]);
+         }
+         else
+         {
+            /// si no hay fuentes que leer, hacemos otras cosas
+            $opcion = mt_rand(0, 6);
+            switch($opcion)
             {
-               /// leemos de la fuente que hace más tiempo que no comprobamos
-               $this->leer_fuente($fuentes[0]);
-            }
-            else
-            {
-               $this->new_error_msg('No hay ninguna fuente que picar. <a href="index.php?page=inme_fuentes">Añade alguna</a>.');
-            }
-            
-            break;
-         
-         case 4:
-            /// marcamos noticias como publicadas
-            $this->log[] = 'Seleccionando noticias para portada...';
-            $seleccionadas = FALSE;
-            
-            foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
-            {
-               if( is_null($noti->publicada) AND $noti->popularidad() > 1 )
-               {
-                  $noti->publicada = date('d-m-Y H:i:s');
-                  if( $noti->save() )
-                  {
-                     $seleccionadas = TRUE;
-                     $this->log[] = 'Se ha publicado la noticia: <a href="'.$noti->edit_url()
-                             .'" target="_blank">'.$noti->titulo.'</a> <span class="badge">'
-                             .$noti->popularidad().'</span>';
-                  }
-                  else
-                  {
-                     $this->log[] = 'Error al publicar la noticia: '.$noti->titulo;
-                  }
-               }
-               else
-               {
-                  $noti->save();
-               }
-            }
-            
-            if(!$seleccionadas)
-            {
-               $this->log[] = 'Ninguna noticia seleccionada.';
-            }
-            
-            /// también podemos aprovechar para procesar temas y fuentes
-            $this->tema->cron_job();
-            $fuente0 = new inme_fuente();
-            $fuente0->cron_job();
-            break;
-         
-         case 5:
-         case 6:
-            $this->log[] = 'Buscamos imágenes en las noticias...';
-            $this->preview_noticias();
-            break;
-         
-         default:
-            /// actualizamos popularidad de noticias
-            $this->log[] = 'Recalculando popularidad de noticias...';
-            
-            /// escogemos un punto aleatorio en la lista de noticias
-            $offset = mt_rand( 0, max( array( 0 ,$this->total_noticias() - FS_ITEM_LIMIT ) ) );
-            
-            foreach($this->noticia->all($offset) as $noti)
-            {
-               $popularidad = $noti->popularidad();
-               
-               switch( mt_rand(0,9) )
-               {
-                  case 0:
-                     $noti->tweets = $this->tweet_count($noti->url);
-                     break;
-                     
-                  case 1:
-                     $noti->likes = $this->facebook_count($noti->url);
-                     break;
-                     
-                  case 2:
-                     $noti->meneos = $this->meneame_count($noti->url);
-                     break;
-                     
-                  default:
-                     break;
-               }
-               
-               if( $noti->popularidad() == $popularidad )
-               {
+               case 0:
+                  /// marcamos noticias como publicadas
+                  $this->log[] = 'Seleccionando noticias para portada...';
+                  $seleccionadas = FALSE;
                   
-               }
-               else if( $noti->save() )
-               {
-                  if( $noti->popularidad() >= $popularidad )
+                  foreach($this->noticia->all(0, 'popularidad DESC') as $noti)
                   {
-                     $this->log[] = '<a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo
-                             .'</a> <b>+'.abs($noti->popularidad() - $popularidad).'</b> popularidad.';
+                     if( is_null($noti->publicada) AND $noti->popularidad() > 1 )
+                     {
+                        $noti->publicada = date('d-m-Y H:i:s');
+                        if( $noti->save() )
+                        {
+                           $seleccionadas = TRUE;
+                           $this->log[] = 'Se ha publicado la noticia: <a href="'.$noti->edit_url()
+                                   .'" target="_blank">'.$noti->titulo.'</a> <span class="badge">'
+                                   .$noti->popularidad().'</span>';
+                        }
+                        else
+                        {
+                           $this->log[] = 'Error al publicar la noticia: '.$noti->titulo;
+                        }
+                     }
+                     else
+                     {
+                        $noti->save();
+                     }
                   }
-                  else
+                  
+                  if(!$seleccionadas)
                   {
-                     $this->log[] = '<a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo
-                             .'</a> <mark>-'.abs($noti->popularidad() - $popularidad).'</mark> popularidad.';
+                     $this->log[] = 'Ninguna noticia seleccionada.';
                   }
-               }
-               else
-               {
-                  $this->log[] = 'Error al actualizada la popularidad de la noticia: '.$noti->titulo;
-               }
+                  
+                  /// también podemos aprovechar para procesar temas y fuentes
+                  $this->tema->cron_job();
+                  $fuente0 = new inme_fuente();
+                  $fuente0->cron_job();
+                  break;
+                  
+               case 1:
+               case 2:
+                  $this->log[] = 'Buscamos imágenes en las noticias...';
+                  $this->preview_noticias();
+                  break;
+               
+               default:
+                  /// actualizamos popularidad de noticias
+                  $this->log[] = 'Recalculando popularidad de noticias...';
+                  
+                  /// escogemos un punto aleatorio en la lista de noticias
+                  $offset = mt_rand( 0, max( array( 0 ,$this->total_noticias() - FS_ITEM_LIMIT ) ) );
+                  
+                  foreach($this->noticia->all($offset) as $noti)
+                  {
+                     $popularidad = $noti->popularidad();
+                     
+                     switch( mt_rand(0,9) )
+                     {
+                        case 0:
+                           $noti->tweets = $this->tweet_count($noti->url);
+                           break;
+                        
+                        case 1:
+                           $noti->likes = $this->facebook_count($noti->url);
+                           break;
+                        
+                        case 2:
+                           $noti->meneos = $this->meneame_count($noti->url);
+                           break;
+                        
+                        default:
+                           break;
+                     }
+                     
+                     if( $noti->popularidad() == $popularidad )
+                     {
+                        
+                     }
+                     else if( $noti->save() )
+                     {
+                        if( $noti->popularidad() >= $popularidad )
+                        {
+                           $this->log[] = '<a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo
+                                   .'</a> <b>+'.abs($noti->popularidad() - $popularidad).'</b> popularidad.';
+                        }
+                        else
+                        {
+                           $this->log[] = '<a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo
+                                   .'</a> <mark>-'.abs($noti->popularidad() - $popularidad).'</mark> popularidad.';
+                        }
+                     }
+                     else
+                     {
+                        $this->log[] = 'Error al actualizada la popularidad de la noticia: '.$noti->titulo;
+                     }
+                  }
+                  break;
             }
-            break;
+         }
+      }
+      else
+      {
+         $this->new_error_msg('No hay ninguna fuente que picar. <a href="index.php?page=inme_fuentes">Añade alguna</a>.');
       }
    }
    
@@ -303,11 +298,13 @@ class inme_picar extends fs_controller
       
       /// intentamos obtener el enlace original de meneame
       $meneos = 0;
+      $meneame_link = FALSE;
       foreach($item->children('meneame', TRUE) as $element)
       {
          if($element->getName() == 'url')
          {
             $url = (string)$element;
+            $meneame_link = (string)$item->link;
          }
          else if($element->getName() == 'votes')
          {
@@ -544,6 +541,7 @@ class inme_picar extends fs_controller
       if($meneos > 0)
       {
          $noticia->meneos = $meneos;
+         $noticia->meneame_link = $meneame_link;
       }
       
       if( $noticia->save() )
@@ -651,9 +649,35 @@ class inme_picar extends fs_controller
       $preview = new inme_noticia_preview();
       foreach($this->noticia->all( mt_rand(0, 100), 'popularidad DESC' ) as $noti)
       {
-         $preview->load($noti->titulo, $noti->texto.' '.$noti->preview);
-         if(!$preview->type)
+         $preview->load($noti->url, $noti->texto.' '.$noti->preview);
+         if($preview->type)
          {
+            if(!$noti->preview)
+            {
+               if($preview->type == 'youtube')
+               {
+                  $noti->preview = $preview->link;
+                  $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                          .'<iframe class="embed-responsive-item" src="//www.youtube.com/embed/'.$preview->filename.'"></iframe>'
+                          .'</div>'.$noti->texto;
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
+               else if($preview->type == 'vimeo')
+               {
+                  $noti->preview = $preview->link;
+                  $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                          .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                          .'</div>'.$noti->texto;
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
+            }
+         }
+         else
+         {
+            $txt_adicional = FALSE;
+            
             $html = $preview->curl_download($noti->url);
             $urls = array();
             if( preg_match_all('@<meta property="og:image" content="([^"]+)@', $html, $urls) )
@@ -664,10 +688,10 @@ class inme_picar extends fs_controller
                   if($preview->type AND stripos($url, 'logo') === FALSE AND $noti->preview != $preview->link)
                   {
                      $noti->preview = $preview->link;
-                     $noti->texto .= "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
                      $noti->save();
-                     $this->log[] = 'Encontrada imagen: <a href="'.$preview->link
-                             .'" target="_blank">'.$preview->link.'</a>';
+                     $this->log[] = 'Encontrada imagen: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
+                     
+                     $txt_adicional = "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
                      break;
                   }
                }
@@ -690,8 +714,20 @@ class inme_picar extends fs_controller
                            {
                               $noti->preview = $preview->link;
                               $noti->save();
-                              $this->log[] = 'Encontrada vídeo: <a href="'.$preview->link
-                                      .'" target="_blank">'.$preview->link.'</a>';
+                              $this->log[] = 'Encontrada vídeo: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
+                              
+                              if($preview->type == 'youtube')
+                              {
+                                 $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
+                                         .'<iframe class="embed-responsive-item" src="//www.youtube.com/embed/'.$preview->filename.'"></iframe>'
+                                         .'</div>';
+                              }
+                              else if($preview->type == 'vimeo')
+                              {
+                                 $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
+                                         .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                                         .'</div>';
+                              }
                               break;
                            }
                         }
@@ -703,6 +739,12 @@ class inme_picar extends fs_controller
                      }
                   }
                }
+            }
+            
+            if($txt_adicional)
+            {
+               $noti->texto .= $txt_adicional;
+               $noti->save();
             }
          }
       }

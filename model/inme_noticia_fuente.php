@@ -46,6 +46,7 @@ class inme_noticia_fuente extends fs_model
    public $destacada;
    public $nativa;
    public $parodia;
+   public $meneame_link;
    
    public function __construct($n = FALSE)
    {
@@ -77,6 +78,7 @@ class inme_noticia_fuente extends fs_model
          $this->destacada = $this->str2bool($n['destacada']);
          $this->nativa = $this->str2bool($n['nativa']);
          $this->parodia = $this->str2bool($n['parodia']);
+         $this->meneame_link = $n['meneame_link'];
       }
       else
       {
@@ -99,6 +101,7 @@ class inme_noticia_fuente extends fs_model
          $this->destacada = FALSE;
          $this->nativa = TRUE;
          $this->parodia = FALSE;
+         $this->meneame_link = NULL;
       }
    }
    
@@ -268,6 +271,7 @@ class inme_noticia_fuente extends fs_model
                  .", nativa = ".$this->var2str($this->nativa)
                  .", parodia = ".$this->var2str($this->parodia)
                  .", id_relacionada = ".$this->var2str($this->id_relacionada)
+                 .", meneame_link = ".$this->var2str($this->meneame_link)
                  ."  WHERE id = ".$this->var2str($this->id).";";
          
          return $this->db->exec($sql);
@@ -276,7 +280,7 @@ class inme_noticia_fuente extends fs_model
       {
          $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,resumen,fecha,publicada"
                  . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview,editada,"
-                 . "destacada,nativa,parodia,id_relacionada) VALUES ("
+                 . "destacada,nativa,parodia,id_relacionada,meneame_link) VALUES ("
                  .$this->var2str($this->url).","
                  .$this->var2str($this->titulo).","
                  .$this->var2str($this->texto).","
@@ -294,7 +298,8 @@ class inme_noticia_fuente extends fs_model
                  .$this->var2str($this->destacada).","
                  .$this->var2str($this->nativa).","
                  .$this->var2str($this->parodia).","
-                 .$this->var2str($this->id_relacionada).");";
+                 .$this->var2str($this->id_relacionada).","
+                 .$this->var2str($this->meneame_link).");";
          
          if( $this->db->exec($sql) )
          {
