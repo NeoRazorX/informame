@@ -45,8 +45,6 @@ class inme_temas extends fs_controller
       }
       
       $this->tema = new inme_tema();
-      $this->tema->cron_job();
-      
       if( isset($_POST['codtema']) )
       {
          $this->tema->codtema = $_POST['codtema'];

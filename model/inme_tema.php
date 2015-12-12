@@ -86,7 +86,9 @@ class inme_tema extends fs_model
               . ",('nazis','Nazismo','Nazismo','http://i.imgur.com/WYdIkd8.png',true)"
               . ",('pp','Partido Popular','Partido Popular','http://i.imgur.com/IjmbCcA.jpg',true)"
               . ",('psoe','PSOE','Partido Socialista Obrero Español','https://epolitic.s3.amazonaws.com/uploads/group/avatar/5/logo-psoe.jpg',true)"
+              . ",('podemos','Podemos','Podemos','https://pbs.twimg.com/profile_images/478483096598097920/4lnBU17e_bigger.jpeg',true)"
               . ",('raspberry-pi','raspberry-pi','raspberry-pi','http://i.imgur.com/RZ7iexA.jpg',true)"
+              . ",('ubuntu','Ubuntu','Ubuntu','http://i.imgur.com/3Sz1WVo.png',true)"
               . ";";
    }
    
@@ -214,19 +216,25 @@ class inme_tema extends fs_model
          foreach($this->all( mt_rand(0, $total) ) as $tema)
          {
             $tema->articulos = 0;
-            $sql = "SELECT COUNT(*) as num FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
-            $data = $this->db->select($sql);
-            if($data)
+            if($tema->activo)
             {
-               $tema->articulos = intval($data[0]['num']);
+               $sql = "SELECT COUNT(*) as num FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+               $data = $this->db->select($sql);
+               if($data)
+               {
+                  $tema->articulos = intval($data[0]['num']);
+               }
             }
             
             $tema->popularidad = 0;
-            $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
-            $data = $this->db->select($sql);
-            if($data)
+            if($tema->activo)
             {
-               $tema->popularidad = intval($data[0]['total']);
+               $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+               $data = $this->db->select($sql);
+               if($data)
+               {
+                  $tema->popularidad = intval($data[0]['total']);
+               }
             }
             
             $tema->save();

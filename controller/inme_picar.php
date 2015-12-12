@@ -531,7 +531,31 @@ class inme_picar extends fs_controller
                {
                   foreach($aux as $a)
                   {
-                     $noticia->set_keyword( trim($a) );
+                     if( strlen( (string)$a ) > 1 )
+                     {
+                        $codtema = $this->sanitize_url( (string)$a, 50 );
+                        $tema = $this->tema->get($codtema);
+                        if(!$tema)
+                        {
+                           $tema = new inme_tema();
+                           $tema->codtema = $codtema;
+                           $tema->titulo = $tema->texto = (string)$a;
+                        }
+                        
+                        if($tema->activo)
+                        {
+                           $tema->articulos++;
+                           if( $tema->save() )
+                           {
+                              if( is_null($noticia->preview) OR $noticia->preview == '' )
+                              {
+                                 $noticia->preview = $tema->imagen;
+                              }
+                              
+                              $noticia->set_keyword($codtema);
+                           }
+                        }
+                     }
                   }
                }
             }
@@ -566,7 +590,9 @@ class inme_picar extends fs_controller
       curl_setopt($ch0, CURLOPT_FOLLOWLOCATION, true);
       
       if($googlebot)
+      {
          curl_setopt($ch0, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+      }
       
       $html = curl_exec($ch0);
       curl_close($ch0);
@@ -647,28 +673,42 @@ class inme_picar extends fs_controller
    private function preview_noticias()
    {
       $preview = new inme_noticia_preview();
-      foreach($this->noticia->all( mt_rand(0, 100), 'popularidad DESC' ) as $noti)
+      $offset = mt_rand(0, 100);
+      $this->log[] = 'Comprobando noticias populares a partir de la '.$offset;
+      
+      foreach($this->noticia->all($offset, 'popularidad DESC') as $noti)
       {
          $preview->load($noti->url, $noti->texto.' '.$noti->preview);
-         if($preview->type)
+         if($noti->editada)
+         {
+            /// si está editada, no hacemos nada
+         }
+         else if($preview->type)
          {
             if(!$noti->preview)
             {
-               if($preview->type == 'youtube')
+               if($preview->type == 'image' OR $preview->type == 'imgur')
                {
-                  $noti->preview = $preview->link;
+                  $noti->preview = $preview->preview();
+                  $noti->texto .= "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
+               else if($preview->type == 'youtube')
+               {
+                  $noti->preview = $preview->preview();
                   $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
                           .'<iframe class="embed-responsive-item" src="//www.youtube.com/embed/'.$preview->filename.'"></iframe>'
-                          .'</div>'.$noti->texto;
+                          .'</div><br/>'.$noti->texto;
                   $noti->editada = TRUE;
                   $noti->save();
                }
                else if($preview->type == 'vimeo')
                {
-                  $noti->preview = $preview->link;
+                  $noti->preview = $preview->preview();
                   $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
                           .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
-                          .'</div>'.$noti->texto;
+                          .'</div><br/>'.$noti->texto;
                   $noti->editada = TRUE;
                   $noti->save();
                }
@@ -687,7 +727,7 @@ class inme_picar extends fs_controller
                   $preview->load($url);
                   if($preview->type AND stripos($url, 'logo') === FALSE AND $noti->preview != $preview->link)
                   {
-                     $noti->preview = $preview->link;
+                     $noti->preview = $preview->preview();
                      $noti->save();
                      $this->log[] = 'Encontrada imagen: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
                      
@@ -697,9 +737,9 @@ class inme_picar extends fs_controller
                }
             }
             
-            if( !$preview->type )
+            if(!$preview->type)
             {
-               /// buscamos vídeos de youtube
+               /// buscamos vídeos de youtube o vimeo
                $urls = array();
                if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $html, $urls) )
                {
@@ -712,9 +752,9 @@ class inme_picar extends fs_controller
                            $preview->load($url);
                            if( in_array($preview->type, array('youtube', 'vimeo')) )
                            {
-                              $noti->preview = $preview->link;
+                              $noti->preview = $preview->preview();
                               $noti->save();
-                              $this->log[] = 'Encontrada vídeo: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
+                              $this->log[] = 'Encontrado vídeo: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
                               
                               if($preview->type == 'youtube')
                               {
@@ -746,6 +786,25 @@ class inme_picar extends fs_controller
                $noti->texto .= $txt_adicional;
                $noti->save();
             }
+            else
+            {
+               $tema0 = new inme_tema();
+               foreach($noti->keywords() as $key)
+               {
+                  $tema = $tema0->get($key);
+                  if($tema)
+                  {
+                     if($tema->imagen AND $tema->activo)
+                     {
+                        $noti->preview = $tema->imagen;
+                        $noti->save();
+                        $this->log[] = 'Asignada imagen del tema '.$tema->titulo
+                                .': <a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo.'</a>';
+                        break;
+                     }
+                  }
+               }
+            }
          }
       }
    }
@@ -766,10 +825,14 @@ class inme_picar extends fs_controller
       $text = preg_replace('/-+/', '-', $text);
       
       if( substr($text, 0, 1) == '-' )
+      {
          $text = substr($text, 1);
+      }
       
       if( substr($text, -1) == '-' )
+      {
          $text = substr($text, 0, -1);
+      }
       
       return $text;
    }

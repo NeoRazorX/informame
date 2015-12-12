@@ -121,6 +121,13 @@ class inme_editar_noticia extends fs_controller
                if($tema->activo)
                {
                   $this->temas[] = $tema;
+                  
+                  /// si no hay una preview, usamos la de un tema
+                  if($tema->imagen AND !$this->noticia->preview)
+                  {
+                     $this->noticia->preview = $tema->imagen;
+                     $this->noticia->save();
+                  }
                }
             }
             else
@@ -163,6 +170,13 @@ class inme_editar_noticia extends fs_controller
                if($tema->activo)
                {
                   $this->temas[] = $tema;
+                  
+                  /// si no hay una preview, usamos la de un tema
+                  if($tema->imagen AND !$this->noticia->preview)
+                  {
+                     $this->noticia->preview = $tema->imagen;
+                     $this->noticia->save();
+                  }
                }
             }
             else

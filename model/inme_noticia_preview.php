@@ -395,7 +395,9 @@ class inme_noticia_preview
       curl_setopt($ch0, CURLOPT_FOLLOWLOCATION, true);
       
       if($googlebot)
+      {
          curl_setopt($ch0, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+      }
       
       $html = curl_exec($ch0);
       curl_close($ch0);
@@ -412,10 +414,14 @@ class inme_noticia_preview
       curl_setopt($ch, CURLOPT_TIMEOUT, 3);
       
       if($followlocation)
+      {
          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+      }
       
       if($googlebot)
+      {
          curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+      }
       
       curl_exec($ch);
       curl_close($ch);

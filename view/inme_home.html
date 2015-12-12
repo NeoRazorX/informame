@@ -107,7 +107,7 @@
                   <span class="label label-warning">Parodia</span>
                   {/if}
                   {loop="$value->keywords()"}
-                  <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
+                  <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
                   {/loop}
                   {if="!$value->editada"}
                   <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
@@ -153,10 +153,6 @@
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
-                  <br/>
-                  {loop="$value->keywords()"}
-                  <a href="{$fsc->url()}&keyword={$value}" class="label label-default">{$value}</a>
-                  {/loop}
                   {if="!$value->editada"}
                   <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
