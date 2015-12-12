@@ -100,6 +100,12 @@
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
                   &nbsp;
+                  {if="!$value->nativa"}
+                  <span class="label label-info"><s>Español</s></span>
+                  {/if}
+                  {if="$value->parodia"}
+                  <span class="label label-warning">Parodia</span>
+                  {/if}
                   {loop="$value->keywords()"}
                   <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
                   {/loop}
@@ -142,7 +148,12 @@
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
-                  <br/>
+                  {if="!$value->nativa"}
+                  <span class="label label-info"><s>Español</s></span>
+                  {/if}
+                  {if="$value->parodia"}
+                  <span class="label label-warning">Parodia</span>
+                  {/if}
                </span>
             </p>
          </div>

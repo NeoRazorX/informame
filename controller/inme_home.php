@@ -35,6 +35,7 @@ class inme_home extends fs_controller
    public $mostrar;
    public $noticias;
    public $offset;
+   public $page_description;
    public $preview;
    public $temas_populares;
    
@@ -116,6 +117,8 @@ class inme_home extends fs_controller
    protected function public_core()
    {
       $this->template = 'inme_public/portada';
+      $this->page_description = 'Portal de noticias colaborativo, para los que huyen de la mafia de menéame.'
+              . ' Exploramos la web para mostrarte los temas de actualidad.';
       
       $this->mostrar = 'portada';
       if( isset($_GET['mostrar']) )

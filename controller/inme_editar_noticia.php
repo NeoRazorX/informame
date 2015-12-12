@@ -29,6 +29,7 @@ require_model('inme_tema.php');
 class inme_editar_noticia extends fs_controller
 {
    public $noticia;
+   public $page_description;
    public $relacionada;
    public $temas;
    
@@ -143,6 +144,7 @@ class inme_editar_noticia extends fs_controller
    protected function public_core()
    {
       $this->template = 'inme_public/editar_noticia';
+      $this->page_description = 'Detalle de la noticia.';
       
       $this->noticia = FALSE;
       $this->relacionada = FALSE;
@@ -156,6 +158,8 @@ class inme_editar_noticia extends fs_controller
       
       if($this->noticia)
       {
+         $this->page_description = $this->true_text_break($this->noticia->resumen, 140);
+         
          if( !is_null($this->noticia->id_relacionada) )
          {
             $this->relacionada = $noti0->get($this->noticia->id_relacionada);
