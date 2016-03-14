@@ -49,6 +49,11 @@
                   <span class="hidden-xs">&nbsp; Editar</span>
                </a>
             </li>
+            <li role="presentation">
+               <a href="#eliminar" aria-controls="eliminar" role="tab" data-toggle="tab">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+               </a>
+            </li>
          </ul>
          <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="relevante">
@@ -168,6 +173,21 @@
                      <span class="glyphicon glyphicon-floppy-disk"></span> &nbsp; Guardar
                   </button>
                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="eliminar">
+               <br/>
+               {if="$fsc->allow_delete"}
+               <p class="help-block">
+                  ¿Estás seguro de que deseas eliminar esta noticia?
+               </p>
+               <a href="{$fsc->url()}&delete={$fsc->noticia->id}" class="btn btn-xs btn-danger">
+                  <span class="glyphicon glyphicon-trash"></span> &nbsp; Eliminar
+               </a>
+               {else}
+               <p class="help-block">
+                  No tienes permiso para eliminar noticias.
+               </p>
+               {/if}
             </div>
          </div>
       </div>

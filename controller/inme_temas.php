@@ -58,6 +58,20 @@ class inme_temas extends fs_controller
          else
             $this->new_error_msg('Error al guardar el tema.');
       }
+      else if( isset($_GET['delete']) )
+      {
+         $tema2 = $this->tema->get($_GET['delete']);
+         if($tema2)
+         {
+            if($tema2->codtema == $_GET['delete'])
+            {
+               if( $tema2->delete() )
+               {
+                  $this->new_message('Tema eliminado correctamente.');
+               }
+            }
+         }
+      }
       
       if( isset($_GET['order']) )
       {

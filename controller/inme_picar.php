@@ -32,12 +32,13 @@ class inme_picar extends fs_controller
 {
    public $log;
    private $noticia;
+   public $page_description;
    public $recargar;
    private $tema;
    
    public function __construct()
    {
-      parent::__construct(__CLASS__, 'Minar', 'informame', FALSE, FALSE);
+      parent::__construct(__CLASS__, 'Picar...', 'informame', FALSE, FALSE, TRUE);
    }
    
    protected function private_core()
@@ -71,6 +72,7 @@ class inme_picar extends fs_controller
    protected function public_core()
    {
       $this->template = 'inme_public/picar';
+      $this->page_description = 'Picar noticias.';
       
       $this->log = array();
       $this->noticia = new inme_noticia_fuente();

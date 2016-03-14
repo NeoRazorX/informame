@@ -28,6 +28,7 @@ require_model('inme_tema.php');
  */
 class inme_editar_noticia extends fs_controller
 {
+   public $allow_delete;
    public $noticia;
    public $page_description;
    public $relacionada;
@@ -40,13 +41,28 @@ class inme_editar_noticia extends fs_controller
    
    protected function private_core()
    {
+      /// ¿El usuario tiene permiso para eliminar en esta página?
+      $this->allow_delete = $this->user->allow_delete_on(__CLASS__);
+      
       $this->noticia = FALSE;
       $this->relacionada = FALSE;
       $this->temas = array();
       
+      $noti0 = new inme_noticia_fuente();
+      if( isset($_GET['delete']) )
+      {
+         $delete = $noti0->get($_GET['delete']);
+         if($delete)
+         {
+            if( $delete->delete() )
+            {
+               $this->new_error_msg('Noticia eliminada correctamente.');
+            }
+         }
+      }
+      
       if( isset($_REQUEST['id']) )
       {
-         $noti0 = new inme_noticia_fuente();
          $this->noticia = $noti0->get($_REQUEST['id']);
       }
       
@@ -209,10 +225,14 @@ class inme_editar_noticia extends fs_controller
       $text = preg_replace('/-+/', '-', $text);
       
       if( substr($text, 0, 1) == '-' )
+      {
          $text = substr($text, 1);
+      }
       
       if( substr($text, -1) == '-' )
+      {
          $text = substr($text, 0, -1);
+      }
       
       return $text;
    }

@@ -18,6 +18,10 @@
       <tipo>text</tipo>
    </columna>
    <columna>
+      <nombre>keywords</nombre>
+      <tipo>character varying(300)</tipo>
+   </columna>
+   <columna>
       <nombre>imagen</nombre>
       <tipo>character varying(255)</tipo>
    </columna>

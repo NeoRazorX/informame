@@ -32,6 +32,7 @@ class inme_tema extends fs_model
    public $codtema;
    public $titulo;
    public $texto;
+   private $keywords;
    public $imagen;
    public $articulos;
    public $popularidad;
@@ -45,6 +46,7 @@ class inme_tema extends fs_model
          $this->codtema = $t['codtema'];
          $this->titulo = $t['titulo'];
          $this->texto = $t['texto'];
+         $this->keywords = $t['keywords'];
          $this->imagen = $t['imagen'];
          $this->articulos = intval($t['articulos']);
          $this->popularidad = intval($t['popularidad']);
@@ -55,6 +57,7 @@ class inme_tema extends fs_model
          $this->codtema = NULL;
          $this->titulo = '';
          $this->texto = '';
+         $this->keywords = '';
          $this->imagen = NULL;
          $this->articulos = 0;
          $this->popularidad = 0;
@@ -64,31 +67,28 @@ class inme_tema extends fs_model
    
    protected function install()
    {
-      return "INSERT INTO inme_temas (codtema,titulo,texto,imagen,activo) VALUES"
-              . " ('espanya','España','España (Reino de España)','http://i.imgur.com/nDoxKF3.jpg',true)"
-              . ",('corrupcion','Corrupción','Corrupción','http://i.imgur.com/wYe54PC.jpg',true)"
-              . ",('ee-uu','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
-              . ",('eeuu','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
-              . ",('usa','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
-              . ",('estados-unidos','EE.UU','Estados Unidos de América','http://i.imgur.com/MsZyxdq.jpg',true)"
-              . ",('alemania','Alemania','Alemania','http://i.imgur.com/I8f9WXM.jpg',true)"
-              . ",('china','China','China','http://i.imgur.com/T5KsW3L.jpg',true)"
-              . ",('grafeno','Grafeno','Grafeno','http://i.imgur.com/jjlcWYu.jpg',true)"
-              . ",('grecia','Grecia','Grecia','http://i.imgur.com/FyyQJho.jpg',true)"
-              . ",('isis','ISIS','ISIS','http://i.imgur.com/qXgdYox.jpg',true)"
-              . ",('israel','Israel','Israel','http://i.imgur.com/2uRAhdA.png',true)"
-              . ",('linux','Linux','Linux','http://i.imgur.com/zF5yVoQ.png',true)"
-              . ",('rusia','Rusia','Rusia','http://i.imgur.com/7WZu7fl.jpg',true)"
-              . ",('venezuela','Venezuela','Venezuela','http://i.imgur.com/jAB2UDd.jpg',true)"
-              . ",('microsoft','Microsoft','Microsoft','http://i.imgur.com/LLX8ddu.jpg',true)"
-              . ",('google','Google','Google','http://i.imgur.com/Gh7Ib2o.png',true)"
-              . ",('apple','Apple','Apple','http://i.imgur.com/Qttksz6.jpg',true)"
-              . ",('nazis','Nazismo','Nazismo','http://i.imgur.com/WYdIkd8.png',true)"
-              . ",('pp','Partido Popular','Partido Popular','http://i.imgur.com/IjmbCcA.jpg',true)"
-              . ",('psoe','PSOE','Partido Socialista Obrero Español','https://epolitic.s3.amazonaws.com/uploads/group/avatar/5/logo-psoe.jpg',true)"
-              . ",('podemos','Podemos','Podemos','https://pbs.twimg.com/profile_images/478483096598097920/4lnBU17e_bigger.jpeg',true)"
-              . ",('raspberry-pi','raspberry-pi','raspberry-pi','http://i.imgur.com/RZ7iexA.jpg',true)"
-              . ",('ubuntu','Ubuntu','Ubuntu','http://i.imgur.com/3Sz1WVo.png',true)"
+      return "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,activo) VALUES"
+              . " ('espanya','España','España (Reino de España)','[espanya],[spain]','http://i.imgur.com/nDoxKF3.jpg',true)"
+              . ",('corrupcion','Corrupción','Corrupción','[corrupcion]','http://i.imgur.com/wYe54PC.jpg',true)"
+              . ",('ee-uu','EE.UU','Estados Unidos de América','[estados-unidos],[usa],[ee-uu],[eeuu]','http://i.imgur.com/MsZyxdq.jpg',true)"
+              . ",('alemania','Alemania','Alemania','[alemania]','http://i.imgur.com/I8f9WXM.jpg',true)"
+              . ",('china','China','China','[china]','http://i.imgur.com/T5KsW3L.jpg',true)"
+              . ",('grafeno','Grafeno','Grafeno','[grafeno]','http://i.imgur.com/jjlcWYu.jpg',true)"
+              . ",('grecia','Grecia','Grecia','[grecia]','http://i.imgur.com/FyyQJho.jpg',true)"
+              . ",('isis','ISIS','ISIS','[isis]','http://i.imgur.com/qXgdYox.jpg',true)"
+              . ",('israel','Israel','Israel','[israel]','http://i.imgur.com/2uRAhdA.png',true)"
+              . ",('linux','Linux','Linux','[linux]','http://i.imgur.com/zF5yVoQ.png',true)"
+              . ",('rusia','Rusia','Rusia','[rusia]','http://i.imgur.com/7WZu7fl.jpg',true)"
+              . ",('venezuela','Venezuela','Venezuela','[venezuela]','http://i.imgur.com/jAB2UDd.jpg',true)"
+              . ",('microsoft','Microsoft','Microsoft','[microsoft]','http://i.imgur.com/LLX8ddu.jpg',true)"
+              . ",('google','Google','Google','[google]','http://i.imgur.com/Gh7Ib2o.png',true)"
+              . ",('apple','Apple','Apple','[apple]','http://i.imgur.com/Qttksz6.jpg',true)"
+              . ",('nazis','Nazismo','Nazismo','[nazis],[nazismo],[hitler]','http://i.imgur.com/WYdIkd8.png',true)"
+              . ",('pp','Partido Popular','Partido Popular','[pp]','http://i.imgur.com/IjmbCcA.jpg',true)"
+              . ",('psoe','PSOE','Partido Socialista Obrero Español','[psoe]','https://epolitic.s3.amazonaws.com/uploads/group/avatar/5/logo-psoe.jpg',true)"
+              . ",('podemos','Podemos','Podemos','[podemos]','https://pbs.twimg.com/profile_images/478483096598097920/4lnBU17e_bigger.jpeg',true)"
+              . ",('raspberry-pi','raspberry-pi','raspberry-pi','[raspberry]','http://i.imgur.com/RZ7iexA.jpg',true)"
+              . ",('ubuntu','Ubuntu','Ubuntu','[ubuntu]','http://i.imgur.com/3Sz1WVo.png',true)"
               . ";";
    }
    
@@ -102,6 +102,50 @@ class inme_tema extends fs_model
       return nl2br($this->texto);
    }
    
+   public function keywords($plain = FALSE)
+   {
+      $keys = array();
+      
+      $aux = explode(',', $this->keywords);
+      if($aux)
+      {
+         foreach($aux as $i => $value)
+         {
+            $key = str_replace( array('[',']') , array('',''), $value);
+            if($key)
+            {
+               $keys[] = $key;
+            }
+         }
+      }
+      
+      if($plain)
+      {
+         return join(', ', $keys);
+      }
+      else
+      {
+         return $keys;
+      }
+   }
+   
+   public function set_keyword($k)
+   {
+      if($this->keywords == '')
+      {
+         $this->keywords = '['.strtolower($k).']';
+      }
+      else if( !in_array( $k, $this->keywords() ) )
+      {
+         $this->keywords .= ',['.strtolower($k).']';
+      }
+   }
+   
+   public function clean_keywords()
+   {
+      $this->keywords = NULL;
+   }
+   
    public function get($cod)
    {
       $data = $this->db->select("SELECT * FROM inme_temas WHERE codtema = ".$this->var2str($cod).";");
@@ -110,7 +154,18 @@ class inme_tema extends fs_model
          return new inme_tema($data[0]);
       }
       else
-         return FALSE;
+      {
+         $cod = $this->db->escape_string($cod);
+         $data = $this->db->select("SELECT * FROM inme_temas WHERE keywords LIKE '%[".$cod."]%';");
+         if($data)
+         {
+            return new inme_tema($data[0]);
+         }
+         else
+         {
+            return FALSE;
+         }
+      }
    }
    
    public function exists()
@@ -133,6 +188,7 @@ class inme_tema extends fs_model
          {
             $sql = "UPDATE inme_temas SET titulo = ".$this->var2str($this->titulo)
                     .", texto = ".$this->var2str($this->texto)
+                    .", keywords = ".$this->var2str($this->keywords)
                     .", imagen = ".$this->var2str($this->imagen)
                     .", articulos = ".$this->var2str($this->articulos)
                     .", popularidad = ".$this->var2str($this->popularidad)
@@ -141,10 +197,11 @@ class inme_tema extends fs_model
          }
          else
          {
-            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,imagen,articulos,activo,popularidad) VALUES "
+            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,articulos,activo,popularidad) VALUES "
                     . "(".$this->var2str($this->codtema)
                     . ",".$this->var2str($this->titulo)
                     . ",".$this->var2str($this->texto)
+                    . ",".$this->var2str($this->keywords)
                     . ",".$this->var2str($this->imagen)
                     . ",".$this->var2str($this->articulos)
                     . ",".$this->var2str($this->activo)
@@ -175,7 +232,9 @@ class inme_tema extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $tlist[] = new inme_tema($d);
+         }
       }
       
       return $tlist;
@@ -189,7 +248,9 @@ class inme_tema extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $tlist[] = new inme_tema($d);
+         }
       }
       
       return $tlist;

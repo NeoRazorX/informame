@@ -32,6 +32,11 @@
                   <span class="hidden-xs">&nbsp; Editar</span>
                </a>
             </li>
+            <li role="presentation">
+               <a href="#eliminar" aria-controls="eliminar" role="tab" data-toggle="tab">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+               </a>
+            </li>
          </ul>
          <br/>
          <div class="tab-content">
@@ -56,6 +61,12 @@
                   </div>
                   <div class="form-group">
                      <div class="input-group">
+                        <span class="input-group-addon">Keywords</span>
+                        <input type="text" name="keywords" value="{$fsc->tema->keywords(TRUE)}" class="form-control" autocomplete="off"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <div class="input-group">
                         <div class="input-group-addon">
                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                         </div>
@@ -76,6 +87,20 @@
                      <span class="glyphicon glyphicon-floppy-disk"></span> &nbsp; Guardar
                   </button>
                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="eliminar">
+               {if="$fsc->allow_delete"}
+               <p class="help-block">
+                  ¿Estás seguro de que deseas eliminar este tema?
+               </p>
+               <a href="index.php?page=inme_temas&delete={$fsc->tema->codtema}" class="btn btn-xs btn-danger">
+                  <span class="glyphicon glyphicon-trash"></span> &nbsp; Eliminar
+               </a>
+               {else}
+               <p class="help-block">
+                  No tienes permiso para eliminar temas.
+               </p>
+               {/if}
             </div>
          </div>
       </div>
