@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
    <div class="row">
-      <div class="col-sm-9 col-md-10">
+      <div class="col-sm-12 col-md-12">
          <ul class="nav nav-tabs">
             {if="$fsc->buscar=='' AND $fsc->codfuente=='' AND $fsc->keyword==''"}
             <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
@@ -38,7 +38,7 @@
                </a>
             </li>
             <li role="presentation">
-               <a href="{$fsc->url()}" title="Portada"
+               <a href="{$fsc->url()}" title="Portada">
                   <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                </a>
             </li>
@@ -55,18 +55,6 @@
             {/if}
          </ul>
       </div>
-      <div class="col-sm-3 col-md-2">
-         <form action="{$fsc->url()}" method="post" class="form">
-            <div class="input-group">
-               <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar" autocomplete="off"/>
-               <span class="input-group-btn">
-                  <button class="btn btn-primary" type="submit">
-                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                  </button>
-               </span>
-            </div>
-         </form>
-      </div>
    </div>
    <div class="row">
       <div class="col-sm-5 col-md-6">
@@ -74,23 +62,19 @@
          <!--{$url=$value->url()}-->
          {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter<24"}
-         <div>
+         {if="$counter<22"}
+         <div class="noticia">
             {if="$fsc->preview->type"}
             <div class="pull-left">
-               <a href="{$url}">
-                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 100px; max-width: 120px; margin-right: 10px;">
+               <a href="{$url}" target="_blank">
+                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-left">
                </a>
             </div>
             {/if}
             {if="$counter==0"}
-            <h2>
-               <a href="{$url}" target="_blank">{$value->titulo}</a>
-            </h2>
+            <h2><a href="{$url}" target="_blank">{$value->titulo}</a></h2>
             {else}
-            <h3 style="margin-bottom: 0px;">
-               <a href="{$url}" target="_blank">{$value->titulo}</a>
-            </h3>
+            <h3><a href="{$url}" target="_blank">{$value->titulo}</a></h3>
             {/if}
             <p class="text-justify">
                {$value->resumen}
@@ -107,7 +91,9 @@
                   <span class="label label-warning">Parodia</span>
                   {/if}
                   {loop="$value->keywords()"}
-                  <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
+                     {if="$counter<4"}
+                     <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
+                     {/if}
                   {/loop}
                </span>
             </p>
@@ -129,25 +115,24 @@
          <!--{$url=$value->url()}-->
          {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter>=24"}
-         <div style="margin-bottom: 20px;">
+         {if="$counter>=22"}
+         <div class="noticia2">
             {if="$fsc->preview->type"}
             <div class="pull-right">
-               <a href="{$url}">
-                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 80px; max-width: 100px; margin-left: 10px;">
+               <a href="{$url}" target="_blank">
+                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
                </a>
             </div>
             {/if}
-            <h4 style="margin-bottom: 0px;">
-               <a href="{$url}" target="_blank">{$value->titulo}</a>
-            </h4>
-            <p class="text-justify">
+            <h4><a href="{$url}" target="_blank">{$value->titulo}</a></h4>
+            <p class="help-block">
                {$value->resumen}
                <br/>
-               <span class="small">
+               <span>
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  &nbsp;
                   {if="!$value->nativa"}
                   <span class="label label-info"><s>Español</s></span>
                   {/if}
@@ -162,7 +147,31 @@
       {/loop}
       </div>
       <div class="col-sm-3 col-md-2">
+         {if="mt_rand(0,2)==0"}
+         <br/>
+         <div class="thumbnail">
+            <a href="https://www.facturascripts.com" target="_blank">
+               <img src="plugins/informame/view/img/facturascripts.png" alt="FacturaScripts"/>
+            </a>
+            <div class="caption">
+               <h4>FacturaScripts</h4>
+               <p class="help-block">
+                  Facturación y contabilidad, software libre.
+                  Potente sistema de plugins y actualizaciones constantes.
+               </p>
+            </div>
+         </div>
+         {/if}
+         <br/>
          <div class="list-group">
+            <a href="#" class="list-group-item">
+               <h4 class="list-group-item-heading">
+                  <span class="glyphicon glyphicon-bookmark"></span>&nbsp; TOP
+               </h4>
+               <p class="list-group-item-text">
+                  Estos son los temas más populares de {$fsc->empresa->nombre}
+               </p>
+            </a>
             {loop="$fsc->temas_populares"}
             <a href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item">
                <span class="badge">{$value->popularidad}</span>
@@ -178,14 +187,14 @@
             {if="$fsc->offset>0"}
             <li class="previous">
                <a href="{$fsc->anterior_url()}">
-                  <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
+                  <span class="glyphicon glyphicon-chevron-left"></span>&nbsp; Anteriores
                </a>
             </li>
             {/if}
             {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
             <li class="next">
                <a href="{$fsc->siguiente_url()}">
-                  Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
+                  Siguientes &nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
                </a>
             </li>
             {/if}

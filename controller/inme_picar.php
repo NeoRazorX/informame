@@ -2,19 +2,19 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -43,6 +43,8 @@ class inme_picar extends fs_controller
    
    protected function private_core()
    {
+      $this->share_extensions();
+      
       $this->log = array();
       $this->noticia = new inme_noticia_fuente();
       $this->recargar = 0;
@@ -51,6 +53,11 @@ class inme_picar extends fs_controller
       if( !function_exists('curl_init') )
       {
          $this->new_error_msg('No se encuentra la extensión php-curl, tienes que instalarla.');
+      }
+      else if( isset($_GET['hidden']) )
+      {
+         $this->template = FALSE;
+         $this->picar();
       }
       else if( isset($_GET['picar']) )
       {
@@ -92,6 +99,17 @@ class inme_picar extends fs_controller
          $this->log[] = "Pica un poco para obtener noticias.";
          $this->log[] = "Después las agrupamos, calculamos su popularidad y podemos pasar al siguiente paso...";
       }
+   }
+   
+   private function share_extensions()
+   {
+      $fsext = new fs_extension();
+      $fsext->name = 'iframe_home';
+      $fsext->from = __CLASS__;
+      $fsext->to = 'inme_home';
+      $fsext->type = 'hidden_iframe';
+      $fsext->params = '&hidden=TRUE';
+      $fsext->save();
    }
    
    private function picar()
@@ -153,6 +171,7 @@ class inme_picar extends fs_controller
                   
                case 1:
                case 2:
+               case 3:
                   $this->log[] = 'Buscamos imágenes en las noticias...';
                   $this->preview_noticias();
                   break;

@@ -69,22 +69,22 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-sm-5 col-md-5">
+      <div class="col-sm-5 col-md-6">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
          {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter<24"}
+         {if="$counter<22"}
          <div>
             {if="$fsc->preview->type"}
             <div class="pull-left">
-               <a href="{$url}">
+               <a href="{$url}" target="_blank">
                   <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 100px; max-width: 120px; margin-right: 10px;">
                </a>
             </div>
             {/if}
             {if="$counter==0"}
-            <h2>
+            <h2 style="margin-bottom: 5px;">
                <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h2>
             {else}
@@ -107,7 +107,9 @@
                   <span class="label label-warning">Parodia</span>
                   {/if}
                   {loop="$value->keywords()"}
-                  <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
+                     {if="$counter<4"}
+                     <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
+                     {/if}
                   {/loop}
                   {if="!$value->editada"}
                   <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
@@ -129,16 +131,16 @@
          </div>
       {/loop}
       </div>
-      <div class="col-sm-4 col-md-5">
+      <div class="col-sm-4 col-md-4">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
          {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter>=24"}
+         {if="$counter>=22"}
          <div style="margin-bottom: 20px;">
             {if condition="$fsc->preview->type"}
             <div class="pull-right">
-               <a href="{$url}">
+               <a href="{$url}" target="_blank">
                   <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" style="max-height: 80px; max-width: 100px; margin-left: 10px;">
                </a>
             </div>
@@ -146,13 +148,20 @@
             <h4 style="margin-bottom: 0px;">
                <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h4>
-            <p class="text-justify">
+            <p class="help-block">
                {$value->resumen}
                <br/>
-               <span class="small">
+               <span>
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  &nbsp;
+                  {if="!$value->nativa"}
+                  <span class="label label-info"><s>Español</s></span>
+                  {/if}
+                  {if="$value->parodia"}
+                  <span class="label label-warning">Parodia</span>
+                  {/if}
                   {if="!$value->editada"}
                   <a href="{$value->edit_url()}" class="label label-default" title="Editar esta noticia">
                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

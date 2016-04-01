@@ -1,0 +1,39 @@
+{include="header"}
+
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               Informame
+               <a href="{$fsc->url()}" class="btn btn-xs btn-default">
+                  <span class="glyphicon glyphicon-refresh"></span>
+               </a>
+            </h1>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-4">
+         <form action="{$fsc->url()}" method="post" class="form">
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h3 class="panel-title">Google Analytics</h3>
+               </div>
+               <div class="panel-body">
+                  <div class="form-group">
+                     <input type="text" name="analytics" value="{$fsc->analytics}" class="form-control" placeholder="ANALYTICS ID" autocomplete="off"/>
+                  </div>
+               </div>
+               <div class="panel-footer">
+                  <button type="submit" class="btn btn-sm btn-primary">
+                     <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp; Guardar
+                  </button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{include="footer"}

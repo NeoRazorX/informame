@@ -4,11 +4,13 @@
    function delete_fuente(cod)
    {
       if( confirm("¿Realmente desea eliminar la fuente "+cod+"?") )
+      {
          window.location.href = '{$fsc->url()}&delete='+cod;
+      }
    }
 </script>
 
-<div class="container" style="margin-top: 15px;">
+<div class="container-fluid">
    <div class="row">
       <div class="col-sm-12">
          <div class="page-header">

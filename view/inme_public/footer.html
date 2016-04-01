@@ -23,11 +23,13 @@
       <div class="row">
          <div class="col-xs-6">
             <small>
-               Creado con <a target="_blank" href="//www.facturascripts.com">FacturaScripts</a>.
+               Creado con <a target="_blank" href="https://www.facturascripts.com">FacturaScripts</a>.
             </small>
          </div>
          <div class="col-xs-6 text-right">
-            <span class="label label-default">Procesado en: {$fsc->duration()}</span>
+            <span class="label label-default">
+               <span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span>&nbsp; {$fsc->duration()}
+            </span>
          </div>
       </div>
    </div>

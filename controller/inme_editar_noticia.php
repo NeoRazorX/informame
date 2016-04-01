@@ -2,19 +2,19 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU Lesser General Public License for more details.
  * 
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -29,6 +29,8 @@ require_model('inme_tema.php');
 class inme_editar_noticia extends fs_controller
 {
    public $allow_delete;
+   public $analytics;
+   public $buscar;
    public $noticia;
    public $page_description;
    public $relacionada;
@@ -44,6 +46,7 @@ class inme_editar_noticia extends fs_controller
       /// ¿El usuario tiene permiso para eliminar en esta página?
       $this->allow_delete = $this->user->allow_delete_on(__CLASS__);
       
+      $this->buscar = '';
       $this->noticia = FALSE;
       $this->relacionada = FALSE;
       $this->temas = array();
@@ -161,6 +164,9 @@ class inme_editar_noticia extends fs_controller
    {
       $this->template = 'inme_public/editar_noticia';
       $this->page_description = 'Detalle de la noticia.';
+      
+      $fsvar = new fs_var();
+      $this->analytics = $fsvar->simple_get('inme_analytics');
       
       $this->noticia = FALSE;
       $this->relacionada = FALSE;

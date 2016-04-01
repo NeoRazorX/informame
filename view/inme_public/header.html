@@ -20,16 +20,51 @@
       .well-sm {
          padding-bottom: 0px;
       }
+      h2 {
+         margin-top: 10px;
+         margin-bottom: 5px;
+      }
+      h3, h4 {
+         margin-bottom: 0px;
+      }
+      .noticia {
+         min-height: 110px;
+      }
+      .noticia2 {
+         margin-bottom: 20px;
+      }
+      .imagen-left {
+         max-height: 100px;
+         max-width: 120px;
+         margin-right: 10px;
+      }
+      .imagen-right {
+         max-height: 80px;
+         max-width: 100px;
+         margin-left: 10px;
+      }
    </style>
    <script type="text/javascript" src="view/js/jquery.min.js"></script>
    <script type="text/javascript" src="view/js/bootstrap.min.js"></script>
+   {if="$fsc->analytics"}
+   <script>
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+     
+     ga('create', '{$fsc->analytics}', 'auto');
+     ga('require', 'displayfeatures');
+     ga('send', 'pageview');
+   </script>
+   {/if}
 </head>
 <body>
    <nav class="navbar navbar-default">
       <div class="container-fluid">
          <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-               <span class="sr-only">Toggle navigation</span>
+               <span class="sr-only">Menú</span>
                <span class="icon-bar"></span>
                <span class="icon-bar"></span>
                <span class="icon-bar"></span>
@@ -44,7 +79,27 @@
                   </a>
                </li>
             </ul>
+            <form class="navbar-form navbar-left" role="search" action="{$fsc->url()}" method="post" name="f_search">
+               <div class="form-group">
+                  <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar..." autocomplete="off"/>
+               </div>
+               <button type="submit" class="btn btn-xs btn-default">
+                  <span class="glyphicon glyphicon-search"></span>
+               </button>
+            </form>
             <ul class="nav navbar-nav navbar-right">
+               <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Ayuda">
+                     <span class="glyphicon glyphicon-question-sign hidden-xs"></span>
+                     <span class="visible-xs">Ayuda</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_questions" target="_blank">Preguntas</a></li>
+                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_errors" target="_blank">Errores</a></li>
+                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_ideas" target="_blank">Sugerencias</a></li>
+                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_colabora" target="_blank">Colabora</a></li>
+                  </ul>
+               </li>
                <li>
                   <a href="#" data-toggle="modal" data-target="#modal_login">
                      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
