@@ -31,6 +31,7 @@ class inme_editar_noticia extends fs_controller
    public $allow_delete;
    public $analytics;
    public $buscar;
+   public $modrewrite;
    public $noticia;
    public $page_description;
    public $relacionada;
@@ -167,15 +168,20 @@ class inme_editar_noticia extends fs_controller
       
       $fsvar = new fs_var();
       $this->analytics = $fsvar->simple_get('inme_analytics');
+      $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
       
       $this->noticia = FALSE;
       $this->relacionada = FALSE;
       $this->temas = array();
       
+      $noti0 = new inme_noticia_fuente();
       if( isset($_REQUEST['id']) )
       {
-         $noti0 = new inme_noticia_fuente();
          $this->noticia = $noti0->get($_REQUEST['id']);
+      }
+      else if( isset($_REQUEST['permalink']) )
+      {
+         $this->noticia = $noti0->get_by_permalink($_REQUEST['permalink']);
       }
       
       if($this->noticia)

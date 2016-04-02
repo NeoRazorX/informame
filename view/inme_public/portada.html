@@ -26,14 +26,12 @@
             {else}
             <li role="presentation" class="active">
                <a href="{$fsc->url()}">
-                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                  &nbsp; Resultados
                   {if="$fsc->buscar"}
-                  de <b>{$fsc->buscar}</b>
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp; <b>{$fsc->buscar}</b>
                   {elseif="$fsc->codfuente"}
-                  de <b>{$fsc->codfuente}</b>
+                  <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp; <b>{$fsc->codfuente}</b>
                   {elseif="$fsc->keyword"}
-                  de <b>{$fsc->keyword}</b>
+                  <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>&nbsp; <b>{$fsc->keyword}</b>
                   {/if}
                </a>
             </li>
@@ -59,8 +57,7 @@
    <div class="row">
       <div class="col-sm-5 col-md-6">
       {loop="$fsc->noticias"}
-         <!--{$url=$value->url()}-->
-         {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
+         <!--{$url=$value->url($fsc->modrewrite)}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter<22"}
          <div class="noticia">
@@ -112,8 +109,7 @@
       </div>
       <div class="col-sm-4 col-md-4">
       {loop="$fsc->noticias"}
-         <!--{$url=$value->url()}-->
-         {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
+         <!--{$url=$value->url($fsc->modrewrite)}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter>=22"}
          <div class="noticia2">
@@ -147,10 +143,22 @@
       {/loop}
       </div>
       <div class="col-sm-3 col-md-2">
-         {if="mt_rand(0,2)==0"}
          <br/>
+         {if="mt_rand(0,2)==0"}
          <div class="thumbnail">
-            <a href="https://www.facturascripts.com" target="_blank">
+            <a rel="nofollow" href="https://www.amazon.es/gp/product/B01CD5VC92/ref=as_li_tf_tl?ie=UTF8&camp=3626&creative=24790&creativeASIN=B01CD5VC92&linkCode=as2&tag=kelinux-21" target="_blank">
+               <img src="https://i.imgur.com/h9pSx6Z.jpg" alt="raspberrypi3"/>
+            </a>
+            <div class="caption">
+               <h4>Raspberry Pi 3</h4>
+               <p class="help-block">
+                  Raspberry Pi 3 Modelo B (1,2 GHz Quad-core ARM Cortex-A53, 1GB RAM, USB 2.0)
+               </p>
+            </div>
+         </div>
+         {else}
+         <div class="thumbnail">
+            <a rel="nofollow" href="https://www.facturascripts.com" target="_blank">
                <img src="plugins/informame/view/img/facturascripts.png" alt="FacturaScripts"/>
             </a>
             <div class="caption">

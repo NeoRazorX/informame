@@ -14,10 +14,10 @@
             <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
             {$fsc->noticia->fecha}
             &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->noticia->popularidad()}
-            &nbsp; <a href="index.php?page=inme_home&codfuente={$fsc->noticia->codfuente}">{$fsc->noticia->codfuente}</a>
+            &nbsp; <a href="{$fsc->empresa->web}/index.php?page=inme_home&codfuente={$fsc->noticia->codfuente}">{$fsc->noticia->codfuente}</a>
             &nbsp;
             {loop="$fsc->noticia->keywords()"}
-            <a href="index.php?page=inme_home&keyword={$value}" class="label label-default">{$value}</a>
+            <a href="{$fsc->empresa->web}/index.php?page=inme_home&keyword={$value}" class="label label-default">{$value}</a>
             {/loop}
          </p>
       </div>
@@ -52,7 +52,7 @@
                   {$fsc->relacionada->fecha} &nbsp;
                   <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                   {$fsc->relacionada->popularidad()} &nbsp;
-                  <a href="index.php?page=inme_home&codfuente={$fsc->relacionada->codfuente}">{$fsc->relacionada->codfuente}</a>
+                  <a href="{$fsc->empresa->web}/index.php?page=inme_home&codfuente={$fsc->relacionada->codfuente}">{$fsc->relacionada->codfuente}</a>
                </p>
                <hr/>
                {else}
@@ -79,11 +79,7 @@
                   <div class="row">
                      <div class="col-xs-12">
                         <h4 style="margin-bottom: 0px;">
-                           {if="$value->editada"}
-                           <a href="{$value->edit_url}">{$value->titulo}</a>
-                           {else}
-                           <a href="{$value->url}">{$value->titulo}</a>
-                           {/if}
+                           <a href="{$fsc->empresa->web}/{$value->url($fsc->modrewrite)}">{$value->titulo}</a>
                         </h4>
                         <p class="help-block">{$value->resumen}</p>
                      </div>

@@ -26,19 +26,17 @@
             {else}
             <li role="presentation" class="active">
                <a href="{$fsc->url()}">
-                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                  &nbsp; Resultados
                   {if="$fsc->buscar"}
-                  de <b>{$fsc->buscar}</b>
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp; <b>{$fsc->buscar}</b>
                   {elseif="$fsc->codfuente"}
-                  de <b>{$fsc->codfuente}</b>
+                  <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp; <b>{$fsc->codfuente}</b>
                   {elseif="$fsc->keyword"}
-                  de <b>{$fsc->keyword}</b>
+                  <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>&nbsp; <b>{$fsc->keyword}</b>
                   {/if}
                </a>
             </li>
             <li role="presentation">
-               <a href="{$fsc->url()}" title="Portada"
+               <a href="{$fsc->url()}" title="Portada">
                   <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                </a>
             </li>
@@ -72,7 +70,6 @@
       <div class="col-sm-5 col-md-6">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
-         {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter<22"}
          <div>
@@ -134,7 +131,6 @@
       <div class="col-sm-4 col-md-4">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
-         {if="$value->editada"}<!--{$url=$value->edit_url()}-->{/if}
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter>=22"}
          <div style="margin-bottom: 20px;">

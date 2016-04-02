@@ -119,8 +119,8 @@ class inme_picar extends fs_controller
       $fuentes = $fuente0->all('fcomprobada ASC');
       if($fuentes)
       {
-         /// no leeremos fuentes que ya hayamos leido hace menos de 3 horas
-         if( strtotime($fuentes[0]->fcomprobada) < time() - 10800 )
+         /// no leeremos fuentes que ya hayamos leido hace menos de 1 hora
+         if( strtotime($fuentes[0]->fcomprobada) < time() - 3600 )
          {
             $this->leer_fuente($fuentes[0]);
          }
@@ -719,7 +719,7 @@ class inme_picar extends fs_controller
                {
                   $noti->preview = $preview->preview();
                   $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
-                          .'<iframe class="embed-responsive-item" src="//www.youtube.com/embed/'.$preview->filename.'"></iframe>'
+                          .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
                           .'</div><br/>'.$noti->texto;
                   $noti->editada = TRUE;
                   $noti->save();
@@ -780,7 +780,7 @@ class inme_picar extends fs_controller
                               if($preview->type == 'youtube')
                               {
                                  $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
-                                         .'<iframe class="embed-responsive-item" src="//www.youtube.com/embed/'.$preview->filename.'"></iframe>'
+                                         .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
                                          .'</div>';
                               }
                               else if($preview->type == 'vimeo')

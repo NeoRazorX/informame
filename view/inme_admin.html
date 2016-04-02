@@ -13,27 +13,52 @@
          </div>
       </div>
    </div>
-   <div class="row">
-      <div class="col-sm-4">
-         <form action="{$fsc->url()}" method="post" class="form">
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                  <h3 class="panel-title">Google Analytics</h3>
-               </div>
-               <div class="panel-body">
-                  <div class="form-group">
-                     <input type="text" name="analytics" value="{$fsc->analytics}" class="form-control" placeholder="ANALYTICS ID" autocomplete="off"/>
-                  </div>
-               </div>
-               <div class="panel-footer">
-                  <button type="submit" class="btn btn-sm btn-primary">
-                     <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp; Guardar
-                  </button>
-               </div>
+   <form action="{$fsc->url()}" method="post" class="form">
+      <div class="row">
+         <div class="col-sm-3">
+            <div class="form-group">
+               Dominio:
+               <input type="text" name="web" value="{$fsc->empresa->web}" class="form-control" placeholder="http://" autocomplete="off"/>
             </div>
-         </form>
+         </div>
+         <div class="col-sm-3">
+            <div class="form-group">
+               Apache mod-rewrite:
+               <select name="modrewrite" class="form-control">
+                  <option value="0">Desactivado</option>
+                  {if="$fsc->inme_config['inme_modrewrite']"}
+                  <option value="1" selected="">Activado</option>
+                  {else}
+                  <option value="1">Activado</option>
+                  {/if}
+               </select>
+            </div>
+         </div>
+         <div class="col-sm-3">
+            <div class="form-group">
+               Google Analytics:
+               <input type="text" name="analytics" value="{$fsc->inme_config['inme_analytics']}" class="form-control" placeholder="ANALYTICS ID" autocomplete="off"/>
+               <p class="help-block">
+                  Si usas google analytics, escribe aquí el ID que quieres usar.
+               </p>
+            </div>
+         </div>
       </div>
-   </div>
+      <div class="row">
+         <div class="col-sm-4">
+            <button type="submit" class="btn btn-sm btn-primary">
+               <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp; Guardar
+            </button>
+         </div>
+         <div class="col-sm-8 text-right">
+            {if="$fsc->inme_config['inme_modrewrite']"}
+            <a href="{$fsc->url()}&htaccess=TRUE" class="btn btn-sm btn-warning">
+               <span class="glyphicon glyphicon-wrench"></span>&nbsp; Sobreescribir .htaccess
+            </a>
+            {/if}
+         </div>
+      </div>
+   </form>
 </div>
 
 {include="footer"}

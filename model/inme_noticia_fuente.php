@@ -45,6 +45,7 @@ class inme_noticia_fuente extends fs_model
    public $nativa;
    public $parodia;
    public $meneame_link;
+   public $permalink;
    
    private $popularidad;
    private $keywords;
@@ -80,6 +81,7 @@ class inme_noticia_fuente extends fs_model
          $this->nativa = $this->str2bool($n['nativa']);
          $this->parodia = $this->str2bool($n['parodia']);
          $this->meneame_link = $n['meneame_link'];
+         $this->permalink = $n['permalink'];
       }
       else
       {
@@ -103,6 +105,7 @@ class inme_noticia_fuente extends fs_model
          $this->nativa = TRUE;
          $this->parodia = FALSE;
          $this->meneame_link = NULL;
+         $this->permalink = NULL;
       }
    }
    
@@ -114,11 +117,18 @@ class inme_noticia_fuente extends fs_model
       return '';
    }
    
-   public function url()
+   public function url($modrewrite = FALSE)
    {
       if($this->editada)
       {
-         return $this->edit_url();
+         if($modrewrite)
+         {
+            return 'story/'.$this->permalink;
+         }
+         else
+         {
+            return $this->edit_url();
+         }
       }
       else
          return $this->url;
@@ -126,7 +136,7 @@ class inme_noticia_fuente extends fs_model
    
    public function edit_url()
    {
-      return 'index.php?page=inme_editar_noticia&id='.$this->id;
+      return 'index.php?page=inme_editar_noticia&amp;id='.$this->id;
    }
    
    public function popularidad()
@@ -201,6 +211,36 @@ class inme_noticia_fuente extends fs_model
       $this->keywords = NULL;
    }
    
+   private function new_permalink()
+   {
+      $url_title = substr( strtolower($this->titulo), 0, 60 );
+      $changes = array('/à/' => 'a', '/á/' => 'a', '/â/' => 'a', '/ã/' => 'a', '/ä/' => 'a',
+          '/å/' => 'a', '/æ/' => 'ae', '/ç/' => 'c', '/è/' => 'e', '/é/' => 'e', '/ê/' => 'e',
+          '/ë/' => 'e', '/ì/' => 'i', '/í/' => 'i', '/î/' => 'i', '/ï/' => 'i', '/ð/' => 'd',
+          '/ñ/' => 'n', '/ò/' => 'o', '/ó/' => 'o', '/ô/' => 'o', '/õ/' => 'o', '/ö/' => 'o',
+          '/ő/' => 'o', '/ø/' => 'o', '/ù/' => 'u', '/ú/' => 'u', '/û/' => 'u', '/ü/' => 'u',
+          '/ű/' => 'u', '/ý/' => 'y', '/þ/' => 'th', '/ÿ/' => 'y', '/ñ/' => 'ny',
+          '/&quot;/' => '-'
+      );
+      $url_title = preg_replace(array_keys($changes), $changes, $url_title);
+      $url_title = preg_replace('/[^a-z0-9]/i', '-', $url_title);
+      $url_title = preg_replace('/-+/', '-', $url_title);
+      
+      if( substr($url_title, 0, 1) == '-' )
+      {
+         $url_title = substr($url_title, 1);
+      }
+      
+      if( substr($url_title, -1) == '-' )
+      {
+         $url_title = substr($url_title, 0, -1);
+      }
+      
+      $url_title .= '-'.mt_rand(0, 999).'.html';
+      
+      return $url_title;
+   }
+   
    public function get($id)
    {
       $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE id = ".$this->var2str($id).";");
@@ -227,8 +267,26 @@ class inme_noticia_fuente extends fs_model
       }
    }
    
+   public function get_by_permalink($permalink)
+   {
+      $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE permalink = ".$this->var2str($permalink).";");
+      if($data)
+      {
+         return new inme_noticia_fuente($data[0]);
+      }
+      else
+      {
+         return FALSE;
+      }
+   }
+   
    public function exists()
    {
+      if( is_null($this->permalink) )
+      {
+         $this->permalink = $this->new_permalink();
+      }
+      
       if( is_null($this->id) )
       {
          return FALSE;
@@ -273,6 +331,7 @@ class inme_noticia_fuente extends fs_model
                  .", parodia = ".$this->var2str($this->parodia)
                  .", id_relacionada = ".$this->var2str($this->id_relacionada)
                  .", meneame_link = ".$this->var2str($this->meneame_link)
+                 .", permalink = ".$this->var2str($this->permalink)
                  ."  WHERE id = ".$this->var2str($this->id).";";
          
          return $this->db->exec($sql);
@@ -281,7 +340,7 @@ class inme_noticia_fuente extends fs_model
       {
          $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,resumen,fecha,publicada"
                  . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview,editada,"
-                 . "destacada,nativa,parodia,id_relacionada,meneame_link) VALUES ("
+                 . "destacada,nativa,parodia,id_relacionada,meneame_link,permalink) VALUES ("
                  .$this->var2str($this->url).","
                  .$this->var2str($this->titulo).","
                  .$this->var2str($this->texto).","
@@ -300,7 +359,8 @@ class inme_noticia_fuente extends fs_model
                  .$this->var2str($this->nativa).","
                  .$this->var2str($this->parodia).","
                  .$this->var2str($this->id_relacionada).","
-                 .$this->var2str($this->meneame_link).");";
+                 .$this->var2str($this->meneame_link).","
+                 .$this->var2str($this->permalink).");";
          
          if( $this->db->exec($sql) )
          {
@@ -327,7 +387,9 @@ class inme_noticia_fuente extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $nlist[] = new inme_noticia_fuente($d);
+         }
       }
       
       return $nlist;
@@ -342,7 +404,9 @@ class inme_noticia_fuente extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $nlist[] = new inme_noticia_fuente($d);
+         }
       }
       
       return $nlist;
@@ -357,7 +421,9 @@ class inme_noticia_fuente extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $nlist[] = new inme_noticia_fuente($d);
+         }
       }
       
       return $nlist;
@@ -374,7 +440,9 @@ class inme_noticia_fuente extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $nlist[] = new inme_noticia_fuente($d);
+         }
       }
       
       return $nlist;

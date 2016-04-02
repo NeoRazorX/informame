@@ -33,6 +33,7 @@ class inme_home extends fs_controller
    public $codfuente;
    public $buscar;
    public $keyword;
+   public $modrewrite;
    public $mostrar;
    public $noticias;
    public $offset;
@@ -123,6 +124,7 @@ class inme_home extends fs_controller
       
       $fsvar = new fs_var();
       $this->analytics = $fsvar->simple_get('inme_analytics');
+      $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
       
       $this->mostrar = 'portada';
       if( isset($_GET['mostrar']) )

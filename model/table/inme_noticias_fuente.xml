@@ -21,6 +21,10 @@
       <nulo>NO</nulo>
    </columna>
    <columna>
+      <nombre>permalink</nombre>
+      <tipo>character varying(100)</tipo>
+   </columna>
+   <columna>
       <nombre>titulo</nombre>
       <tipo>character varying(140)</tipo>
    </columna>
