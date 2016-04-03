@@ -267,6 +267,19 @@ class inme_noticia_fuente extends fs_model
       }
    }
    
+   public function get_by_titulo($titulo)
+   {
+      $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE titulo = ".$this->var2str($titulo).";");
+      if($data)
+      {
+         return new inme_noticia_fuente($data[0]);
+      }
+      else
+      {
+         return FALSE;
+      }
+   }
+   
    public function get_by_permalink($permalink)
    {
       $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE permalink = ".$this->var2str($permalink).";");

@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -66,7 +66,9 @@ class inme_noticia_preview
       if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $text, $aux) )
       {
          foreach($aux[0] as $a)
+         {
             $links[] = $a;
+         }
       }
       
       foreach($links as $link)
@@ -240,7 +242,9 @@ class inme_noticia_preview
          else if( strpos($link, 'twitter.com/') !== FALSE )
          {
             if( !file_exists('tmp/twitter') )
+            {
                mkdir('tmp/twitter');
+            }
             
             $filename = 'tmp/twitter/'.str_replace( '/', '_', str_replace( ':', '_', $link) );
             if( !file_exists($filename) )
@@ -380,6 +384,10 @@ class inme_noticia_preview
          $status = FALSE;
       }
       else if( mb_substr($url, -9) == 'blank.jpg' )
+      {
+         $status = FALSE;
+      }
+      else if( mb_substr($url, 15) == 'http://ctxt.es/' )
       {
          $status = FALSE;
       }

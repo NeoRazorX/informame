@@ -31,9 +31,10 @@ require_model('inme_tema.php');
 class inme_picar extends fs_controller
 {
    public $log;
-   private $noticia;
    public $page_description;
    public $recargar;
+   
+   private $noticia;
    private $tema;
    
    public function __construct()
@@ -230,6 +231,22 @@ class inme_picar extends fs_controller
                   break;
             }
          }
+         
+         /// guardamos el log
+         foreach($this->log as $l)
+         {
+            $fslog = new fs_log();
+            $fslog->tipo = 'picar';
+            $fslog->detalle = $l;
+            $fslog->ip = $_SERVER['REMOTE_ADDR'];
+            
+            if($this->user)
+            {
+               $fslog->usuario = $this->user->nick;
+            }
+            
+            $fslog->save();
+         }
       }
       else
       {
@@ -381,6 +398,25 @@ class inme_picar extends fs_controller
       /// ¿Ya existe la noticia en la bd?
       $nueva = FALSE;
       $noticia = $this->noticia->get_by_url($url);
+      
+      if(!$noticia)
+      {
+         /// es posible que la noticia ya exista, pero con otra url
+         $titulo = $this->true_text_break( (string)$item->title, 140 );
+         $noticia2 = $this->noticia->get_by_titulo($titulo);
+         if($noticia2)
+         {
+            /**
+             * si hay una noticia con el mismo título y de hace menos de una
+             * semana, la consideramos un duplicado.
+             */
+            if( strtotime($noticia2->fecha) > time() - 604800 )
+            {
+               $noticia = $noticia2;
+            }
+         }
+      }
+      
       if($noticia)
       {
          /// procesamos las keywords de categorías

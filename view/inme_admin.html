@@ -19,6 +19,10 @@
             <div class="form-group">
                Dominio:
                <input type="text" name="web" value="{$fsc->empresa->web}" class="form-control" placeholder="http://" autocomplete="off"/>
+               <p class="help-block">
+                  Debe ser el que aparece en la barra de dirección.
+                  Si no es el mismo puedes tener problemas de acceso.
+               </p>
             </div>
          </div>
          <div class="col-sm-3">
@@ -32,6 +36,9 @@
                   <option value="1">Activado</option>
                   {/if}
                </select>
+               <p class="help-block">
+                  Una vez activado debes pulsar el botón <b>sobreescribir .htaccess</b>
+               </p>
             </div>
          </div>
          <div class="col-sm-3">

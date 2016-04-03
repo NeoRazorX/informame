@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -81,125 +81,11 @@ class inme_fuentes extends fs_controller
             $this->new_error_msg('Fuente '.$_GET['delete'].' No encontrada');
          }
       }
-      else if( isset($_GET['import']) )
-      {
-         $this->importar_de_feedstorm($_GET['import']);
-      }
       else
       {
          $this->fuente->cron_job();
       }
       
       $this->resultados = $this->fuente->all();
-   }
-   
-   private function importar_de_feedstorm($web = 'locierto.es')
-   {
-      switch($web)
-      {
-         case 'kelinux.net':
-            $html = $this->curl_download('http://www.kelinux.net/export.php');
-            break;
-         
-         default:
-            $html = $this->curl_download('http://www.locierto.es/export.php');
-            break;
-      }
-      
-      if($html)
-      {
-         $xml = simplexml_load_string($html);
-         if($xml)
-         {
-            if( $xml->item )
-            {
-               $fuentes = 0;
-               $noticias = 0;
-               $urls = array();
-               
-               /// importamos fuentes
-               foreach($xml->item as $item)
-               {
-                  $url = base64_decode( (string)$item->feed );
-                  
-                  if( !in_array($url, $urls) )
-                  {
-                     if( $this->fuente->get_by_url($url) )
-                     {
-                        /// ya existe la fuente
-                     }
-                     else
-                     {
-                        $aux = explode('/', substr( str_replace('www.', '', $url), 7));
-                        if($aux)
-                        {
-                           $fuente = new inme_fuente();
-                           
-                           if( $this->fuente->get($aux[0]) )
-                           {
-                              $fuente->codfuente = $this->random_string(10);
-                           }
-                           else
-                           {
-                              $fuente->codfuente = $aux[0];
-                           }
-                           
-                           $fuente->url = $url;
-                           
-                           if( $fuente->save() )
-                           {
-                              $urls[] = $url;
-                              $fuentes++;
-                           }
-                           else
-                           {
-                              $this->new_error_msg('Error al añadir la fuente '.$url);
-                           }
-                        }
-                     }
-                  }
-               }
-               
-               /// importamos las noticias más populares
-               $noti0 = new inme_noticia_fuente();
-               foreach($xml->story as $item)
-               {
-                  $noti2 = $noti0->get_by_url( base64_decode( (string)$item->link ) );
-                  if(!$noti2)
-                  {
-                     $noti2 = new inme_noticia_fuente();
-                     $noti2->titulo = base64_decode( (string)$item->title );
-                     $noti2->texto = $noti2->resumen = base64_decode( (string)$item->description );
-                     $noti2->url = base64_decode( (string)$item->link );
-                     $noti2->publicada = $noti2->fecha = date('d-m-Y H:i:s', intval( (string)$item->date ));
-                     $noti2->save();
-                     $noticias++;
-                  }
-               }
-               
-               $this->new_message($fuentes.' fuentes y '.$noticias.' noticias importadas.');
-            }
-            else
-               $this->new_error_msg("Estructura irreconocible.");
-         }
-         else
-            $this->new_error_msg("Error al leer el archivo.");
-      }
-   }
-   
-   public function curl_download($url, $googlebot=TRUE, $timeout=50)
-   {
-      $ch0 = curl_init($url);
-      curl_setopt($ch0, CURLOPT_TIMEOUT, $timeout);
-      curl_setopt($ch0, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch0, CURLOPT_FOLLOWLOCATION, true);
-      
-      if($googlebot)
-         curl_setopt($ch0, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-      
-      $html = curl_exec($ch0);
-      curl_close($ch0);
-      
-      return $html;
    }
 }

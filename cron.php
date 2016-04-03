@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -74,6 +74,10 @@ class inme_cron
          $total -= FS_ITEM_LIMIT;
          echo 'T';
       }
+      
+      /// Por último forzamos una llamada web para picar
+      $empresa = new empresa();
+      $this->curl_download($empresa->web.'/index.php?page=inme_picar&picar=TRUE');
    }
    
    private function tweet_count($link)
