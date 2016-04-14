@@ -40,7 +40,7 @@ class inme_tema extends fs_model
    
    public function __construct($t = FALSE)
    {
-      parent::__construct('inme_temas', 'plugins/informame/');
+      parent::__construct('inme_temas');
       if($t)
       {
          $this->codtema = $t['codtema'];

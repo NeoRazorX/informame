@@ -38,7 +38,7 @@ class inme_fuente extends fs_model
    
    public function __construct($t = FALSE)
    {
-      parent::__construct('inme_fuentes', 'plugins/informame/');
+      parent::__construct('inme_fuentes');
       if($t)
       {
          $this->codfuente = $t['codfuente'];

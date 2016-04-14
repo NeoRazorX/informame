@@ -30,7 +30,10 @@ require_model('inme_tema.php');
  */
 class inme_picar extends fs_controller
 {
+   public $analytics;
+   public $buscar;
    public $log;
+   public $modrewrite;
    public $page_description;
    public $recargar;
    
@@ -82,6 +85,11 @@ class inme_picar extends fs_controller
       $this->template = 'inme_public/picar';
       $this->page_description = 'Picar noticias.';
       
+      $fsvar = new fs_var();
+      $this->analytics = $fsvar->simple_get('inme_analytics');
+      $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
+      
+      $this->buscar = '';
       $this->log = array();
       $this->noticia = new inme_noticia_fuente();
       $this->tema = new inme_tema();

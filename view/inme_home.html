@@ -96,6 +96,12 @@
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  {if="$value->meneame_link"}
+                  &nbsp;
+                  <a href="{$value->meneame_link}" target="_blank" class="label label-default">
+                     <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+                  </a>
+                  {/if}
                   &nbsp;
                   {if="!$value->nativa"}
                   <span class="label label-info"><s>Español</s></span>
@@ -151,6 +157,12 @@
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
                   &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  {if="$value->meneame_link"}
+                  &nbsp;
+                  <a href="{$value->meneame_link}" target="_blank" class="label label-default">
+                     <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+                  </a>
+                  {/if}
                   &nbsp;
                   {if="!$value->nativa"}
                   <span class="label label-info"><s>Español</s></span>

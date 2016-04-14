@@ -28,9 +28,11 @@
          <a href="#" class="btn btn-sm btn-primary">
             Facebook: {$fsc->noticia->likes}
          </a>
+         {if="$fsc->noticia->meneame_link"}
          <a href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
             Menéame: {$fsc->noticia->meneos}
          </a>
+         {/if}
          <br/><br/>
          <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">

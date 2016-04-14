@@ -31,9 +31,11 @@
          <a href="#" class="btn btn-sm btn-primary">
             Facebook: {$fsc->noticia->likes}
          </a>
-         <a href="{$fsc->noticia->meneame_link}" target="_blank" class="btn btn-sm btn-warning">
+         {if="$fsc->noticia->meneame_link"}
+         <a href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
             Menéame: {$fsc->noticia->meneos}
          </a>
+         {/if}
       </div>
       <div class="col-sm-6">
          <div class="visible-xs">

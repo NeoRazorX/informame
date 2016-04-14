@@ -52,7 +52,7 @@ class inme_noticia_fuente extends fs_model
    
    public function __construct($n = FALSE)
    {
-      parent::__construct('inme_noticias_fuente', 'plugins/informame/');
+      parent::__construct('inme_noticias_fuente');
       if($n)
       {
          $this->id = $this->intval($n['id']);
