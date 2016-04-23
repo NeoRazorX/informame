@@ -48,12 +48,6 @@ class inme_home extends fs_controller
    
    protected function private_core()
    {
-      if(FS_HOMEPAGE != __CLASS__)
-      {
-         $this->new_advice('Debes poner <b>'.__CLASS__.'</b> como portada en la'
-                 . ' pestaña avanzado del <a href="index.php?page=admin_home#avanzado">panel de control</a>.');
-      }
-      
       $this->mostrar = 'portada';
       if( isset($_GET['mostrar']) )
       {
@@ -211,5 +205,26 @@ class inme_home extends fs_controller
    {
       return $this->url().'&mostrar='.$this->mostrar.'&buscar='.$this->buscar.'&codfuente='.
               $this->codfuente.'&keyword='.$this->keyword.'&offset='.($this->offset+FS_ITEM_LIMIT);
+   }
+   
+   public function full_url()
+   {
+      $url = $this->empresa->web;
+      
+      if( isset($_SERVER['SERVER_NAME']) )
+      {
+         if($_SERVER['SERVER_NAME'] == 'localhost')
+         {
+            $url = 'http://'.$_SERVER['SERVER_NAME'];
+            
+            if( isset($_SERVER['REQUEST_URI']) )
+            {
+               $aux = parse_url( str_replace('/index.php', '', $_SERVER['REQUEST_URI']) );
+               $url .= $aux['path'];
+            }
+         }
+      }
+      
+      return $url;
    }
 }

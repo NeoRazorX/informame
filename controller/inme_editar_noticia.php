@@ -293,4 +293,25 @@ class inme_editar_noticia extends fs_controller
       
       return $lista;
    }
+   
+   public function full_url()
+   {
+      $url = $this->empresa->web;
+      
+      if( isset($_SERVER['SERVER_NAME']) )
+      {
+         if($_SERVER['SERVER_NAME'] == 'localhost')
+         {
+            $url = 'http://'.$_SERVER['SERVER_NAME'];
+            
+            if( isset($_SERVER['REQUEST_URI']) )
+            {
+               $aux = parse_url( str_replace('/index.php', '', $_SERVER['REQUEST_URI']) );
+               $url .= $aux['path'];
+            }
+         }
+      }
+      
+      return $url;
+   }
 }

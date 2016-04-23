@@ -342,7 +342,7 @@ class inme_noticia_preview
             break;
          
          case 'vimeo':
-            $thumbnail = FS_PATH.'tmp/vimeo/'.$this->filename;
+            $thumbnail = getcwd().'/tmp/vimeo/'.$this->filename;
             break;
       }
       

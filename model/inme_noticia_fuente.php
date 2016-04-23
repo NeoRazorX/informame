@@ -362,7 +362,7 @@ class inme_noticia_fuente extends fs_model
                  .$this->var2str($this->publicada).","
                  .$this->var2str($this->codfuente).","
                  .$this->var2str($this->likes).","
-                 .$this->var2str($this->texto).","
+                 .$this->var2str($this->tweets).","
                  .$this->var2str($this->meneos).","
                  .$this->var2str($this->popularidad).","
                  .$this->var2str($this->keywords).","

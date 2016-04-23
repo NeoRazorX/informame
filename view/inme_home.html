@@ -2,13 +2,12 @@
 
 <div class="container-fluid">
    <div class="row">
-      <div class="col-sm-9 col-md-10">
+      <div class="col-sm-9 col-lg-10">
          <ul class="nav nav-tabs">
             {if="$fsc->buscar=='' AND $fsc->codfuente=='' AND $fsc->keyword==''"}
             <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
                <a href="{$fsc->url()}">
-                  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                  &nbsp; Portada
+                  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp; Portada
                </a>
             </li>
             <li role="presentation"{if="$fsc->mostrar=='populares'"} class="active"{/if}>
@@ -18,8 +17,7 @@
             </li>
             <li role="presentation"{if="$fsc->mostrar=='todo'"} class="active"{/if}>
                <a href="{$fsc->url()}&mostrar=todo">
-                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-                  &nbsp; Lo último
+                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp; Lo último
                   <span class="badge">{$fsc->total_noticias()}</span>
                </a>
             </li>
@@ -53,7 +51,7 @@
             {/if}
          </ul>
       </div>
-      <div class="col-sm-3 col-md-2">
+      <div class="col-sm-3 col-lg-2">
          <form action="{$fsc->url()}" method="post" class="form">
             <div class="input-group">
                <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar" autocomplete="off"/>
@@ -67,7 +65,7 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-sm-5 col-md-6">
+      <div class="col-sm-5 col-lg-5">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
@@ -134,7 +132,7 @@
          </div>
       {/loop}
       </div>
-      <div class="col-sm-4 col-md-4">
+      <div class="col-sm-4 col-lg-5">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
@@ -182,7 +180,7 @@
          {/if}
       {/loop}
       </div>
-      <div class="col-sm-3 col-md-2">
+      <div class="col-sm-3 col-lg-2">
          <br/>
          <div class="thumbnail">
             <img src="plugins/informame/view/img/picar.png" alt="picar"/>
@@ -218,7 +216,7 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-sm-12 col-md-12">
+      <div class="col-sm-12 col-lg-12">
          <ul class="pager">
             {if="$fsc->offset>0"}
             <li class="previous">

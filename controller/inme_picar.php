@@ -54,14 +54,22 @@ class inme_picar extends fs_controller
       $this->recargar = 0;
       $this->tema = new inme_tema();
       
-      if( !function_exists('curl_init') )
-      {
-         $this->new_error_msg('No se encuentra la extensión php-curl, tienes que instalarla.');
-      }
-      else if( isset($_GET['hidden']) )
+      if( isset($_GET['hidden']) )
       {
          $this->template = FALSE;
-         $this->picar();
+         
+         if( function_exists('curl_init') )
+         {
+            $this->picar();
+         }
+         else
+         {
+            echo 'ERROR: No se encuentra la extensión php-curl, tienes que instalarla.';
+         }
+      }
+      else if( !function_exists('curl_init') )
+      {
+         $this->new_error_msg('No se encuentra la extensión php-curl, tienes que instalarla.');
       }
       else if( isset($_GET['picar']) )
       {
@@ -94,7 +102,20 @@ class inme_picar extends fs_controller
       $this->noticia = new inme_noticia_fuente();
       $this->tema = new inme_tema();
       
-      if( !function_exists('curl_init') )
+      if( isset($_GET['hidden']) )
+      {
+         $this->template = FALSE;
+         
+         if( function_exists('curl_init') )
+         {
+            $this->picar();
+         }
+         else
+         {
+            echo 'ERROR: No se encuentra la extensión php-curl, tienes que instalarla.';
+         }
+      }
+      else if( !function_exists('curl_init') )
       {
          $this->new_error_msg('No se encuentra la extensión php-curl, tienes que instalarla.');
       }
@@ -931,5 +952,26 @@ class inme_picar extends fs_controller
          
          return trim($description).'...';
       }
+   }
+   
+   public function full_url()
+   {
+      $url = $this->empresa->web;
+      
+      if( isset($_SERVER['SERVER_NAME']) )
+      {
+         if($_SERVER['SERVER_NAME'] == 'localhost')
+         {
+            $url = 'http://'.$_SERVER['SERVER_NAME'];
+            
+            if( isset($_SERVER['REQUEST_URI']) )
+            {
+               $aux = parse_url( str_replace('/index.php', '', $_SERVER['REQUEST_URI']) );
+               $url .= $aux['path'];
+            }
+         }
+      }
+      
+      return $url;
    }
 }

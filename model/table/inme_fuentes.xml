@@ -8,6 +8,7 @@
    <columna>
       <nombre>codfuente</nombre>
       <tipo>character varying(50)</tipo>
+      <nulo>NO</nulo>
    </columna>
    <columna>
       <nombre>url</nombre>
