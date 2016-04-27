@@ -144,12 +144,25 @@ class inme_noticia_fuente extends fs_model
       $tclics = $this->tweets + $this->likes + $this->meneos;
       $dias = 1 + intval( (time() - strtotime($this->fecha)) / 86400 );
       
-      if( strlen($this->titulo) < 10 OR strlen($this->texto) < 100 )
+      if( strlen($this->titulo) < 10 OR strlen($this->texto) < 100 AND $tclics > 0 )
       {
-         /// si el título o el texto es muy corto, no nos interesa valorarlo.
-         $this->popularidad = 0;
+         /// si el título o el texto es muy corto, lo penalizamos.
+         $tclics = $tclics / 2;
       }
-      else if($tclics > 0)
+      
+      if( !$this->nativa AND $tclics > 0 )
+      {
+         /// si la noticia no está en español, también penalizamos
+         $tclics = $tclics / 2;
+      }
+      
+      /// damos una bonificación por cada keyword
+      foreach($this->keywords() as $key)
+      {
+         $tclics++;
+      }
+      
+      if($tclics > 0)
       {
          /// la popularidad debe bajar con el paso del tiempo
          $this->popularidad = intval( $tclics / $dias );
@@ -392,6 +405,12 @@ class inme_noticia_fuente extends fs_model
       return $this->db->exec("DELETE FROM inme_noticias_fuente WHERE id = ".$this->var2str($this->id).";");
    }
    
+   /**
+    * Devuelve un array con las últimas noticias.
+    * @param type $offset
+    * @param type $order
+    * @return \inme_noticia_fuente
+    */
    public function all($offset = 0, $order = 'fecha DESC')
    {
       $nlist = array();

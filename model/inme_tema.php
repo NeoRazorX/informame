@@ -288,7 +288,7 @@ class inme_tema extends fs_model
             }
             
             $tema->popularidad = 0;
-            if($tema->activo)
+            if($tema->activo AND $tema->articulos > 1)
             {
                $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
                $data = $this->db->select($sql);

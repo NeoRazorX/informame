@@ -34,6 +34,7 @@ class inme_editar_noticia extends fs_controller
    public $modrewrite;
    public $noticia;
    public $page_description;
+   public $page_title;
    public $relacionada;
    public $temas;
    
@@ -128,6 +129,8 @@ class inme_editar_noticia extends fs_controller
                $this->new_error_msg('Error al guardar los datos.');
          }
          
+         $this->page->title = $this->noticia->titulo;
+         
          if( !is_null($this->noticia->id_relacionada) )
          {
             $this->relacionada = $noti0->get($this->noticia->id_relacionada);
@@ -186,6 +189,7 @@ class inme_editar_noticia extends fs_controller
       
       if($this->noticia)
       {
+         $this->page_title = $this->noticia->titulo;
          $this->page_description = $this->true_text_break($this->noticia->resumen, 140);
          
          if( !is_null($this->noticia->id_relacionada) )
@@ -296,22 +300,6 @@ class inme_editar_noticia extends fs_controller
    
    public function full_url()
    {
-      $url = $this->empresa->web;
-      
-      if( isset($_SERVER['SERVER_NAME']) )
-      {
-         if($_SERVER['SERVER_NAME'] == 'localhost')
-         {
-            $url = 'http://'.$_SERVER['SERVER_NAME'];
-            
-            if( isset($_SERVER['REQUEST_URI']) )
-            {
-               $aux = parse_url( str_replace('/index.php', '', $_SERVER['REQUEST_URI']) );
-               $url .= $aux['path'];
-            }
-         }
-      }
-      
-      return $url;
+      return $this->empresa->web;
    }
 }

@@ -35,6 +35,7 @@ class inme_picar extends fs_controller
    public $log;
    public $modrewrite;
    public $page_description;
+   public $page_title;
    public $recargar;
    
    private $noticia;
@@ -91,7 +92,7 @@ class inme_picar extends fs_controller
    protected function public_core()
    {
       $this->template = 'inme_public/picar';
-      $this->page_description = 'Picar noticias.';
+      $this->page_title = $this->page_description = 'Picar noticias.';
       
       $fsvar = new fs_var();
       $this->analytics = $fsvar->simple_get('inme_analytics');
@@ -220,15 +221,15 @@ class inme_picar extends fs_controller
                      switch( mt_rand(0,9) )
                      {
                         case 0:
-                           $noti->tweets = $this->tweet_count($noti->url);
+                           $noti->tweets = max( array($noti->tweets, $this->tweet_count($noti->url)) );
                            break;
                         
                         case 1:
-                           $noti->likes = $this->facebook_count($noti->url);
+                           $noti->likes = max( array($noti->likes, $this->facebook_count($noti->url)) );
                            break;
                         
                         case 2:
-                           $noti->meneos = $this->meneame_count($noti->url);
+                           $noti->meneos = max( array($noti->meneos, $this->meneame_count($noti->url)) );
                            break;
                         
                         default:
@@ -373,9 +374,9 @@ class inme_picar extends fs_controller
             $url = (string)$element;
             $meneame_link = (string)$item->link;
          }
-         else if($element->getName() == 'votes')
+         else if($element->getName() == 'votes' OR $element->getName() == 'clicks' OR $element->getName() == 'comments')
          {
-            $meneos = intval( (string)$element );
+            $meneos = max( array($meneos, intval( (string)$element )) );
          }
       }
       
@@ -648,7 +649,7 @@ class inme_picar extends fs_controller
          }
       }
       
-      if($meneos > 0)
+      if($meneos > $noticia->meneos)
       {
          $noticia->meneos = $meneos;
          $noticia->meneame_link = $meneame_link;
@@ -956,22 +957,6 @@ class inme_picar extends fs_controller
    
    public function full_url()
    {
-      $url = $this->empresa->web;
-      
-      if( isset($_SERVER['SERVER_NAME']) )
-      {
-         if($_SERVER['SERVER_NAME'] == 'localhost')
-         {
-            $url = 'http://'.$_SERVER['SERVER_NAME'];
-            
-            if( isset($_SERVER['REQUEST_URI']) )
-            {
-               $aux = parse_url( str_replace('/index.php', '', $_SERVER['REQUEST_URI']) );
-               $url .= $aux['path'];
-            }
-         }
-      }
-      
-      return $url;
+      return $this->empresa->web;
    }
 }

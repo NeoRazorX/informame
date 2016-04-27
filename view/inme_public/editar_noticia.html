@@ -81,7 +81,11 @@
                   <div class="row">
                      <div class="col-xs-12">
                         <h4 style="margin-bottom: 0px;">
+                           {if="$value->editada"}
                            <a href="{$fsc->empresa->web}/{$value->url($fsc->modrewrite)}">{$value->titulo}</a>
+                           {else}
+                           <a href="{$value->url()}">{$value->titulo}</a>
+                           {/if}
                         </h4>
                         <p class="help-block">{$value->resumen}</p>
                      </div>
@@ -94,5 +98,9 @@
    </div>
 </div>
 {/if}
+
+<div class="hidden">
+   <iframe src="index.php?page=inme_picar&amp;hidden=TRUE"></iframe>
+</div>
 
 {include="inme_public/footer"}

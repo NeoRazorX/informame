@@ -38,6 +38,7 @@ class inme_home extends fs_controller
    public $noticias;
    public $offset;
    public $page_description;
+   public $page_title;
    public $preview;
    public $temas_populares;
    
@@ -113,6 +114,7 @@ class inme_home extends fs_controller
    protected function public_core()
    {
       $this->template = 'inme_public/portada';
+      $this->page_title = $this->empresa->nombrecorto;
       $this->page_description = 'Portal de noticias colaborativo, para los que huyen de la mafia de menéame.'
               . ' Exploramos la web para mostrarte los temas de actualidad.';
       

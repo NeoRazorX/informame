@@ -40,15 +40,15 @@ class inme_cron
          {
             default:
             case 0:
-               $noti->tweets = $this->tweet_count($noti->url);
+               $noti->tweets = max( array($noti->tweets, $this->tweet_count($noti->url)) );
                break;
             
             case 1:
-               $noti->likes = $this->facebook_count($noti->url);
+               $noti->likes = max( array($noti->likes, $this->facebook_count($noti->url)) );
                break;
             
             case 2:
-               $noti->meneos = $this->meneame_count($noti->url);
+               $noti->meneos = max( array($noti->meneos, $this->meneame_count($noti->url)) );
                break;
          }
          
