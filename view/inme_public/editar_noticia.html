@@ -8,14 +8,20 @@
             <h1>
                <a href="{$fsc->noticia->url}">{$fsc->noticia->titulo}</a>
             </h1>
+            <small>
+               <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticia->fecha} &nbsp;
+               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->noticia->popularidad()} &nbsp;
+               {if="!$fsc->noticia->nativa"}
+               <span class="label label-info"><s>Español</s></span>
+               {/if}
+               {if="$fsc->noticia->parodia"}
+               <span class="label label-warning">Parodia</span>
+               {/if}
+            </small>
          </div>
          <p>{$fsc->noticia->texto}</p>
          <p class="help-block">
-            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-            {$fsc->noticia->fecha}
-            &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->noticia->popularidad()}
-            &nbsp; <a href="{$fsc->empresa->web}/index.php?page=inme_home&codfuente={$fsc->noticia->codfuente}">{$fsc->noticia->codfuente}</a>
-            &nbsp;
+            <a href="{$fsc->empresa->web}/index.php?page=inme_home&codfuente={$fsc->noticia->codfuente}">{$fsc->noticia->codfuente}</a> &nbsp;
             {loop="$fsc->noticia->keywords()"}
             <a href="{$fsc->empresa->web}/index.php?page=inme_home&keyword={$value}" class="label label-default">{$value}</a>
             {/loop}

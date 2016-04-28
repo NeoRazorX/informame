@@ -198,9 +198,11 @@ class inme_picar extends fs_controller
          if(!$seleccionadas)
          {
             $this->log[] = 'Ninguna noticia seleccionada.';
+            $publicar = FALSE;
          }
       }
-      else /// no publicamos
+      
+      if(!$publicar)
       {
          /// buscamos noticias en las fuentes
          $fuente0 = new inme_fuente();
