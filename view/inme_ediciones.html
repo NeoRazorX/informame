@@ -1,0 +1,82 @@
+{include="header"}
+
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+               Ediciones
+               <a class="btn btn-xs btn-default" href="{$fsc->url()}" title="Recargar la página">
+                  <span class="glyphicon glyphicon-refresh"></span>
+               </a>
+            </h1>
+            <p class="help-block">
+               Estas son las últimas noticias editadas.
+            </p>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      {loop="$fsc->resultados"}
+         <div class="col-sm-6">
+            <div class="media">
+               <!--{$url=$value->url()}-->
+               {if="$value->preview"}
+               <div class="media-left">
+                  <a href="{$url}">
+                     <img class="media-object" src="{$value->preview}" alt="{$value->titulo}" width="100"/>
+                  </a>
+               </div>
+               {/if}
+               <div class="media-body">
+                  <h4 class="media-heading">
+                     <a href="{$url}">{$value->titulo}</a>
+                  </h4>
+                  <p class="text-justify">
+                     {$value->resumen}
+                     <br/>
+                     <span class="small">
+                        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
+                        &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
+                        {if="$value->meneame_link"}
+                        &nbsp;
+                        <a href="{$value->meneame_link}" target="_blank" class="label label-default">
+                           <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+                        </a>
+                        {/if}
+                        &nbsp;
+                        {if="!$value->nativa"}
+                        <span class="label label-info"><s>Español</s></span>
+                        {/if}
+                        {if="$value->parodia"}
+                        <span class="label label-warning">Parodia</span>
+                        {/if}
+                        {loop="$value->keywords()"}
+                           {if="$counter<4"}
+                           <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
+                           {/if}
+                        {/loop}
+                     </span>
+                  </p>
+               </div>
+            </div>
+         </div>
+         {if="$counter%2!=0"}
+         </div>
+         <div class="row">
+            <div class="col-sm-12">
+               <br/>
+            </div>
+         </div>
+         <div class="row">
+         {/if}
+      {else}
+      <div class="col-sm-12">
+         <div class="alert alert-warning">Sin resultados.</div>
+      </div>
+      {/loop}
+   </div>
+</div>
+
+{include="footer"}

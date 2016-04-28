@@ -256,7 +256,7 @@ class inme_noticia_fuente extends fs_model
    
    public function get($id)
    {
-      $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE id = ".$this->var2str($id).";");
+      $data = $this->db->select("SELECT * FROM ".$this->table_name." WHERE id = ".$this->var2str($id).";");
       if($data)
       {
          return new inme_noticia_fuente($data[0]);
@@ -269,7 +269,7 @@ class inme_noticia_fuente extends fs_model
    
    public function get_by_url($url)
    {
-      $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE url = ".$this->var2str($url).";");
+      $data = $this->db->select("SELECT * FROM ".$this->table_name." WHERE url = ".$this->var2str($url).";");
       if($data)
       {
          return new inme_noticia_fuente($data[0]);
@@ -282,7 +282,7 @@ class inme_noticia_fuente extends fs_model
    
    public function get_by_titulo($titulo)
    {
-      $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE titulo = ".$this->var2str($titulo).";");
+      $data = $this->db->select("SELECT * FROM ".$this->table_name." WHERE titulo = ".$this->var2str($titulo).";");
       if($data)
       {
          return new inme_noticia_fuente($data[0]);
@@ -295,7 +295,7 @@ class inme_noticia_fuente extends fs_model
    
    public function get_by_permalink($permalink)
    {
-      $data = $this->db->select("SELECT * FROM inme_noticias_fuente WHERE permalink = ".$this->var2str($permalink).";");
+      $data = $this->db->select("SELECT * FROM ".$this->table_name." WHERE permalink = ".$this->var2str($permalink).";");
       if($data)
       {
          return new inme_noticia_fuente($data[0]);
@@ -319,7 +319,7 @@ class inme_noticia_fuente extends fs_model
       }
       else
       {
-         return $this->db->select("SELECT * FROM inme_noticias_fuente WHERE id = ".$this->var2str($this->id).";");
+         return $this->db->select("SELECT * FROM ".$this->table_name." WHERE id = ".$this->var2str($this->id).";");
       }
    }
    
@@ -338,7 +338,7 @@ class inme_noticia_fuente extends fs_model
       
       if( $this->exists() )
       {
-         $sql = "UPDATE inme_noticias_fuente SET url = ".$this->var2str($this->url)
+         $sql = "UPDATE ".$this->table_name." SET url = ".$this->var2str($this->url)
                  .", titulo = ".$this->var2str($this->titulo)
                  .", texto = ".$this->var2str($this->texto)
                  .", resumen = ".$this->var2str($this->resumen)
@@ -364,7 +364,7 @@ class inme_noticia_fuente extends fs_model
       }
       else
       {
-         $sql = "INSERT INTO inme_noticias_fuente (url,titulo,texto,resumen,fecha,publicada"
+         $sql = "INSERT INTO ".$this->table_name." (url,titulo,texto,resumen,fecha,publicada"
                  . ",codfuente,likes,tweets,meneos,popularidad,keywords,preview,editada,"
                  . "destacada,nativa,parodia,id_relacionada,meneame_link,permalink) VALUES ("
                  .$this->var2str($this->url).","
@@ -402,7 +402,7 @@ class inme_noticia_fuente extends fs_model
    
    public function delete()
    {
-      return $this->db->exec("DELETE FROM inme_noticias_fuente WHERE id = ".$this->var2str($this->id).";");
+      return $this->db->exec("DELETE FROM ".$this->table_name." WHERE id = ".$this->var2str($this->id).";");
    }
    
    /**
@@ -415,7 +415,7 @@ class inme_noticia_fuente extends fs_model
    {
       $nlist = array();
       
-      $data = $this->db->select_limit("SELECT * FROM inme_noticias_fuente ORDER BY ".$order, FS_ITEM_LIMIT, $offset);
+      $data = $this->db->select_limit("SELECT * FROM ".$this->table_name." ORDER BY ".$order, FS_ITEM_LIMIT, $offset);
       if($data)
       {
          foreach($data as $d)
@@ -430,7 +430,8 @@ class inme_noticia_fuente extends fs_model
    public function all_from_fuente($codfuente, $offset = 0)
    {
       $nlist = array();
-      $sql = "SELECT * FROM inme_noticias_fuente WHERE codfuente = ".$this->var2str($codfuente)." ORDER BY fecha DESC";
+      $sql = "SELECT * FROM ".$this->table_name." WHERE codfuente = ".$this->var2str($codfuente)
+              . " ORDER BY fecha DESC";
       
       $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)
@@ -447,7 +448,8 @@ class inme_noticia_fuente extends fs_model
    public function all_from_keyword($key, $offset = 0)
    {
       $nlist = array();
-      $sql = "SELECT * FROM inme_noticias_fuente WHERE keywords LIKE '%[".$key."]%' ORDER BY popularidad DESC";
+      $sql = "SELECT * FROM ".$this->table_name." WHERE keywords LIKE '%[".$key."]%'"
+              . " ORDER BY popularidad DESC";
       
       $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)
@@ -465,8 +467,9 @@ class inme_noticia_fuente extends fs_model
    {
       $nlist = array();
       $query = $this->no_html( strtolower($query) );
-      $sql = "SELECT * FROM inme_noticias_fuente WHERE lower(titulo) LIKE '%".$query."%'"
-              . " OR lower(resumen) LIKE '%".$query."%'  ORDER BY popularidad DESC";
+      $sql = "SELECT * FROM ".$this->table_name." WHERE lower(titulo) LIKE '%".$query."%'"
+              . " OR lower(resumen) LIKE '%".$query."%'"
+              . " ORDER BY popularidad DESC";
       
       $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)

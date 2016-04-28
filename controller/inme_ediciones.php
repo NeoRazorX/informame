@@ -1,8 +1,8 @@
 <?php
 
 /*
- * This file is part of FacturaSctipts
- * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
+ * This file is part of informame
+ * Copyright (C) 2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,50 +19,35 @@
  */
 
 require_model('inme_noticia_fuente.php');
+require_model('inme_noticia_preview.php');
 
 /**
- * Description of inme_sitemap
+ * Description of inme_ediciones
  *
  * @author carlos
  */
-class inme_sitemap extends fs_controller
+class inme_ediciones extends fs_controller
 {
+   public $preview;
+   public $resultados;
+   
    public function __construct()
    {
-      parent::__construct(__CLASS__, 'sitemap', 'comunidad', FALSE, FALSE);
+      parent::__construct(__CLASS__, 'Ediciones', 'informame');
    }
    
    protected function private_core()
    {
-      $this->sitemap();
-   }
-   
-   protected function public_core()
-   {
-      $this->sitemap();
-   }
-   
-   private function sitemap()
-   {
-      $this->template = FALSE;
+      $this->preview = new inme_noticia_preview();
       
-      $fsvar = new fs_var();
-      $modrewrite = $fsvar->simple_get('inme_modrewrite');
-      
-      header("Content-type: text/xml");
-      echo '<?xml version="1.0" encoding="UTF-8"?>';
-      echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-      
+      $this->resultados = array();
       $noti = new inme_noticia_fuente();
       foreach($noti->all(0, 'editada DESC, publicada DESC') as $no)
       {
          if($no->editada)
          {
-            echo '<url><loc>',  $this->empresa->web,'/',$no->url($modrewrite),'</loc><lastmod>',
-                    Date('Y-m-d', strtotime($no->fecha)),'</lastmod><changefreq>always</changefreq><priority>0.8</priority></url>';
+            $this->resultados[] = $no;
          }
       }
-      
-      echo '</urlset>';
    }
 }
