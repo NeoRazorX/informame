@@ -1,4 +1,4 @@
-   {if="$fsc->analytics"}
+   {if="$fsc->analytics AND !isset($_GET['ok_cookies']) AND !isset($_COOKIE['ok_cookies'])"}
    <nav id="div_cookies" class="navbar navbar-inverse navbar-fixed-bottom" style="margin: 0px;">
       <div class="container-fluid">
          <p class='navbar-text'>
@@ -6,7 +6,7 @@
             Utilizamos <b>cookies</b> propias y de terceros para el correcto funcionamiento
             de la web y para mejorar nuestros servicios. Si continua navegando,
             consideramos que acepta su uso.
-            <a href="#" class="btn btn-xs btn-default" onclick="$('#div_cookies').hide()">Cerrar</a>
+            <a href="{$fsc->url()}&ok_cookies=TRUE" class="btn btn-xs btn-default">Cerrar</a>
          </p>
       </div>
    </nav>
@@ -36,7 +36,7 @@
       <div class="row">
          <div class="col-xs-6">
             <small>
-               Creado con <a target="_blank" href="https://www.facturascripts.com">FacturaScripts</a>.
+               Creado con <a target="_blank" href="https://www.facturascripts.com" rel="nofollow">FacturaScripts</a>.
             </small>
          </div>
          <div class="col-xs-6 text-right">

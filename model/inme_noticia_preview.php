@@ -387,7 +387,7 @@ class inme_noticia_preview
       {
          $status = FALSE;
       }
-      else if( mb_substr($url, 15) == 'http://ctxt.es/' )
+      else if( mb_substr($url, 0, 15) == 'http://ctxt.es/' )
       {
          $status = FALSE;
       }

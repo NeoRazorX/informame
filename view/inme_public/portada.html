@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
    <div class="row">
-      <div class="col-sm-12 col-lg-12">
+      <div class="col-sm-12 col-md-12 col-lg-12">
          <ul class="nav nav-tabs">
             {if="$fsc->buscar=='' AND $fsc->codfuente=='' AND $fsc->keyword==''"}
             <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
@@ -55,7 +55,7 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-sm-5 col-lg-6">
+      <div class="col-sm-12 col-md-5 col-lg-6">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url($fsc->modrewrite)}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
@@ -115,13 +115,13 @@
          </div>
       {/loop}
       </div>
-      <div class="col-sm-4 col-lg-4">
+      <div class="col-sm-8 col-md-4 col-lg-4">
       {loop="$fsc->noticias"}
          <!--{$url=$value->url($fsc->modrewrite)}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter>=22"}
          <div class="noticia2">
-            {if="$fsc->preview->type"}
+            {if="$fsc->preview->type AND $counter<35"}
             <div class="pull-right">
                <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
             </div>
@@ -154,7 +154,7 @@
          {/if}
       {/loop}
       </div>
-      <div class="col-sm-3 col-lg-2">
+      <div class="col-sm-4 col-md-3 col-lg-2">
          <br/>
          {if="mt_rand(0,2)==0"}
          <div class="thumbnail">
@@ -193,7 +193,7 @@
                </p>
             </a>
             {loop="$fsc->temas_populares"}
-            <a href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item">
+            <a href="{$fsc->url()}&keyword={$value->codtema}" rel="noindex" class="list-group-item">
                <span class="badge">{$value->popularidad}</span>
                {$value->titulo}
             </a>
@@ -206,14 +206,14 @@
          <ul class="pager">
             {if="$fsc->offset>0"}
             <li class="previous">
-               <a href="{$fsc->anterior_url()}">
+               <a href="{$fsc->anterior_url()}" rel="prev">
                   <span class="glyphicon glyphicon-chevron-left"></span>&nbsp; Anteriores
                </a>
             </li>
             {/if}
             {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
             <li class="next">
-               <a href="{$fsc->siguiente_url()}">
+               <a href="{$fsc->siguiente_url()}" rel="next">
                   Siguientes &nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
                </a>
             </li>

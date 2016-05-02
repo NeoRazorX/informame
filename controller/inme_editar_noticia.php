@@ -173,6 +173,17 @@ class inme_editar_noticia extends fs_controller
       $this->analytics = $fsvar->simple_get('inme_analytics');
       $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
       
+      if( isset($_GET['ok_cookies']) )
+      {
+         setcookie('ok_cookies', 'TRUE', time()+FS_COOKIES_EXPIRE, '/');
+         
+         $fslog = new fs_log();
+         $fslog->tipo = 'cookies';
+         $fslog->detalle = 'Se han aceptado las cookies';
+         $fslog->ip = $_SERVER['REMOTE_ADDR'];
+         $fslog->save();
+      }
+      
       $this->noticia = FALSE;
       $this->relacionada = FALSE;
       $this->temas = array();
