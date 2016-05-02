@@ -4,46 +4,15 @@
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
    <title>{$fsc->page_title}</title>
    <meta name="description" content="{$fsc->page_description}" />
+   {if condition="$fsc->get_keywords()!=''"}
+   <meta name="keywords" content="{$fsc->get_keywords()}" />
+   {/if}
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <meta name="generator" content="FacturaScripts" />
    <link rel="Publisher" href="https://www.google.com/+Neorazorx"/>
    <link rel="shortcut icon" href="{$fsc->full_url()}/plugins/informame/view/img/favicon.ico" />
    <link rel="stylesheet" href="{$fsc->full_url()}/view/css/bootstrap-yeti.min.css" />
-   <style type="text/css">
-      .clickableRow:hover {
-         cursor: pointer;
-      }
-      hr {
-         margin-top: 5px;
-         margin-bottom: 5px;
-      }
-      .well-sm {
-         padding-bottom: 0px;
-      }
-      h2 {
-         margin-top: 10px;
-         margin-bottom: 5px;
-      }
-      h3, h4 {
-         margin-bottom: 0px;
-      }
-      .noticia {
-         min-height: 110px;
-      }
-      .noticia2 {
-         margin-bottom: 20px;
-      }
-      .imagen-left {
-         max-height: 100px;
-         max-width: 120px;
-         margin-right: 10px;
-      }
-      .imagen-right {
-         max-height: 80px;
-         max-width: 100px;
-         margin-left: 10px;
-      }
-   </style>
+   <link rel="stylesheet" href="{$fsc->full_url()}/plugins/informame/view/css/custom.css" />
    <script type="text/javascript" src="{$fsc->full_url()}/view/js/jquery.min.js"></script>
    <script type="text/javascript" src="{$fsc->full_url()}/view/js/bootstrap.min.js"></script>
    {if="$fsc->analytics"}
@@ -58,6 +27,16 @@
      ga('send', 'pageview');
    </script>
    {/if}
+   <script type="text/javascript">
+      $(document).ready(function() {
+         $.ajax({
+            type: 'GET',
+            url: 'index.php?page=inme_picar&amp;hidden=TRUE',
+            dataType: 'html',
+            success: function(datos) {}
+         });
+      });
+   </script>
 </head>
 <body>
    <nav class="navbar navbar-default">

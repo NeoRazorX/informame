@@ -962,4 +962,9 @@ class inme_picar extends fs_controller
    {
       return $this->empresa->web;
    }
+   
+   public function get_keywords()
+   {
+      return '';
+   }
 }

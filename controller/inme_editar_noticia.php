@@ -302,4 +302,16 @@ class inme_editar_noticia extends fs_controller
    {
       return $this->empresa->web;
    }
+   
+   public function get_keywords()
+   {
+      $txt = '';
+      
+      if($this->noticia)
+      {
+         $txt = $this->noticia->keywords(TRUE);
+      }
+      
+      return $txt;
+   }
 }

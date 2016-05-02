@@ -229,4 +229,26 @@ class inme_home extends fs_controller
       
       return $url;
    }
+   
+   public function get_keywords()
+   {
+      $txt = '';
+      
+      if($this->temas_populares)
+      {
+         foreach($this->temas_populares as $i => $tema)
+         {
+            if($i == 0)
+            {
+               $txt = $tema->codtema;
+            }
+            else if($i < 9)
+            {
+               $txt .= ', '.$tema->codtema;
+            }
+         }
+      }
+      
+      return $txt;
+   }
 }

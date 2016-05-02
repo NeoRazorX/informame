@@ -69,6 +69,8 @@
             </div>
             {/if}
             {if="$counter==0"}
+            <h1><a href="{$url}" target="_blank">{$value->titulo}</a></h1>
+            {elseif="$counter==1"}
             <h2><a href="{$url}" target="_blank">{$value->titulo}</a></h2>
             {else}
             <h3><a href="{$url}" target="_blank">{$value->titulo}</a></h3>
@@ -121,9 +123,7 @@
          <div class="noticia2">
             {if="$fsc->preview->type"}
             <div class="pull-right">
-               <a href="{$url}" target="_blank">
-                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
-               </a>
+               <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
             </div>
             {/if}
             <h4><a href="{$url}" target="_blank">{$value->titulo}</a></h4>
@@ -221,10 +221,6 @@
          </ul>
       </div>
    </div>
-</div>
-
-<div class="hidden">
-   <iframe src="index.php?page=inme_picar&amp;hidden=TRUE"></iframe>
 </div>
 
 {include="inme_public/footer"}

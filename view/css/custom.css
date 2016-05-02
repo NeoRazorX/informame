@@ -1,0 +1,44 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 02-may-2016, 17:12:05
+    Author     : carlos
+*/
+
+.clickableRow:hover {
+   cursor: pointer;
+}
+hr {
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+.well-sm {
+   padding-bottom: 0px;
+}
+h1, h2 {
+   font-size: 25px;
+   margin-top: 10px;
+   margin-bottom: 5px;
+}
+h3, h4 {
+   margin-bottom: 0px;
+}
+.noticia {
+   min-height: 110px;
+}
+.noticia2 {
+   margin-bottom: 20px;
+}
+.imagen-left {
+   max-height: 100px;
+   max-width: 120px;
+   margin-right: 10px;
+}
+.imagen-right {
+   max-height: 80px;
+   max-width: 100px;
+   margin-left: 10px;
+}
