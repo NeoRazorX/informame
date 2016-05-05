@@ -31,9 +31,15 @@
       $(document).ready(function() {
          $.ajax({
             type: 'GET',
-            url: 'index.php?page=inme_picar&amp;hidden=TRUE',
+            url: 'index.php?page=inme_picar&hidden=TRUE',
             dataType: 'html',
             success: function(datos) {}
+         });
+         $(".fake_link").click(function(event) {
+            if(event.which === 1)
+            {
+               parent.document.location = $(this).attr("data-href");
+            }
          });
       });
    </script>

@@ -128,7 +128,9 @@ class inme_noticia_preview
          else if( mb_substr($link, 0, 17) == 'http://vimeo.com/' )
          {
             if( !file_exists('tmp/vimeo') )
+            {
                mkdir('tmp/vimeo');
+            }
             
             $parts = explode('/', $link);
             if( count($parts) >= 4 )
@@ -326,7 +328,7 @@ class inme_noticia_preview
    {
       $thumbnail = FALSE;
       
-      switch ($this->type)
+      switch($this->type)
       {
          case 'image':
             $thumbnail = $this->filename;

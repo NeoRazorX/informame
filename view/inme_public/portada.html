@@ -19,7 +19,7 @@
             <li role="presentation"{if="$fsc->mostrar=='todo'"} class="active"{/if}>
                <a href="{$fsc->url()}&mostrar=todo">
                   <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-                  &nbsp; Lo último
+                  <span class="hidden-xs">&nbsp; Lo último</span>
                   <span class="badge">{$fsc->total_noticias()}</span>
                </a>
             </li>
@@ -61,7 +61,7 @@
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter<22"}
          <div class="noticia">
-            {if="$fsc->preview->type"}
+            {if="$fsc->preview->type AND $fsc->preview->type != 'image'"}
             <div class="pull-left">
                <a href="{$url}" target="_blank">
                   <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-left">
@@ -81,10 +81,10 @@
                <span class="small">
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-                  &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  &nbsp; <a href="#" data-href="{$fsc->url()}&codfuente={$value->codfuente}" class="fake_link">{$value->codfuente}</a>
                   {if="$value->meneame_link"}
                   &nbsp;
-                  <a href="{$value->meneame_link}" target="_blank" class="label label-default">
+                  <a href="{$value->meneame_link}" target="_blank" rel="nofollow" class="label label-default">
                      <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
                   </a>
                   {/if}
@@ -97,7 +97,7 @@
                   {/if}
                   {loop="$value->keywords()"}
                      {if="$counter<4"}
-                     <a href="{$fsc->url()}&keyword={$value2}" class="label label-default">{$value2}</a>
+                     <a href="#" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
                      {/if}
                   {/loop}
                </span>
@@ -121,7 +121,7 @@
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter>=22"}
          <div class="noticia2">
-            {if="$fsc->preview->type AND $counter<35"}
+            {if="$fsc->preview->type AND $fsc->preview->type != 'image' AND $counter<35"}
             <div class="pull-right">
                <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
             </div>
@@ -133,10 +133,10 @@
                <span>
                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
                   &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-                  &nbsp; <a href="{$fsc->url()}&codfuente={$value->codfuente}">{$value->codfuente}</a>
+                  &nbsp; <a href="#" data-href="{$fsc->url()}&codfuente={$value->codfuente}" class="fake_link">{$value->codfuente}</a>
                   {if="$value->meneame_link"}
                   &nbsp;
-                  <a href="{$value->meneame_link}" target="_blank" class="label label-default">
+                  <a href="{$value->meneame_link}" target="_blank" rel="nofollow" class="label label-default">
                      <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
                   </a>
                   {/if}
@@ -156,7 +156,7 @@
       </div>
       <div class="col-sm-4 col-md-3 col-lg-2">
          <br/>
-         {if="mt_rand(0,2)==0"}
+         {if="mt_rand(0,1)==0"}
          <div class="thumbnail">
             <a rel="nofollow" href="https://www.amazon.es/gp/product/B01CD5VC92/ref=as_li_tf_tl?ie=UTF8&camp=3626&creative=24790&creativeASIN=B01CD5VC92&linkCode=as2&tag=kelinux-21" target="_blank">
                <img src="https://i.imgur.com/h9pSx6Z.jpg" alt="raspberrypi3"/>
@@ -193,7 +193,7 @@
                </p>
             </a>
             {loop="$fsc->temas_populares"}
-            <a href="{$fsc->url()}&keyword={$value->codtema}" rel="noindex" class="list-group-item">
+            <a href="#" data-href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item fake_link">
                <span class="badge">{$value->popularidad}</span>
                {$value->titulo}
             </a>
