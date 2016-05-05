@@ -20,6 +20,7 @@
 
 require_model('inme_fuente.php');
 require_model('inme_noticia_fuente.php');
+require_model('inme_noticia_preview.php');
 require_model('inme_tema.php');
 
 class inme_cron
@@ -36,9 +37,12 @@ class inme_cron
       foreach($noti0->all( mt_rand(0, 100), $order ) as $noti)
       {
          $popularidad = $noti->popularidad();
-         switch( mt_rand(0,2) )
+         switch( mt_rand(0, 3) )
          {
             default:
+               $this->preview_noticia($noti);
+               break;
+            
             case 0:
                $noti->tweets = max( array($noti->tweets, $this->tweet_count($noti->url)) );
                break;
@@ -77,7 +81,7 @@ class inme_cron
       
       /// Por último forzamos una llamada web para picar
       $empresa = new empresa();
-      $this->curl_download($empresa->web.'/index.php?page=inme_picar&picar=TRUE');
+      $this->curl_download($empresa->web.'/index.php?page=inme_picar&hidden=TRUE');
    }
    
    private function tweet_count($link)
@@ -127,6 +131,139 @@ class inme_cron
       curl_close($ch0);
       
       return $html;
+   }
+   
+   /**
+    * Busca imágentes/vídeos en la noticia.
+    * @param inme_noticia_fuente $noti
+    */
+   private function preview_noticia(&$noti)
+   {
+      $preview = new inme_noticia_preview();
+      $preview->load($noti->url, $noti->texto.' '.$noti->preview);
+      if($noti->editada)
+      {
+         /// si está editada, no hacemos nada
+      }
+      else if($preview->type)
+      {
+         if(!$noti->preview)
+         {
+            if($preview->type == 'image' OR $preview->type == 'imgur')
+            {
+               $noti->preview = $preview->preview();
+               $noti->texto .= "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
+               $noti->editada = TRUE;
+               $noti->save();
+            }
+            else if($preview->type == 'youtube')
+            {
+               $noti->preview = $preview->preview();
+               $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                       .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
+                       .'</div><br/>'.$noti->texto;
+               $noti->editada = TRUE;
+               $noti->save();
+            }
+            else if($preview->type == 'vimeo')
+            {
+               $noti->preview = $preview->preview();
+               $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                       .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                       .'</div><br/>'.$noti->texto;
+               $noti->editada = TRUE;
+               $noti->save();
+            }
+         }
+      }
+      else
+      {
+         $txt_adicional = FALSE;
+         
+         $html = $preview->curl_download($noti->url);
+         $urls = array();
+         if( preg_match_all('@<meta property="og:image" content="([^"]+)@', $html, $urls) )
+         {
+            foreach($urls[1] as $url)
+            {
+               $preview->load($url);
+               if($preview->type AND stripos($url, 'logo') === FALSE AND $noti->preview != $preview->link)
+               {
+                  $noti->preview = $preview->preview();
+                  $noti->save();
+                  
+                  $txt_adicional = "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
+                  break;
+               }
+            }
+         }
+         
+         if(!$preview->type)
+         {
+            /// buscamos vídeos de youtube o vimeo
+            $urls = array();
+            if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $html, $urls) )
+            {
+               foreach($urls[0] as $url)
+               {
+                  foreach( array('youtube', 'youtu.be', 'vimeo') as $domain )
+                  {
+                     if( strpos($url, $domain) !== FALSE )
+                     {
+                        $preview->load($url);
+                        if( in_array($preview->type, array('youtube', 'vimeo')) )
+                        {
+                           $noti->preview = $preview->preview();
+                           $noti->save();
+                           
+                           if($preview->type == 'youtube')
+                           {
+                              $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
+                                      .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
+                                      .'</div>';
+                           }
+                           else if($preview->type == 'vimeo')
+                           {
+                              $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
+                                      .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                                      .'</div>';
+                           }
+                           break;
+                        }
+                     }
+                  }
+                  
+                  if($preview->type)
+                  {
+                     break;
+                  }
+               }
+            }
+         }
+         
+         if($txt_adicional)
+         {
+            $noti->texto .= $txt_adicional;
+            $noti->save();
+         }
+         else
+         {
+            $tema0 = new inme_tema();
+            foreach($noti->keywords() as $key)
+            {
+               $tema = $tema0->get($key);
+               if($tema)
+               {
+                  if($tema->imagen AND $tema->activo)
+                  {
+                     $noti->preview = $tema->imagen;
+                     $noti->save();
+                     break;
+                  }
+               }
+            }
+         }
+      }
    }
 }
 
