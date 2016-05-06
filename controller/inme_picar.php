@@ -768,17 +768,40 @@ class inme_picar extends fs_controller
     */
    private function preview_noticia(&$noti)
    {
-      $preview = new inme_noticia_preview();
-      $preview->load($noti->url, $noti->texto.' '.$noti->preview);
       if($noti->editada)
       {
          /// si está editada, no hacemos nada
       }
-      else if($preview->type)
+      else if( is_null($noti->preview) )
       {
-         if(!$noti->preview)
+         /// primero intentamos asignar la imagen de un tema
+         $tema0 = new inme_tema();
+         foreach($noti->keywords() as $key)
          {
-            if($preview->type == 'image' OR $preview->type == 'imgur')
+            $tema = $tema0->get($key);
+            if($tema)
+            {
+               if($tema->imagen AND $tema->activo)
+               {
+                  $noti->preview = $tema->imagen;
+                  $noti->save();
+                  $this->log[] = 'Asignada imagen del tema '.$tema->titulo
+                          .': <a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo.'</a>';
+                  break;
+               }
+            }
+         }
+         
+         /// ahora buscamos una previsualización
+         $preview = new inme_noticia_preview();
+         $preview->load($noti->url, $noti->texto);
+         if($preview->type)
+         {
+            /**
+             * nos interesan previews de youtube y vimeo, así como imágenes de imgur,
+             * PERO si es una imagen normal, solamente la queremos si no tenemos nada.
+             */
+            if( is_null($noti->preview) AND ($preview->type == 'imgur' OR $preview->type == 'image') )
             {
                $noti->preview = $preview->preview();
                $noti->texto .= "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
@@ -804,96 +827,79 @@ class inme_picar extends fs_controller
                $noti->save();
             }
          }
-      }
-      else
-      {
-         $txt_adicional = FALSE;
-         
-         $html = $preview->curl_download($noti->url);
-         $urls = array();
-         if( preg_match_all('@<meta property="og:image" content="([^"]+)@', $html, $urls) )
+         else if( is_null($noti->preview) )
          {
-            foreach($urls[1] as $url)
+            /// exploramos la página para buscar imágenes
+            $html = $preview->curl_download($noti->url);
+            
+            $txt_adicional = FALSE;
+            
+            $urls = array();
+            if( preg_match_all('@<meta property="og:image" content="([^"]+)@', $html, $urls) )
             {
-               $preview->load($url);
-               if($preview->type AND stripos($url, 'logo') === FALSE AND $noti->preview != $preview->link)
+               foreach($urls[1] as $url)
                {
-                  $noti->preview = $preview->preview();
-                  $noti->save();
-                  $this->log[] = 'Encontrada imagen: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
-                  
-                  $txt_adicional = "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
-                  break;
+                  $preview->load($url);
+                  if($preview->type AND stripos($url, 'logo') === FALSE AND $noti->preview != $preview->link)
+                  {
+                     $noti->preview = $preview->preview();
+                     $noti->save();
+                     $this->log[] = 'Encontrada imagen: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
+                     
+                     $txt_adicional = "\n<div class='thumbnail'>\n<img src='".$preview->link."' alt='".$noti->titulo."'/>\n</div>";
+                     break;
+                  }
                }
             }
-         }
-         
-         if(!$preview->type)
-         {
-            /// buscamos vídeos de youtube o vimeo
-            $urls = array();
-            if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $html, $urls) )
+            
+            if(!$preview->type)
             {
-               foreach($urls[0] as $url)
+               /// buscamos vídeos de youtube o vimeo
+               $urls = array();
+               if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $html, $urls) )
                {
-                  foreach( array('youtube', 'youtu.be', 'vimeo') as $domain )
+                  foreach($urls[0] as $url)
                   {
-                     if( strpos($url, $domain) !== FALSE )
+                     foreach( array('youtube', 'youtu.be', 'vimeo') as $domain )
                      {
-                        $preview->load($url);
-                        if( in_array($preview->type, array('youtube', 'vimeo')) )
+                        if( strpos($url, $domain) !== FALSE )
                         {
-                           $noti->preview = $preview->preview();
-                           $noti->save();
-                           $this->log[] = 'Encontrado vídeo: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
-                           
-                           if($preview->type == 'youtube')
+                           $preview->load($url);
+                           if( in_array($preview->type, array('youtube', 'vimeo')) )
                            {
-                              $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
-                                      .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
-                                      .'</div>';
+                              $noti->preview = $preview->preview();
+                              $noti->save();
+                              $this->log[] = 'Encontrado vídeo: <a href="'.$preview->link.'" target="_blank">'.$preview->link.'</a>';
+                              
+                              if($preview->type == 'youtube')
+                              {
+                                 $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
+                                            .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
+                                            .'</div>';
+                              }
+                              else if($preview->type == 'vimeo')
+                              {
+                                 $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
+                                            .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                                            .'</div>';
+                              }
+                              break;
                            }
-                           else if($preview->type == 'vimeo')
-                           {
-                              $txt_adicional = '<div class="embed-responsive embed-responsive-16by9">'
-                                      .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
-                                      .'</div>';
-                           }
-                           break;
                         }
                      }
-                  }
-                  
-                  if($preview->type)
-                  {
-                     break;
+                     
+                     if($preview->type)
+                     {
+                        break;
+                     }
                   }
                }
             }
-         }
-         
-         if($txt_adicional)
-         {
-            $noti->texto .= $txt_adicional;
-            $noti->save();
-         }
-         else
-         {
-            $tema0 = new inme_tema();
-            foreach($noti->keywords() as $key)
+            
+            if($txt_adicional)
             {
-               $tema = $tema0->get($key);
-               if($tema)
-               {
-                  if($tema->imagen AND $tema->activo)
-                  {
-                     $noti->preview = $tema->imagen;
-                     $noti->save();
-                     $this->log[] = 'Asignada imagen del tema '.$tema->titulo
-                             .': <a href="'.$noti->edit_url().'" target="_blank">'.$noti->titulo.'</a>';
-                     break;
-                  }
-               }
+               $noti->texto .= $txt_adicional;
+               $noti->save();
             }
          }
       }

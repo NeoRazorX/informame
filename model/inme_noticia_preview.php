@@ -336,7 +336,14 @@ class inme_noticia_preview
          
          case 'imgur':
             $parts2 = explode('.', $this->filename);
-            $thumbnail = 'http://i.imgur.com/'.$parts2[0].'b.'.$parts2[1];
+            if( substr($parts2[0], -1) == 'b' )
+            {
+               $thumbnail = 'http://i.imgur.com/'.$parts2[0].'.'.$parts2[1];
+            }
+            else
+            {
+               $thumbnail = 'http://i.imgur.com/'.$parts2[0].'b.'.$parts2[1];
+            }
             break;
          
          case 'youtube':

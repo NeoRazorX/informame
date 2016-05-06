@@ -61,7 +61,7 @@
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter<22"}
          <div class="noticia">
-            {if="$fsc->preview->type AND $fsc->preview->type != 'image'"}
+            {if="$fsc->preview->type AND ($fsc->preview->type != 'image' OR $counter<10)"}
             <div class="pull-left">
                <a href="{$url}" target="_blank">
                   <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-left">
@@ -121,7 +121,7 @@
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
          {if="$counter>=22"}
          <div class="noticia2">
-            {if="$fsc->preview->type AND $fsc->preview->type != 'image' AND $counter<35"}
+            {if="$fsc->preview->type AND $fsc->preview->type != 'image'"}
             <div class="pull-right">
                <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
             </div>
