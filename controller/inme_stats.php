@@ -70,8 +70,8 @@ class inme_stats extends fs_controller
    {
       $stats = array();
       
-      $sql = "select DATE_FORMAT(fecha, '%d-%m-%Y') as fecha2,count(*) as total"
-              . " from inme_noticias_fuente group by fecha2;";
+      $sql = "select DATE_FORMAT(fecha, '%Y-%m') as fecha2,count(*) as total"
+              . " from inme_noticias_fuente group by fecha2 order by fecha2 asc;";
       $data = $this->db->select($sql);
       if($data)
       {
@@ -81,8 +81,8 @@ class inme_stats extends fs_controller
          }
       }
       
-      $sql = "select DATE_FORMAT(fecha, '%d-%m-%Y') as fecha2,sum(likes+tweets+meneos) as total"
-              . " from inme_noticias_fuente group by fecha2;";
+      $sql = "select DATE_FORMAT(fecha, '%Y-%m') as fecha2,sum(likes+tweets+meneos) as total"
+              . " from inme_noticias_fuente group by fecha2 order by fecha2 asc;";
       $data = $this->db->select($sql);
       if($data)
       {
