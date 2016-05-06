@@ -121,7 +121,7 @@ class inme_admin extends fs_controller
    public function stats_cookies()
    {
       $stats = array();
-      $sql = "select DATE_FORMAT(fecha, '%Y-%m') as fecha2,count(id) as total from fs_logs"
+      $sql = "select DATE_FORMAT(fecha, '%Y#%v') as fecha2,count(id) as total from fs_logs"
               . " where tipo = 'cookies' group by fecha2 order by fecha2 asc;";
       
       $data = $this->db->select($sql);
@@ -139,7 +139,7 @@ class inme_admin extends fs_controller
    public function stats_picar()
    {
       $stats = array();
-      $sql = "select DATE_FORMAT(fecha, '%Y-%m') as fecha2,count(id) as total from fs_logs"
+      $sql = "select DATE_FORMAT(fecha, '%Y#%v') as fecha2,count(id) as total from fs_logs"
               . " where tipo = 'picar' group by fecha2 order by fecha2 asc;";
       
       $data = $this->db->select($sql);

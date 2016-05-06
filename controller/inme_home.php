@@ -35,6 +35,7 @@ class inme_home extends fs_controller
    public $keyword;
    public $modrewrite;
    public $mostrar;
+   public $mostrar_tema;
    public $noticias;
    public $offset;
    public $page_description;
@@ -108,7 +109,12 @@ class inme_home extends fs_controller
       }
       
       $tema = new inme_tema();
+      $this->mostrar_tema = FALSE;
       $this->temas_populares = $tema->populares();
+      if( isset($_GET['keyword']) )
+      {
+         $this->mostrar_tema = $tema->get($_GET['keyword']);
+      }
    }
    
    protected function public_core()
@@ -192,7 +198,12 @@ class inme_home extends fs_controller
       }
       
       $tema = new inme_tema();
+      $this->mostrar_tema = FALSE;
       $this->temas_populares = $tema->populares();
+      if( isset($_GET['keyword']) )
+      {
+         $this->mostrar_tema = $tema->get($_GET['keyword']);
+      }
    }
    
    public function total_noticias()

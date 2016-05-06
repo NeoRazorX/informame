@@ -1,6 +1,21 @@
 {include="inme_public/header"}
 
 <div class="container-fluid">
+   {if="$fsc->mostrar_tema"}
+      {if="$fsc->mostrar_tema->imagen"}
+      <div class="row">
+         <div class="col-sm-1">
+            <div class="thumbnail">
+               <img src="{$fsc->mostrar_tema->imagen}" alt="$fsc->mostrar_tema->codtema"/>
+            </div>
+         </div>
+         <div class="col-sm-11">
+            <h1>{$fsc->mostrar_tema->titulo}</h1>
+            <p class="help-block">{$fsc->mostrar_tema->texto}</p>
+         </div>
+      </div>
+      {/if}
+   {/if}
    <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-12">
          <ul class="nav nav-tabs">

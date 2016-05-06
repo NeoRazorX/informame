@@ -58,12 +58,12 @@
          </div>
          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-               <li class="active">
+               <li{if="$fsc->page->name!='inme_stats'"} class="active"{/if}>
                   <a href="{$fsc->full_url()}">
                      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                   </a>
                </li>
-               <li>
+               <li{if="$fsc->page->name=='inme_stats'"} class="active"{/if}>
                   {if="$fsc->modrewrite"}
                   <a href="{$fsc->empresa->web}/stats">
                      <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
@@ -84,20 +84,16 @@
                </button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-               <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Ayuda">
+               <li>
+                  <a href="#" data-toggle="modal" data-target="#modal_ayuda">
                      <span class="glyphicon glyphicon-question-sign hidden-xs"></span>
                      <span class="visible-xs">Ayuda</span>
                   </a>
-                  <ul class="dropdown-menu">
-                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_questions" target="_blank">Preguntas</a></li>
-                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_errors" target="_blank">Errores</a></li>
-                     <li><a href="{#FS_COMMUNITY_URL#}/index.php?page=community_ideas" target="_blank">Sugerencias</a></li>
-                  </ul>
                </li>
                <li>
                   <a href="#" data-toggle="modal" data-target="#modal_login">
                      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                     <span class="visible-xs">Login</span>
                   </a>
                </li>
             </ul>
@@ -105,15 +101,57 @@
       </div>
    </nav>
    
+   <div class="modal" id="modal_ayuda" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+               <h4 class="modal-title">
+                  <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                  Ayuda
+               </h4>
+            </div>
+            <div class="modal-body">
+               <p class='help-block'>
+                  {$fsc->empresa->nombrecorto} es un agregador de noticias automatizado
+                  que funciona con el plugin <u>informame</u> de <b>FacturaScripts</b>.
+                  Lee las últimas noticias de las fuentes configuradas por el administrador,
+                  las agrupa, calcula su popularidad y genera esta portada.
+               </p>
+               <br/>
+               <div class="row">
+                  <div class="col-sm-4">
+                     <a href="{#FS_COMMUNITY_URL#}/index.php?page=community_questions" target="_blank" class="btn btn-sm btn-block btn-warning">
+                        Preguntas
+                     </a>
+                  </div>
+                  <div class="col-sm-4">
+                     <a href="{#FS_COMMUNITY_URL#}/index.php?page=community_errors" target="_blank" class="btn btn-sm btn-block btn-danger">
+                        Errores
+                     </a>
+                  </div>
+                  <div class="col-sm-4">
+                     <a href="{#FS_COMMUNITY_URL#}/index.php?page=community_ideas" target="_blank" class="btn btn-sm btn-block btn-success">
+                        Sugerencias
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   
    <form action="{$fsc->full_url()}/{$fsc->url()}" method="post" class="form">
-      <div class="modal" id="modal_login" tabindex="-1" role="dialog" aria-labelledby="modal_label_login">
+      <div class="modal" id="modal_login" tabindex="-1" role="dialog">
          <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">&times;</span>
                   </button>
-                  <h4 class="modal-title" id="modal_label_login">
+                  <h4 class="modal-title">
                      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                      Iniciar sesión
                   </h4>
