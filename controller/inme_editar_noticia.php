@@ -169,6 +169,8 @@ class inme_editar_noticia extends fs_controller
       $this->template = 'inme_public/editar_noticia';
       $this->page_description = 'Detalle de la noticia.';
       
+      $this->buscar = '';
+      
       $fsvar = new fs_var();
       $this->analytics = $fsvar->simple_get('inme_analytics');
       $this->modrewrite = $fsvar->simple_get('inme_modrewrite');

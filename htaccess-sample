@@ -6,4 +6,5 @@
    RewriteRule ^story/(.*)$ index.php?page=inme_editar_noticia&permalink=$1&%{QUERY_STRING} [L]
    RewriteRule ^sitemap$ index.php?page=inme_sitemap [L]
    RewriteRule ^sitemap.xml$ index.php?page=inme_sitemap [L]
+   RewriteRule ^stats$ index.php?page=inme_stats [L]
 </IfModule>

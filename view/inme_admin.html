@@ -1,5 +1,32 @@
 {include="header"}
 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+   google.load("visualization", "1", {packages:["corechart"]});
+   google.setOnLoadCallback(drawChart);
+   function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+         ['fecha', 'aceptaciones'],
+         {loop="$fsc->stats_cookies()"}
+         ['{$key}', {$value}],
+         {/loop}
+      ]);
+      
+      var chart = new google.visualization.AreaChart(document.getElementById('chart-cookies'));
+      chart.draw(data);
+      
+      var data2 = google.visualization.arrayToDataTable([
+         ['fecha', 'ejecuciones'],
+         {loop="$fsc->stats_picar()"}
+         ['{$key}', {$value}],
+         {/loop}
+      ]);
+      
+      var chart2 = new google.visualization.AreaChart(document.getElementById('chart-picar'));
+      chart2.draw(data2);
+   }
+</script>
+
 <div class="container-fluid">
    <div class="row">
       <div class="col-sm-12">
@@ -46,6 +73,11 @@
                   Una vez activado debes pulsar el botón <b>sobreescribir .htaccess</b>
                </p>
             </div>
+            {if="$fsc->inme_config['inme_modrewrite']"}
+            <a href="{$fsc->url()}&htaccess=TRUE" class="btn btn-xs btn-warning">
+               <span class="glyphicon glyphicon-wrench"></span>&nbsp; Sobreescribir .htaccess
+            </a>
+            {/if}
          </div>
          <div class="col-sm-3">
             <div class="form-group">
@@ -56,22 +88,47 @@
                </p>
             </div>
          </div>
-      </div>
-      <div class="row">
-         <div class="col-sm-4">
+         <div class="col-sm-3">
+            <br/>
             <button type="submit" class="btn btn-sm btn-primary">
                <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp; Guardar
             </button>
          </div>
-         <div class="col-sm-8 text-right">
-            {if="$fsc->inme_config['inme_modrewrite']"}
-            <a href="{$fsc->url()}&htaccess=TRUE" class="btn btn-sm btn-warning">
-               <span class="glyphicon glyphicon-wrench"></span>&nbsp; Sobreescribir .htaccess
-            </a>
-            {/if}
-         </div>
       </div>
    </form>
+   <div class="row">
+      <div class="col-sm-12">
+         <br/>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">Estadísticas de cookies</h3>
+            </div>
+            <div class="panel-body">
+               <div id="chart-cookies"></div>
+            </div>
+            <div class="panel-footer">
+               <p class="help-block">
+                  Nº de aceptaciones de cookies cada mes. Cuantas más aceptaciones,
+                  más visitantes nuevos.
+               </p>
+            </div>
+         </div>
+         <br/>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">Estadísticas de picar</h3>
+            </div>
+            <div class="panel-body">
+               <div id="chart-picar"></div>
+            </div>
+            <div class="panel-footer">
+               <p class="help-block">
+                  Nº de ejecuciones del algoritmo de picar.
+               </p>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
 
 {include="footer"}

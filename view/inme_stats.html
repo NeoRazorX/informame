@@ -1,0 +1,62 @@
+{include="header"}
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+   google.load("visualization", "1", {packages:["corechart"]});
+   google.setOnLoadCallback(drawChart);
+   function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+         ['fecha', 'nº noticias', 'popularidad'],
+         {loop="$fsc->stats_noticias()"}
+         ['{$key}', {$value['num']}, {$value['popularidad']}],
+         {/loop}
+      ]);
+      
+      var classicOptions = {
+         height: 600,
+         series: {
+            0: {targetAxisIndex: 0},
+            1: {targetAxisIndex: 1}
+         },
+         vAxes: {
+            0: {title: 'Nº noticias'},
+            1: {title: 'Popularidad'}
+         },
+      };
+      
+      var chart = new google.visualization.AreaChart(document.getElementById('chart-noticias'));
+      chart.draw(data, classicOptions);
+   }
+</script>
+
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               Estadísticas de informame
+               <a href="{$fsc->url()}" class="btn btn-xs btn-default">
+                  <span class="glyphicon glyphicon-refresh"></span>
+               </a>
+            </h1>
+         </div>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">Estadísticas de noticias</h3>
+            </div>
+            <div class="panel-body">
+               <div id="chart-noticias"></div>
+            </div>
+            <div class="panel-footer">
+               <p class="help-block">
+                  La popularidad de una noticia se calcula en este caso como
+                  la suma de las menciones en <b>facebook</b>, <b>twitter</b>
+                  y <b>menéame</b>.
+               </p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{include="footer"}

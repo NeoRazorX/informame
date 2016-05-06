@@ -117,4 +117,40 @@ class inme_admin extends fs_controller
          $this->load_menu(TRUE);
       }
    }
+   
+   public function stats_cookies()
+   {
+      $stats = array();
+      $sql = "select DATE_FORMAT(fecha, '%Y-%m') as fecha2,count(id) as total from fs_logs"
+              . " where tipo = 'cookies' group by fecha2;";
+      
+      $data = $this->db->select($sql);
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $stats[$d['fecha2']] = intval($d['total']);
+         }
+      }
+      
+      return $stats;
+   }
+   
+   public function stats_picar()
+   {
+      $stats = array();
+      $sql = "select DATE_FORMAT(fecha, '%Y-%m') as fecha2,count(id) as total from fs_logs"
+              . " where tipo = 'picar' group by fecha2;";
+      
+      $data = $this->db->select($sql);
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $stats[$d['fecha2']] = intval($d['total']);
+         }
+      }
+      
+      return $stats;
+   }
 }
