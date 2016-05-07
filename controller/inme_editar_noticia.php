@@ -48,6 +48,10 @@ class inme_editar_noticia extends fs_controller
       /// ¿El usuario tiene permiso para eliminar en esta página?
       $this->allow_delete = $this->user->allow_delete_on(__CLASS__);
       
+      $fsvar = new fs_var();
+      $this->analytics = $fsvar->simple_get('inme_analytics');
+      $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
+      
       $this->buscar = '';
       $this->noticia = FALSE;
       $this->relacionada = FALSE;
@@ -326,5 +330,27 @@ class inme_editar_noticia extends fs_controller
       }
       
       return $txt;
+   }
+   
+   public function twitter_url()
+   {
+      if($this->noticia)
+      {
+         return 'https://twitter.com/share?url='.urlencode( $this->empresa->web.'/'.$this->noticia->url($this->modrewrite) ).
+            '&amp;text='.urlencode( html_entity_decode($this->noticia->titulo) );
+      }
+      else
+         return 'https://twitter.com/share';
+   }
+   
+   public function facebook_url()
+   {
+      if($this->noticia)
+      {
+         return 'http://www.facebook.com/sharer.php?s=100&amp;p[title]='.urlencode( html_entity_decode($this->noticia->titulo) ).
+            '&amp;p[url]='.urlencode( $this->empresa->web.'/'.$this->noticia->url($this->modrewrite) );
+      }
+      else
+         return 'http://www.facebook.com/sharer.php';
    }
 }

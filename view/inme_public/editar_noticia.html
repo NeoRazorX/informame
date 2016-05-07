@@ -26,16 +26,35 @@
             <a href="{$fsc->empresa->web}/index.php?page=inme_home&keyword={$value}" class="label label-default">{$value}</a>
             {/loop}
          </p>
+         <br/>
+         <br/>
+         <div class="container-fluid">
+         {loop="$fsc->temas"}
+            {if="$value->imagen"}
+            <div class="row">
+               <div class="col-xs-2">
+                  <a href="{$value->url()}" class="thumbnail">
+                     <img src="{$value->imagen}" alt="{$value->titulo}"/>
+                  </a>
+               </div>
+               <div class="col-xs-10">
+                  <a href="{$value->url()}" class="label label-default">{$value->titulo}</a>
+                  <p class="help-block">{$value->texto()}</p>
+               </div>
+            </div>
+            {/if}
+         {/loop}
+         </div>
       </div>
       <div class="col-sm-6">
-         <a href="#" class="btn btn-sm btn-info">
+         <a rel="nofollow" href="{$fsc->twitter_url()}" class="btn btn-sm btn-info">
             Twitter: {$fsc->noticia->tweets}
          </a>
-         <a href="#" class="btn btn-sm btn-primary">
+         <a rel="nofollow" href="{$fsc->facebook_url()}" class="btn btn-sm btn-primary">
             Facebook: {$fsc->noticia->likes}
          </a>
          {if="$fsc->noticia->meneame_link"}
-         <a href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
+         <a rel="nofollow" href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
             Menéame: {$fsc->noticia->meneos}
          </a>
          {/if}
@@ -90,7 +109,7 @@
                            {if="$value->editada"}
                            <a href="{$fsc->empresa->web}/{$value->url($fsc->modrewrite)}">{$value->titulo}</a>
                            {else}
-                           <a href="{$value->url()}">{$value->titulo}</a>
+                           <a rel="nofollow" href="{$value->url()}">{$value->titulo}</a>
                            {/if}
                         </h4>
                         <p class="help-block">{$value->resumen}</p>

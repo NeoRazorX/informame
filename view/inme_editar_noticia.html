@@ -33,14 +33,14 @@
             {/loop}
          </p>
          <br/>
-         <a href="#" class="btn btn-sm btn-info">
+         <a rel="nofollow" href="{$fsc->twitter_url()}" class="btn btn-sm btn-info">
             Twitter: {$fsc->noticia->tweets}
          </a>
-         <a href="#" class="btn btn-sm btn-primary">
+         <a rel="nofollow" href="{$fsc->facebook_url()}" class="btn btn-sm btn-primary">
             Facebook: {$fsc->noticia->likes}
          </a>
          {if="$fsc->noticia->meneame_link"}
-         <a href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
+         <a rel="nofollow" href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
             Menéame: {$fsc->noticia->meneos}
          </a>
          {/if}
