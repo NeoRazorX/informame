@@ -13,7 +13,7 @@
       ]);
       
       var classicOptions = {
-         height: 600,
+         height: 300,
          series: {
             0: {targetAxisIndex: 0},
             1: {targetAxisIndex: 1}
@@ -26,6 +26,43 @@
       
       var chart = new google.visualization.AreaChart(document.getElementById('chart-noticias'));
       chart.draw(data, classicOptions);
+      
+      var data2 = google.visualization.arrayToDataTable([
+         ['fuente', 'nº noticias'],
+         {loop="$fsc->stats_fuentes()"}
+         ['{$value['codfuente']}', {$value['noticias']}],
+         {/loop}
+      ]);
+      
+      var options = {
+          is3D: true,
+      };
+      
+      var chart2 = new google.visualization.PieChart(document.getElementById('chart-fuentes'));
+      chart2.draw(data2, options);
+      
+      var data3 = google.visualization.arrayToDataTable([
+         ['fuente', 'nº noticias'],
+         {loop="$fsc->stats_fuentes(TRUE)"}
+         ['{$value['codfuente']}', {$value['noticias']}],
+         {/loop}
+      ]);
+      
+      var chart3 = new google.visualization.PieChart(document.getElementById('chart-fuentes-portada'));
+      chart3.draw(data3, options);
+      
+      var data4 = google.visualization.arrayToDataTable([
+         
+         {loop="$fsc->stats_temas()"}
+            {if="$counter==0"}
+            ['fecha', '{$value['tema_0']['codtema']}', '{$value['tema_1']['codtema']}', '{$value['tema_2']['codtema']}', '{$value['tema_3']['codtema']}'],
+            {/if}
+            ['{$key}', {$value['tema_0']['popularidad']}, {$value['tema_1']['popularidad']}, {$value['tema_2']['popularidad']}, {$value['tema_3']['popularidad']}],
+         {/loop}
+      ]);
+      
+      var chart4 = new google.visualization.AreaChart(document.getElementById('chart-temas'));
+      chart4.draw(data4);
    }
 </script>
 
@@ -34,6 +71,7 @@
       <div class="col-sm-12">
          <div class="page-header">
             <h1>
+               <span class="glyphicon glyphicon-stats"></span>
                Estadísticas de informame
                <a href="{$fsc->url()}" class="btn btn-xs btn-default">
                   <span class="glyphicon glyphicon-refresh"></span>
@@ -52,6 +90,57 @@
                   La popularidad de una noticia se calcula en este caso como
                   la suma de las menciones en <b>facebook</b>, <b>twitter</b>
                   y <b>menéame</b>.
+               </p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-6">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">Fuentes de noticias</h3>
+            </div>
+            <div class="panel-body">
+               <div id="chart-fuentes"></div>
+            </div>
+            <div class="panel-footer">
+               <p class="help-block">
+                  Distribución de noticias por fuente.
+               </p>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-6">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">Fuentes de portada</h3>
+            </div>
+            <div class="panel-body">
+               <div id="chart-fuentes-portada"></div>
+            </div>
+            <div class="panel-footer">
+               <p class="help-block">
+                  Distribución de noticias <b>de portada</b> por fuente.
+               </p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">Estadísticas de temas</h3>
+            </div>
+            <div class="panel-body">
+               <div id="chart-temas"></div>
+            </div>
+            <div class="panel-footer">
+               <p class="help-block">
+                  La popularidad de un tema se calcula en este caso como
+                  la suma de las menciones en <b>facebook</b>, <b>twitter</b>
+                  y <b>menéame</b> de las noticias que lo mencionan.
                </p>
             </div>
          </div>

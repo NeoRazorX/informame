@@ -38,6 +38,10 @@
       <nombre>activo</nombre>
       <tipo>boolean</tipo>
    </columna>
+   <columna>
+      <nombre>busqueda</nombre>
+      <tipo>character varying(50)</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_temas_pkey</nombre>
       <consulta>PRIMARY KEY (codtema)</consulta>

@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_model('inme_tema.php');
+
 /**
  * Description of inme_stats
  *
@@ -91,6 +93,106 @@ class inme_stats extends fs_controller
             $stats[$d['fecha2']]['popularidad'] = intval($d['total']);
          }
       }
+      
+      return $stats;
+   }
+   
+   public function stats_fuentes($portada = FALSE)
+   {
+      $stats = array();
+      
+      $sql = "select codfuente,count(*) as total from inme_noticias_fuente";
+      if($portada)
+      {
+         $sql .= " WHERE publicada";
+      }
+      $sql .= " group by codfuente order by total desc;";
+      
+      $data = $this->db->select($sql);
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $stats[] = array(
+                'codfuente' => $d['codfuente'],
+                'noticias' => intval($d['total']),
+            );
+         }
+      }
+      
+      return $stats;
+   }
+   
+   public function stats_temas()
+   {
+      $stats = array();
+      $te0 = new inme_tema();
+      
+      foreach($te0->populares() as $i => $tema)
+      {
+         if($i < 4)
+         {
+            $sql = "SELECT DATE_FORMAT(fecha, '%Y-%m') as fecha2,SUM(popularidad) as num FROM inme_noticias_fuente"
+                    . " WHERE keywords LIKE '%[".$tema->codtema."]%' group by fecha2";
+            
+            $data = $this->db->select($sql);
+            if($data)
+            {
+               foreach($data as $d)
+               {
+                  if( !isset($stats[$d['fecha2']]) )
+                  {
+                     $stats[$d['fecha2']] = array(
+                         'time' => strtotime($d['fecha2']),
+                         'tema_0' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_1' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_2' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_3' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                     );
+                  }
+                  
+                  $stats[$d['fecha2']]['tema_'.$i]['codtema'] = $tema->codtema;
+                  $stats[$d['fecha2']]['tema_'.$i]['popularidad'] = intval($d['num']);
+               }
+            }
+            
+            /// completamos datos
+            foreach($stats as $j => $value)
+            {
+               $stats[$j]['tema_'.$i]['codtema'] = $tema->codtema;
+            }
+         }
+         else
+         {
+            break;
+         }
+      }
+      
+      /// ordenamos
+      uasort($stats, function($a,$b) {
+         if( $a['time'] == $b['time'] )
+         {
+            return 0;
+         }
+         else if( $a['time'] < $b['time'] )
+         {
+            return -1;
+         }
+         else
+            return 1;
+      });
       
       return $stats;
    }

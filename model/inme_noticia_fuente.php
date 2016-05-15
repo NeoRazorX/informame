@@ -463,6 +463,12 @@ class inme_noticia_fuente extends fs_model
       return $nlist;
    }
    
+   /**
+    * Devuelve un array con las noticias que coinciden con la bueda.
+    * @param type $query
+    * @param type $offset
+    * @return \inme_noticia_fuente
+    */
    public function search($query, $offset = 0)
    {
       $nlist = array();

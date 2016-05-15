@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -32,11 +32,15 @@ class inme_tema extends fs_model
    public $codtema;
    public $titulo;
    public $texto;
-   private $keywords;
    public $imagen;
    public $articulos;
    public $popularidad;
    public $activo;
+   
+   /// texto a buscar en noticias para asignarles este tema
+   public $busqueda;
+   
+   private $keywords;
    
    public function __construct($t = FALSE)
    {
@@ -51,6 +55,7 @@ class inme_tema extends fs_model
          $this->articulos = intval($t['articulos']);
          $this->popularidad = intval($t['popularidad']);
          $this->activo = $this->str2bool($t['activo']);
+         $this->busqueda = $t['busqueda'];
       }
       else
       {
@@ -62,6 +67,7 @@ class inme_tema extends fs_model
          $this->articulos = 0;
          $this->popularidad = 0;
          $this->activo = TRUE;
+         $this->busqueda = '';
       }
    }
    
@@ -193,11 +199,13 @@ class inme_tema extends fs_model
                     .", articulos = ".$this->var2str($this->articulos)
                     .", popularidad = ".$this->var2str($this->popularidad)
                     .", activo = ".$this->var2str($this->activo)
+                    .", busqueda = ".$this->var2str($this->busqueda)
                     ."  WHERE codtema = ".$this->var2str($this->codtema).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,articulos,activo,popularidad) VALUES "
+            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,articulos,activo,popularidad,"
+                    . "busqueda) VALUES "
                     . "(".$this->var2str($this->codtema)
                     . ",".$this->var2str($this->titulo)
                     . ",".$this->var2str($this->texto)
@@ -205,7 +213,8 @@ class inme_tema extends fs_model
                     . ",".$this->var2str($this->imagen)
                     . ",".$this->var2str($this->articulos)
                     . ",".$this->var2str($this->activo)
-                    . ",".$this->var2str($this->popularidad).");";
+                    . ",".$this->var2str($this->popularidad)
+                    . ",".$this->var2str($this->busqueda).");";
          }
          
          return $this->db->exec($sql);

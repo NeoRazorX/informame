@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -55,6 +55,7 @@ class inme_editar_tema extends fs_controller
          {
             $this->tema->titulo = $_POST['titulo'];
             $this->tema->texto = $_POST['texto'];
+            $this->tema->busqueda = $_POST['busqueda'];
             $this->tema->activo = isset($_POST['activo']);
             
             $this->tema->clean_keywords();

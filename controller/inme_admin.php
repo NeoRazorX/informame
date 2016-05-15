@@ -121,10 +121,10 @@ class inme_admin extends fs_controller
    public function stats_cookies()
    {
       $stats = array();
-      $sql = "select DATE_FORMAT(fecha, '%Y#%v') as fecha2,count(id) as total from fs_logs"
-              . " where tipo = 'cookies' group by fecha2 order by fecha2 asc;";
+      $sql = "select DATE_FORMAT(fecha, '%Y-%m-%d') as fecha2,count(id) as total from fs_logs"
+              . " where tipo = 'cookies' group by fecha2 order by fecha2 desc";
       
-      $data = $this->db->select($sql);
+      $data = $this->db->select_limit($sql, 50, 0);
       if($data)
       {
          foreach($data as $d)
@@ -133,7 +133,7 @@ class inme_admin extends fs_controller
          }
       }
       
-      return $stats;
+      return array_reverse($stats, TRUE);
    }
    
    public function stats_picar()

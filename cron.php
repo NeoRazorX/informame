@@ -25,8 +25,12 @@ require_model('inme_tema.php');
 
 class inme_cron
 {
-   public function __construct()
+   private $db;
+   
+   public function __construct(&$db)
    {
+      $this->db = $db;
+      
       $order = 'popularidad DESC';
       if( mt_rand(0, 1) == 0 )
       {
@@ -67,17 +71,11 @@ class inme_cron
          }
       }
       
+      /// comprobamos las fuentes
       $fuente0 = new inme_fuente();
       $fuente0->cron_job();
       
-      $tema0 = new inme_tema();
-      $total = $tema0->count();
-      while($total > 0)
-      {
-         $tema0->cron_job();
-         $total -= FS_ITEM_LIMIT;
-         echo 'T';
-      }
+      $this->comprobar_temas();
       
       /// Por último forzamos una llamada web para picar
       $empresa = new empresa();
@@ -271,6 +269,39 @@ class inme_cron
          }
       }
    }
+   
+   private function comprobar_temas()
+   {
+      $noti0 = new inme_noticia_fuente();
+      $tema0 = new inme_tema();
+      
+      /**
+       * Realizamos una busqueda en las noticias para asignarle tema
+       */
+      $sql = "SELECT * FROM inme_temas WHERE busqueda != '' ORDER BY popularidad DESC";
+      $data = $this->db->select_limit($sql, 20, 0);
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $tema = new inme_tema($d);
+            
+            foreach($noti0->search($tema->busqueda) as $no)
+            {
+               $no->set_keyword($tema->codtema);
+               $no->save();
+            }
+         }
+      }
+      
+      $total = $tema0->count();
+      while($total > 0)
+      {
+         $tema0->cron_job();
+         $total -= FS_ITEM_LIMIT;
+         echo 'T';
+      }
+   }
 }
 
-new inme_cron();
+new inme_cron($db);

@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -28,6 +28,8 @@ require_model('inme_tema.php');
 class inme_temas extends fs_controller
 {
    public $offset;
+   public $orden;
+   public $num_resultados;
    public $resultados;
    public $tema;
    
@@ -38,12 +40,6 @@ class inme_temas extends fs_controller
    
    protected function private_core()
    {
-      $this->offset = 0;
-      if( isset($_GET['offset']) )
-      {
-         $this->offset = intval($_GET['offset']);
-      }
-      
       $this->tema = new inme_tema();
       if( isset($_POST['codtema']) )
       {
@@ -73,26 +69,50 @@ class inme_temas extends fs_controller
          }
       }
       
-      if( isset($_GET['order']) )
+      $this->offset = 0;
+      if( isset($_GET['offset']) )
       {
-         switch($_GET['order'])
+         $this->offset = intval($_GET['offset']);
+      }
+      
+      $this->orden = 'titulo ASC';
+      if( isset($_REQUEST['orden']) )
+      {
+         $this->orden = $_REQUEST['orden'];
+      }
+      
+      $this->resultados = $this->buscar();
+   }
+   
+   private function buscar()
+   {
+      $tlist = array();
+      $this->num_resultados = 0;
+      
+      $query = $this->tema->no_html( mb_strtolower($this->query, 'UTF8') );
+      
+      $sql = "";
+      if($query != '')
+      {
+         $sql .= " WHERE lower(titulo) LIKE '%".$query."%' OR lower(texto) LIKE '%".$query."%'";
+      }
+      
+      $data = $this->db->select("SELECT COUNT(*) as total from inme_temas".$sql);
+      if($data)
+      {
+         $this->num_resultados = intval($data[0]['total']);
+         
+         $sql = "SELECT * FROM inme_temas".$sql." ORDER BY ".$this->orden;
+         $data2 = $this->db->select_limit($sql, FS_ITEM_LIMIT, $this->offset);
+         if($data2)
          {
-            case 'articulos':
-               $this->resultados = $this->tema->all($this->offset, 'articulos DESC');
-               break;
-            
-            case 'popularidad':
-               $this->resultados = $this->tema->all($this->offset, 'popularidad DESC');
-               break;
-            
-            default:
-               $this->resultados = $this->tema->all($this->offset);
-               break;
+            foreach($data2 as $d)
+            {
+               $tlist[] = new inme_tema($d);
+            }
          }
       }
-      else
-      {
-         $this->resultados = $this->tema->all($this->offset);
-      }
+      
+      return $tlist;
    }
 }
