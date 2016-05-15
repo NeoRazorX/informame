@@ -167,8 +167,18 @@ class inme_stats extends fs_controller
                   $stats[$d['fecha2']]['tema_'.$i]['popularidad'] = intval($d['num']);
                }
             }
-            
-            /// completamos datos
+         }
+         else
+         {
+            break;
+         }
+      }
+      
+      /// completamos datos
+      foreach($te0->populares() as $i => $tema)
+      {
+         if($i < 4)
+         {
             foreach($stats as $j => $value)
             {
                $stats[$j]['tema_'.$i]['codtema'] = $tema->codtema;
