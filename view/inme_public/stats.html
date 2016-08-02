@@ -55,14 +55,22 @@
          
          {loop="$fsc->stats_temas()"}
             {if="$counter==0"}
-            ['fecha', '{$value['tema_0']['codtema']}', '{$value['tema_1']['codtema']}', '{$value['tema_2']['codtema']}', '{$value['tema_3']['codtema']}'],
+            ['fecha','{$value['tema_0']['codtema']}','{$value['tema_1']['codtema']}','{$value['tema_2']['codtema']}'
+               ,'{$value['tema_3']['codtema']}','{$value['tema_4']['codtema']}','{$value['tema_5']['codtema']}'
+               ,'{$value['tema_6']['codtema']}','{$value['tema_7']['codtema']}'],
             {/if}
-            ['{$key}', {$value['tema_0']['popularidad']}, {$value['tema_1']['popularidad']}, {$value['tema_2']['popularidad']}, {$value['tema_3']['popularidad']}],
+            ['{$key}',{$value['tema_0']['popularidad']},{$value['tema_1']['popularidad']},{$value['tema_2']['popularidad']}
+               ,{$value['tema_3']['popularidad']},{$value['tema_4']['popularidad']},{$value['tema_5']['popularidad']}
+               ,{$value['tema_6']['popularidad']},{$value['tema_7']['popularidad']}],
          {/loop}
       ]);
       
+      var classicOptions4 = {
+         height: 450,
+      };
+      
       var chart4 = new google.visualization.AreaChart(document.getElementById('chart-temas'));
-      chart4.draw(data4);
+      chart4.draw(data4, classicOptions4);
    }
 </script>
 

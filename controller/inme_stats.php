@@ -127,10 +127,11 @@ class inme_stats extends fs_controller
    {
       $stats = array();
       $te0 = new inme_tema();
+      $max = 9;
       
       foreach($te0->populares() as $i => $tema)
       {
-         if($i < 4)
+         if($i < $max)
          {
             $sql = "SELECT DATE_FORMAT(fecha, '%Y-%m') as fecha2,SUM(popularidad) as num FROM inme_noticias_fuente"
                     . " WHERE keywords LIKE '%[".$tema->codtema."]%' group by fecha2";
@@ -144,22 +145,6 @@ class inme_stats extends fs_controller
                   {
                      $stats[$d['fecha2']] = array(
                          'time' => strtotime($d['fecha2']),
-                         'tema_0' => array(
-                             'codtema' => '-',
-                             'popularidad' => 0,
-                         ),
-                         'tema_1' => array(
-                             'codtema' => '-',
-                             'popularidad' => 0,
-                         ),
-                         'tema_2' => array(
-                             'codtema' => '-',
-                             'popularidad' => 0,
-                         ),
-                         'tema_3' => array(
-                             'codtema' => '-',
-                             'popularidad' => 0,
-                         ),
                      );
                   }
                   
@@ -177,7 +162,7 @@ class inme_stats extends fs_controller
       /// completamos datos
       foreach($te0->populares() as $i => $tema)
       {
-         if($i < 4)
+         if($i < $max)
          {
             foreach($stats as $j => $value)
             {
