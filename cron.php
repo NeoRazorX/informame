@@ -31,6 +31,11 @@ class inme_cron
    {
       $this->db = $db;
       
+      /// Forzamos una llamada web para picar
+      $empresa = new empresa();
+      $this->curl_download($empresa->web.'/index.php?page=inme_picar&hidden=TRUE');
+      
+      /// procesamos noticias aleatorias
       $order = 'popularidad DESC';
       if( mt_rand(0, 1) == 0 )
       {
@@ -78,7 +83,6 @@ class inme_cron
       $this->comprobar_temas();
       
       /// Por último forzamos una llamada web para picar
-      $empresa = new empresa();
       $this->curl_download($empresa->web.'/index.php?page=inme_picar&hidden=TRUE');
    }
    

@@ -145,6 +145,38 @@ class inme_stats extends fs_controller
                   {
                      $stats[$d['fecha2']] = array(
                          'time' => strtotime($d['fecha2']),
+                         'tema_0' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_1' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_2' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_3' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_4' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_5' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_6' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
+                         'tema_7' => array(
+                             'codtema' => '-',
+                             'popularidad' => 0,
+                         ),
                      );
                   }
                   
