@@ -186,7 +186,19 @@ class inme_home extends fs_controller
       }
       else if($this->mostrar == 'portada')
       {
-         $this->noticias = $noti->all($this->offset, 'publicada DESC');
+         if($this->offset > 0)
+         {
+            $this->noticias = $noti->all($this->offset, 'publicada DESC');
+         }
+         else
+         {
+            $this->noticias = $this->cache->get('inme_portada');
+            if(!$this->noticias)
+            {
+               $this->noticias = $noti->all($this->offset, 'publicada DESC');
+               $this->cache->set('inme_portada', $this->noticias, 900);
+            }
+         }
       }
       else if($this->mostrar == 'populares')
       {
@@ -199,10 +211,16 @@ class inme_home extends fs_controller
       
       $tema = new inme_tema();
       $this->mostrar_tema = FALSE;
-      $this->temas_populares = $tema->populares();
       if( isset($_GET['keyword']) )
       {
          $this->mostrar_tema = $tema->get($_GET['keyword']);
+      }
+      
+      $this->temas_populares = $this->cache->get('inme_temas_populares');
+      if(!$this->temas_populares)
+      {
+         $this->temas_populares = $tema->populares();
+         $this->cache->set('inme_temas_populares', $this->temas_populares, 900);
       }
    }
    
