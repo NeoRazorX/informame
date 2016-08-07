@@ -152,6 +152,26 @@ class inme_tema extends fs_model
       $this->keywords = NULL;
    }
    
+   public function busquedas()
+   {
+      $keys = array();
+      
+      $aux = explode(',', $this->busqueda);
+      if($aux)
+      {
+         foreach($aux as $value)
+         {
+            $key = trim($value);
+            if($key)
+            {
+               $keys[] = $key;
+            }
+         }
+      }
+      
+      return $keys;
+   }
+   
    public function get($cod)
    {
       $data = $this->db->select("SELECT * FROM inme_temas WHERE codtema = ".$this->var2str($cod).";");
@@ -265,6 +285,31 @@ class inme_tema extends fs_model
       return $tlist;
    }
    
+   public function random()
+   {
+      $tlist = array();
+      $sql = "SELECT * FROM inme_temas WHERE activo ORDER BY ";
+      if( strtolower(FS_DB_TYPE) == 'mysql' )
+      {
+         $sql .= 'rand()';
+      }
+      else
+      {
+         $sql .= ' popularidad DESC';
+      }
+      
+      $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, 0);
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $tlist[] = new inme_tema($d);
+         }
+      }
+      
+      return $tlist;
+   }
+   
    public function count()
    {
       $data = $this->db->select("SELECT COUNT(codtema) as num FROM inme_temas;");
@@ -282,9 +327,9 @@ class inme_tema extends fs_model
    {
       if( $this->db->table_exists('inme_noticias_fuente') )
       {
-         $total = $this->count();
-         foreach($this->all( mt_rand(0, $total) ) as $tema)
+         foreach($this->random() as $tema)
          {
+            /// calculamos el número de artículos de este tema
             $tema->articulos = 0;
             if($tema->activo)
             {
@@ -296,10 +341,12 @@ class inme_tema extends fs_model
                }
             }
             
+            /// calculamos la popularidad del tema
             $tema->popularidad = 0;
             if($tema->activo AND $tema->articulos > 1)
             {
-               $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+               $sql = "SELECT SUM(popularidad) as total FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%'"
+                       . " AND fecha >= ".$this->var2str( date('d-m-Y', strtotime('-1 month')) ).";";
                $data = $this->db->select($sql);
                if($data)
                {

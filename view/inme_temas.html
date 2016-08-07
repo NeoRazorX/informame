@@ -13,18 +13,31 @@
 <div class="container-fluid">
    <div class="row">
       <div class="col-sm-12">
+         <div class="btn-group">
+            <a href="index.php?page=inme_home" class="btn btn-sm btn-default">
+               <span class="glyphicon glyphicon-arrow-left"></span>
+               <span class="hidden-xs">&nbsp; Portada</span>
+            </a>
+            <a class="btn btn-sm btn-default" href="{$fsc->url()}" title="Recargar la página">
+               <span class="glyphicon glyphicon-refresh"></span>
+            </a>
+         </div>
+         <div class="btn-group">
+            <a id="b_nuevo_tema" class="btn btn-sm btn-success" href="#">
+               <span class="glyphicon glyphicon-pencil"></span>
+               <span class="hidden-xs">&nbsp; Nuevo</span>
+            </a>
+            {loop="$fsc->extensions"}
+               {if="$value->type=='button'"}
+               <a href="index.php?page={$value->from}{$value->params}" class="btn btn-sm btn-default">{$value->text}</a>
+               {/if}
+            {/loop}
+         </div>
          <div class="page-header">
             <h1>
                <span class="glyphicon glyphicon-book"></span>
                Temas
                <small>{$fsc->num_resultados}</small>
-               <a class="btn btn-xs btn-default" href="{$fsc->url()}" title="Recargar la página">
-                  <span class="glyphicon glyphicon-refresh"></span>
-               </a>
-               <a id="b_nuevo_tema" class="btn btn-xs btn-success" href="#">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  <span class="hidden-xs">&nbsp; Nuevo</span>
-               </a>
             </h1>
             <p class="help-block">
                Los temas sirven para agrupar noticias, proporcionar más información e imágenes.
@@ -98,14 +111,14 @@
          <ul class="pager">
             {if="$fsc->offset>0"}
             <li class="previous">
-               <a href="{$fsc->url()}&offset={$fsc->offset-FS_ITEM_LIMIT}">
+               <a href="{$fsc->url()}&offset={$fsc->offset-FS_ITEM_LIMIT}&orden={$fsc->orden}">
                   <span class="glyphicon glyphicon-chevron-left"></span>&nbsp; Anteriores
                </a>
             </li>
             {/if}
             {if="count($fsc->resultados)==FS_ITEM_LIMIT"}
             <li class="next">
-               <a href="{$fsc->url()}&offset={$fsc->offset+FS_ITEM_LIMIT}">
+               <a href="{$fsc->url()}&offset={$fsc->offset+FS_ITEM_LIMIT}&orden={$fsc->orden}">
                   Siguientes &nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
                </a>
             </li>

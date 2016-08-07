@@ -75,7 +75,7 @@ class inme_temas extends fs_controller
          $this->offset = intval($_GET['offset']);
       }
       
-      $this->orden = 'titulo ASC';
+      $this->orden = 'popularidad desc';
       if( isset($_REQUEST['orden']) )
       {
          $this->orden = $_REQUEST['orden'];

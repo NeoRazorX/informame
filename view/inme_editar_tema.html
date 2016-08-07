@@ -4,18 +4,21 @@
 <div class="container-fluid">
    <div class="row">
       <div class="col-sm-12">
+         <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="index.php?page=inme_temas" title="Todos los temas">
+               <span class="glyphicon glyphicon-arrow-left"></span>
+               <span class="hidden-xs">&nbsp; Todos</span>
+            </a>
+            <a class="btn btn-sm btn-default" href="{$fsc->tema->url()}" title="Recargar la página">
+               <span class="glyphicon glyphicon-refresh"></span>
+            </a>
+         </div>
          <div class="page-header">
             <h1>
-               <a class="btn btn-xs btn-default" href="index.php?page=inme_temas" title="Todos los temas">
-                  <span class="glyphicon glyphicon-arrow-left"></span>
-               </a>
                {$fsc->tema->titulo}
                <small>
                   <a href="index.php?page=inme_home&keyword={$fsc->tema->codtema}">{$fsc->tema->articulos}</a>
                </small>
-               <a class="btn btn-xs btn-default" href="{$fsc->tema->url()}" title="Recargar la página">
-                  <span class="glyphicon glyphicon-refresh"></span>
-               </a>
             </h1>
          </div>
       </div>
@@ -24,7 +27,9 @@
       <div class="col-sm-6">
          <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
-               <a href="#tema" aria-controls="tema" role="tab" data-toggle="tab">Tema</a>
+               <a href="#tema" aria-controls="tema" role="tab" data-toggle="tab">
+                  <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp; Tema
+               </a>
             </li>
             <li role="presentation">
                <a href="#editar" aria-controls="editar" role="tab" data-toggle="tab">
@@ -101,7 +106,7 @@
                <p class="help-block">
                   ¿Estás seguro de que deseas eliminar este tema?
                </p>
-               <a href="index.php?page=inme_temas&delete={$fsc->tema->codtema}" class="btn btn-xs btn-danger">
+               <a href="index.php?page=inme_temas&delete={$fsc->tema->codtema}" class="btn btn-sm btn-danger">
                   <span class="glyphicon glyphicon-trash"></span>&nbsp; Eliminar
                </a>
                {else}

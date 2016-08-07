@@ -50,71 +50,7 @@ class inme_home extends fs_controller
    
    protected function private_core()
    {
-      $this->mostrar = 'portada';
-      if( isset($_GET['mostrar']) )
-      {
-         $this->mostrar = $_GET['mostrar'];
-      }
-      
-      $this->buscar = '';
-      if( isset($_REQUEST['buscar']) )
-      {
-         $this->buscar = $_REQUEST['buscar'];
-      }
-      
-      $this->codfuente = '';
-      if( isset($_GET['codfuente']) )
-      {
-         $this->codfuente = $_GET['codfuente'];
-      }
-      
-      $this->keyword = '';
-      if( isset($_GET['keyword']) )
-      {
-         $this->keyword = $_GET['keyword'];
-      }
-      
-      $this->offset = 0;
-      if( isset($_GET['offset']) )
-      {
-         $this->offset = intval($_GET['offset']);
-      }
-      
-      $this->preview = new inme_noticia_preview();
-      
-      $noti = new inme_noticia_fuente();
-      if($this->buscar != '')
-      {
-         $this->noticias = $noti->search($this->buscar, $this->offset);
-      }
-      else if($this->codfuente != '')
-      {
-         $this->noticias = $noti->all_from_fuente($this->codfuente, $this->offset);
-      }
-      else if($this->keyword != '')
-      {
-         $this->noticias = $noti->all_from_keyword($this->keyword, $this->offset);
-      }
-      else if($this->mostrar == 'portada')
-      {
-         $this->noticias = $noti->all($this->offset, 'publicada DESC');
-      }
-      else if($this->mostrar == 'populares')
-      {
-         $this->noticias = $noti->all($this->offset, 'popularidad DESC');
-      }
-      else
-      {
-         $this->noticias = $noti->all($this->offset);
-      }
-      
-      $tema = new inme_tema();
-      $this->mostrar_tema = FALSE;
-      $this->temas_populares = $tema->populares();
-      if( isset($_GET['keyword']) )
-      {
-         $this->mostrar_tema = $tema->get($_GET['keyword']);
-      }
+      $this->procesar_portada();
    }
    
    protected function public_core()
@@ -139,6 +75,11 @@ class inme_home extends fs_controller
          $fslog->save();
       }
       
+      $this->procesar_portada();
+   }
+   
+   public function procesar_portada()
+   {
       $this->mostrar = 'portada';
       if( isset($_GET['mostrar']) )
       {

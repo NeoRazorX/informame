@@ -280,6 +280,71 @@ class inme_cron
       $tema0 = new inme_tema();
       
       /**
+       * Completamos descripciones con ayuda de la wikipedia.
+       */
+      $sql = "SELECT * FROM inme_temas WHERE texto = titulo ORDER BY popularidad DESC";
+      $data = $this->db->select_limit($sql, 20, mt_rand(0, 100) );
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $tema = new inme_tema($d);
+            
+            /// buscamos en la wikipedia
+            $url = 'https://es.wikipedia.org/w/api.php?format=json&action=query&prop=extracts'
+                    . '&exintro=&explaintext=&redirects=1&titles='.urlencode($tema->titulo);
+            $html = file_get_contents($url);
+            if($html)
+            {
+               $json = json_decode($html);
+               if( isset($json->query) )
+               {
+                  if( isset($json->query->pages) )
+                  {
+                     foreach($json->query->pages as $page)
+                     {
+                        if( !isset($page->extract) )
+                        {
+                           /// caca
+                        }
+                        else if( mb_strlen($page->extract) > 100)
+                        {
+                           $tema->titulo = $page->title;
+                           $tema->texto = $page->extract;
+                           $tema->save();
+                           
+                           echo "\nWikipedia: ".$tema->codtema.' - ';
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+      
+      /**
+       * Agregamos imágenes con ayuda de bing.
+       */
+      $sql = "SELECT * FROM inme_temas WHERE imagen IS NULL ORDER BY popularidad DESC";
+      $data = $this->db->select_limit($sql, 20, mt_rand(0, 100) );
+      if($data)
+      {
+         foreach($data as $d)
+         {
+            $tema = new inme_tema($d);
+            
+            /// buscamos en bing
+            $tema->imagen = $this->get_image_from_bing($tema->titulo);
+            
+            if($tema->imagen)
+            {
+               $tema->save();
+               echo "\nBing (".$tema->codtema."): ".$tema->imagen.' - ';
+            }
+         }
+      }
+      
+      /**
        * Realizamos una busqueda en las noticias para asignarle tema
        */
       $sql = "SELECT * FROM inme_temas WHERE busqueda != '' ORDER BY popularidad DESC";
@@ -290,21 +355,54 @@ class inme_cron
          {
             $tema = new inme_tema($d);
             
-            foreach($noti0->search($tema->busqueda) as $no)
+            foreach($tema->busquedas() as $buscar)
             {
-               $no->set_keyword($tema->codtema);
-               $no->save();
+               foreach($noti0->search($buscar) as $no)
+               {
+                  $no->set_keyword($tema->codtema);
+                  
+                  if( is_null($no->preview) AND $tema->imagen )
+                  {
+                     $no->preview = $tema->imagen;
+                  }
+                  
+                  $no->save();
+               }
             }
          }
       }
       
+      $max = 10;
       $total = $tema0->count();
-      while($total > 0)
+      while($total > 0 AND $max > 0)
       {
          $tema0->cron_job();
          $total -= FS_ITEM_LIMIT;
+         $max--;
          echo 'T';
       }
+   }
+   
+   function get_image_from_bing($search)
+   {
+      $imagen = NULL;
+      
+      $url = "http://www.bing.com/images/search?pq=".urlencode( mb_strtolower($search) )."&count=50&q=".urlencode($search);
+      $data = file_get_contents($url);
+      if($data)
+      {
+         preg_match_all('@<img.+src="(.*)".*>@Uims', $data, $matches);
+         foreach($matches[1] as $m)
+         {
+            if( substr($m, 0, 4) == 'http' )
+            {
+               $imagen = $m;
+               break;
+            }
+         }
+      }
+      
+      return $imagen;
    }
 }
 

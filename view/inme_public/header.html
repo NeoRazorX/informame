@@ -28,13 +28,19 @@
    </script>
    {/if}
    <script type="text/javascript">
-      $(document).ready(function() {
+      function picar()
+      {
          $.ajax({
             type: 'GET',
             url: 'index.php?page=inme_picar&hidden=TRUE',
             dataType: 'html',
-            success: function(datos) {}
+            success: function() {
+               setTimeout(picar, 300000);
+            }
          });
+      }
+      $(document).ready(function() {
+         setTimeout(picar, 1000);
          $(".fake_link").click(function(event) {
             if(event.which === 1)
             {
@@ -123,17 +129,17 @@
                <br/>
                <div class="row">
                   <div class="col-sm-4">
-                     <a href="{#FS_COMMUNITY_URL#}/index.php?page=community_questions" target="_blank" class="btn btn-sm btn-block btn-warning">
+                     <a href="https://www.facturascripts.com/preguntas" target="_blank" class="btn btn-sm btn-block btn-warning">
                         Preguntas
                      </a>
                   </div>
                   <div class="col-sm-4">
-                     <a href="{#FS_COMMUNITY_URL#}/index.php?page=community_errors" target="_blank" class="btn btn-sm btn-block btn-danger">
+                     <a href="https://www.facturascripts.com/errores" target="_blank" class="btn btn-sm btn-block btn-danger">
                         Errores
                      </a>
                   </div>
                   <div class="col-sm-4">
-                     <a href="{#FS_COMMUNITY_URL#}/index.php?page=community_ideas" target="_blank" class="btn btn-sm btn-block btn-success">
+                     <a href="https://www.facturascripts.com/ideas" target="_blank" class="btn btn-sm btn-block btn-success">
                         Sugerencias
                      </a>
                   </div>

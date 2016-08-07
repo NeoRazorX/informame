@@ -400,6 +400,14 @@ class inme_noticia_preview
       {
          $status = FALSE;
       }
+      else if( mb_substr($url, 0, 22) == 'https://pbs.twimg.com/' )
+      {
+         $status = FALSE;
+      }
+      else if($url == 'http://s01.europapress.net/imagenes/estaticos/OpenGraph_EP_1024x512.jpg')
+      {
+         $status = FALSE;
+      }
       
       return $status;
    }

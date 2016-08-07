@@ -5,9 +5,9 @@
       {if="$fsc->mostrar_tema->imagen"}
       <div class="row">
          <div class="col-sm-1">
-            <div class="thumbnail">
-               <img src="{$fsc->mostrar_tema->imagen}" alt="$fsc->mostrar_tema->codtema"/>
-            </div>
+            <a href="{$fsc->mostrar_tema->url()}" class="thumbnail">
+               <img src="{$fsc->mostrar_tema->imagen}" alt="{$fsc->mostrar_tema->codtema}"/>
+            </a>
          </div>
          <div class="col-sm-11">
             <h1>{$fsc->mostrar_tema->titulo}</h1>

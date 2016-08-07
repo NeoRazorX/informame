@@ -612,7 +612,7 @@ class inme_picar extends fs_controller
          /// procesamos las keywords y las imágenes de media
          foreach($item->children('media', TRUE) as $element)
          {
-            if($element->getName() == 'thumbnail')
+            if($element->getName() == 'thumbnail' AND !$noticia->editada)
             {
                $noticia->preview = (string)$element;
             }
