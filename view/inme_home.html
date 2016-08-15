@@ -84,7 +84,7 @@
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter<22"}
+         {if="$counter<20"}
          <div>
             {if="$fsc->preview->type"}
             <div class="pull-left">
@@ -151,7 +151,7 @@
       {loop="$fsc->noticias"}
          <!--{$url=$value->url()}-->
          <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter>=22"}
+         {if="$counter>=20"}
          <div style="margin-bottom: 20px;">
             {if condition="$fsc->preview->type"}
             <div class="pull-right">

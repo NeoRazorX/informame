@@ -380,7 +380,11 @@ class inme_noticia_preview
       $status = TRUE;
       $extensions = array('.png', '.jpg', 'jpeg', '.gif', 'webp');
       
-      if( mb_substr($url, 0, 4) != 'http' )
+      if( mb_substr($url, 0, 24) == 'http://tse4.mm.bing.net/' )
+      {
+         $status = TRUE;
+      }
+      else if( mb_substr($url, 0, 4) != 'http' )
       {
          $status = FALSE;
       }

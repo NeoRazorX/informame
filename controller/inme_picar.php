@@ -718,12 +718,29 @@ class inme_picar extends fs_controller
       }
    }
    
+   /**
+    * Debería devolver el nº de menciones en Twitter de dicho enlace, pero eso ya no
+    * es posible por culpa de los estúpidos cambios en la API de Twitter. Así que
+    * en lugar de no hacer nada, devolvemos el nº de menciones en google+.
+    * @param type $link
+    * @return type
+    */
    private function tweet_count($link)
    {
-      $json_string = $this->curl_download('http://urls.api.twitter.com/1/urls/count.json?url='.rawurlencode($link), FALSE);
-      $json = json_decode($json_string, TRUE);
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, "https://clients6.google.com/rpc");
+      curl_setopt($curl, CURLOPT_POST, TRUE);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+      curl_setopt($curl, CURLOPT_POSTFIELDS, '[{"method":"pos.plusones.get","id":"p","params":{"nolog":true,"id":"'.
+              rawurldecode($link).'","source":"widget","userId":"@viewer","groupId":"@self"},"jsonrpc":"2.0","key":"p","apiVersion":"v1"}]');
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+      curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+      $curl_results = curl_exec($curl);
+      curl_close ($curl);
+      $json = json_decode($curl_results, TRUE);
       
-      return isset($json['count']) ? intval($json['count']) : 0;
+      return isset($json[0]['result']['metadata']['globalCounts']['count']) ? intval( $json[0]['result']['metadata']['globalCounts']['count'] ) : 0;
    }
    
    private function facebook_count($link)

@@ -35,6 +35,9 @@ class inme_cron
       $empresa = new empresa();
       $this->curl_download($empresa->web.'/index.php?page=inme_picar&hidden=TRUE');
       
+      /// comprobamos los temas
+      $this->comprobar_temas();
+      
       /// procesamos noticias aleatorias
       $order = 'popularidad DESC';
       if( mt_rand(0, 1) == 0 )
@@ -43,16 +46,12 @@ class inme_cron
       }
       
       $noti0 = new inme_noticia_fuente();
-      foreach($noti0->all( mt_rand(0, 100), $order ) as $noti)
+      foreach($noti0->all( mt_rand(0, 50), $order ) as $noti)
       {
          $popularidad = $noti->popularidad();
-         switch( mt_rand(0, 3) )
+         switch( mt_rand(0, 2) )
          {
             default:
-               $this->preview_noticia($noti);
-               break;
-            
-            case 0:
                $noti->tweets = max( array($noti->tweets, $this->tweet_count($noti->url)) );
                break;
             
@@ -65,22 +64,22 @@ class inme_cron
                break;
          }
          
+         $this->preview_noticia($noti);
+         
          if( $noti->popularidad() == $popularidad )
          {
             echo '=';
          }
          else
          {
-            $noti->save();
             echo '.';
+            $noti->save();
          }
       }
       
       /// comprobamos las fuentes
       $fuente0 = new inme_fuente();
       $fuente0->cron_job();
-      
-      $this->comprobar_temas();
       
       /// Por último forzamos una llamada web para picar
       $this->curl_download($empresa->web.'/index.php?page=inme_picar&hidden=TRUE');
@@ -280,16 +279,58 @@ class inme_cron
       $tema0 = new inme_tema();
       
       /**
-       * Completamos descripciones con ayuda de la wikipedia.
+       * Leemos noticias y sacamos las keywords.
        */
-      $sql = "SELECT * FROM inme_temas WHERE texto = titulo ORDER BY popularidad DESC";
-      $data = $this->db->select_limit($sql, 20, mt_rand(0, 100) );
-      if($data)
+      $keys = array();
+      /// noticias de portadas
+      foreach($noti0->all(0, 'publicada DESC') as $n)
       {
-         foreach($data as $d)
+         foreach($n->keywords() as $key)
          {
-            $tema = new inme_tema($d);
-            
+            if( !in_array($key, $keys) )
+            {
+               $keys[] = $key;
+            }
+         }
+      }
+      /// últimas noticias
+      foreach($noti0->all() as $n)
+      {
+         foreach($n->keywords() as $key)
+         {
+            if( !in_array($key, $keys) )
+            {
+               $keys[] = $key;
+            }
+         }
+      }
+      shuffle($keys);
+      
+      /**
+       * Ahora buscamos los temas de esas keywords.
+       */
+      $temas = array();
+      foreach($keys as $k)
+      {
+         $tema = $tema0->get($k);
+         if($tema)
+         {
+            $temas[] = $tema;
+         }
+      }
+      
+      /**
+       * Completamos descripciones de los temas con ayuda de la wikipedia.
+       */
+      $max = 10;
+      foreach($temas as $tema)
+      {
+         if($max <= 0)
+         {
+            break;
+         }
+         else if( mb_strtolower($tema->texto, 'UTF8') == mb_strtolower($tema->titulo, 'UTF8') )
+         {
             /// buscamos en la wikipedia
             $url = 'https://es.wikipedia.org/w/api.php?format=json&action=query&prop=extracts'
                     . '&exintro=&explaintext=&redirects=1&titles='.urlencode($tema->titulo);
@@ -311,44 +352,63 @@ class inme_cron
                         {
                            $tema->titulo = $page->title;
                            $tema->texto = $page->extract;
-                           $tema->save();
-                           
-                           echo "\nWikipedia: ".$tema->codtema.' - ';
+                           if( $tema->save() )
+                           {
+                              echo '- Wikipedia: '.$tema->codtema.' -';
+                           }
                         }
                      }
                   }
                }
             }
+            
+            $max--;
          }
       }
       
       /**
-       * Agregamos imágenes con ayuda de bing.
+       * Agregamos imágenes a los temas con ayuda de bing.
        */
-      $sql = "SELECT * FROM inme_temas WHERE imagen IS NULL ORDER BY popularidad DESC";
-      $data = $this->db->select_limit($sql, 20, mt_rand(0, 100) );
-      if($data)
+      $max = 10;
+      foreach($temas as $tema)
       {
-         foreach($data as $d)
+         if($max <= 0)
          {
-            $tema = new inme_tema($d);
-            
-            /// buscamos en bing
+            break;
+         }
+         else if( is_null($tema->imagen) )
+         {
             $tema->imagen = $this->get_image_from_bing($tema->titulo);
-            
             if($tema->imagen)
             {
-               $tema->save();
-               echo "\nBing (".$tema->codtema."): ".$tema->imagen.' - ';
+               if( $tema->save() )
+               {
+                  echo '- Bing: '.$tema->codtema.' ';
+                  
+                  /// buscamos noticias relacionadas
+                  foreach($noti0->all_from_keyword($tema->codtema) as $n)
+                  {
+                     if( is_null($n->preview) )
+                     {
+                        $n->preview = $tema->imagen;
+                        $n->save();
+                        echo '*';
+                     }
+                  }
+                  
+                  echo ' -';
+               }
             }
+            
+            $max--;
          }
       }
       
       /**
        * Realizamos una busqueda en las noticias para asignarle tema
        */
-      $sql = "SELECT * FROM inme_temas WHERE busqueda != '' ORDER BY popularidad DESC";
-      $data = $this->db->select_limit($sql, 20, 0);
+      $sql = "SELECT * FROM inme_temas WHERE busqueda != '' ORDER BY popularidad DESC;";
+      $data = $this->db->select($sql);
       if($data)
       {
          foreach($data as $d)
@@ -357,17 +417,20 @@ class inme_cron
             
             foreach($tema->busquedas() as $buscar)
             {
-               foreach($noti0->search($buscar) as $no)
+               echo '- buscar: '.$buscar.' ';
+               foreach($noti0->search($buscar, 0, 'fecha DESC') as $no)
                {
                   $no->set_keyword($tema->codtema);
                   
                   if( is_null($no->preview) AND $tema->imagen )
                   {
                      $no->preview = $tema->imagen;
+                     echo '*';
                   }
                   
                   $no->save();
                }
+               echo ' -';
             }
          }
       }

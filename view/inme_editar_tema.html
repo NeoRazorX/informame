@@ -17,7 +17,7 @@
             <h1>
                {$fsc->tema->titulo}
                <small>
-                  <a href="index.php?page=inme_home&keyword={$fsc->tema->codtema}">{$fsc->tema->articulos}</a>
+                  <a href="index.php?page=inme_home&keyword={$fsc->tema->codtema}">{$fsc->show_numero($fsc->tema->articulos, 0)}</a>
                </small>
             </h1>
          </div>

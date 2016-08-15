@@ -469,13 +469,13 @@ class inme_noticia_fuente extends fs_model
     * @param type $offset
     * @return \inme_noticia_fuente
     */
-   public function search($query, $offset = 0)
+   public function search($query, $offset = 0, $order = 'popularidad DESC')
    {
       $nlist = array();
-      $query = $this->no_html( strtolower($query) );
+      $query = $this->no_html( mb_strtolower($query, 'UTF8') );
       $sql = "SELECT * FROM ".$this->table_name." WHERE lower(titulo) LIKE '%".$query."%'"
               . " OR lower(resumen) LIKE '%".$query."%'"
-              . " ORDER BY popularidad DESC";
+              . " ORDER BY ".$order;
       
       $data = $this->db->select_limit($sql, FS_ITEM_LIMIT, $offset);
       if($data)
