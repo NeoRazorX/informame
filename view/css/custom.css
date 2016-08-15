@@ -43,3 +43,12 @@ h3, h4 {
    max-width: 100px;
    margin-left: 10px;
 }
+.jumbotron p {
+   margin-bottom: 0px;
+}
+.jumbotron small {
+   color: gray;
+}
+.bg-claro {
+   background-color: #FAFAFA;
+}

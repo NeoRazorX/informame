@@ -42,6 +42,10 @@
       <nombre>busqueda</nombre>
       <tipo>character varying(50)</tipo>
    </columna>
+   <columna>
+      <nombre>fecha</nombre>
+      <tipo>date</tipo>
+   </columna>
    <restriccion>
       <nombre>inme_temas_pkey</nombre>
       <consulta>PRIMARY KEY (codtema)</consulta>

@@ -36,6 +36,7 @@ class inme_tema extends fs_model
    public $articulos;
    public $popularidad;
    public $activo;
+   public $fecha;
    
    /// texto a buscar en noticias para asignarles este tema
    public $busqueda;
@@ -55,6 +56,7 @@ class inme_tema extends fs_model
          $this->articulos = intval($t['articulos']);
          $this->popularidad = intval($t['popularidad']);
          $this->activo = $this->str2bool($t['activo']);
+         $this->fecha = date('d-m-Y', strtotime($t['fecha']));
          $this->busqueda = $t['busqueda'];
       }
       else
@@ -67,6 +69,7 @@ class inme_tema extends fs_model
          $this->articulos = 0;
          $this->popularidad = 0;
          $this->activo = TRUE;
+         $this->fecha = date('d-m-Y');
          $this->busqueda = '';
       }
    }
@@ -103,9 +106,16 @@ class inme_tema extends fs_model
       return 'index.php?page=inme_editar_tema&cod='.$this->codtema;
    }
    
-   public function texto()
+   public function texto($len = 0)
    {
-      return nl2br($this->texto);
+      if($len == 0)
+      {
+         return nl2br($this->texto);
+      }
+      else
+      {
+         return nl2br( mb_substr($this->texto, 0, $len) );
+      }
    }
    
    public function keywords($plain = FALSE)
@@ -219,13 +229,14 @@ class inme_tema extends fs_model
                     .", articulos = ".$this->var2str($this->articulos)
                     .", popularidad = ".$this->var2str($this->popularidad)
                     .", activo = ".$this->var2str($this->activo)
+                    .", fecha = ".$this->var2str($this->fecha)
                     .", busqueda = ".$this->var2str($this->busqueda)
                     ."  WHERE codtema = ".$this->var2str($this->codtema).";";
          }
          else
          {
-            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,articulos,activo,popularidad,"
-                    . "busqueda) VALUES "
+            $sql = "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,articulos,activo,fecha,"
+                    . "popularidad,busqueda) VALUES "
                     . "(".$this->var2str($this->codtema)
                     . ",".$this->var2str($this->titulo)
                     . ",".$this->var2str($this->texto)
@@ -233,6 +244,7 @@ class inme_tema extends fs_model
                     . ",".$this->var2str($this->imagen)
                     . ",".$this->var2str($this->articulos)
                     . ",".$this->var2str($this->activo)
+                    . ",".$this->var2str($this->fecha)
                     . ",".$this->var2str($this->popularidad)
                     . ",".$this->var2str($this->busqueda).");";
          }
@@ -329,6 +341,17 @@ class inme_tema extends fs_model
       {
          foreach($this->random() as $tema)
          {
+            /// calculamos la fecha del primer artículo de este tema
+            if($tema->activo)
+            {
+               $sql = "SELECT MIN(fecha) as fecha FROM inme_noticias_fuente WHERE keywords LIKE '%[".$tema->codtema."]%';";
+               $data = $this->db->select($sql);
+               if($data)
+               {
+                  $tema->fecha = date('d-m-Y', strtotime($data[0]['fecha']));
+               }
+            }
+            
             /// calculamos el número de artículos de este tema
             $tema->articulos = 0;
             if($tema->activo)
@@ -350,7 +373,15 @@ class inme_tema extends fs_model
                $data = $this->db->select($sql);
                if($data)
                {
-                  $tema->popularidad = intval($data[0]['total']);
+                  $dias = (time() - strtotime($tema->fecha)) / 86400;
+                  if($dias > 0)
+                  {
+                     $tema->popularidad = intval($data[0]['total']) / $dias;
+                  }
+                  else
+                  {
+                     $tema->popularidad = intval($data[0]['total']);
+                  }
                }
             }
             

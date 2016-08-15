@@ -55,7 +55,7 @@ class inme_home extends fs_controller
    
    protected function public_core()
    {
-      $this->template = 'inme_public/portada';
+      $this->template = 'inme_public/portada_2';
       $this->page_title = $this->empresa->nombrecorto;
       $this->page_description = 'Portal de noticias colaborativo, para los que huyen de la mafia de menéame.'
               . ' Exploramos la web para mostrarte los temas de actualidad.';
@@ -137,7 +137,7 @@ class inme_home extends fs_controller
             if(!$this->noticias)
             {
                $this->noticias = $noti->all($this->offset, 'publicada DESC');
-               $this->cache->set('inme_portada', $this->noticias, 900);
+               $this->cache->set('inme_portada', $this->noticias, 300);
             }
          }
       }
@@ -161,7 +161,7 @@ class inme_home extends fs_controller
       if(!$this->temas_populares)
       {
          $this->temas_populares = $tema->populares();
-         $this->cache->set('inme_temas_populares', $this->temas_populares, 900);
+         $this->cache->set('inme_temas_populares', $this->temas_populares, 300);
       }
    }
    

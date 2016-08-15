@@ -80,16 +80,6 @@
                   </a>
                   {/if}
                </li>
-            </ul>
-            <form class="navbar-form navbar-left" role="search" action="{$fsc->url()}" method="post" name="f_search">
-               <div class="form-group">
-                  <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar..." autocomplete="off"/>
-               </div>
-               <button type="submit" class="btn btn-xs btn-default">
-                  <span class="glyphicon glyphicon-search"></span>
-               </button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
                <li>
                   <a href="#" data-toggle="modal" data-target="#modal_ayuda">
                      <span class="glyphicon glyphicon-question-sign hidden-xs"></span>
@@ -103,6 +93,14 @@
                   </a>
                </li>
             </ul>
+            <form class="navbar-form navbar-right" role="search" action="{$fsc->url()}" method="post" name="f_search">
+               <div class="form-group">
+                  <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar..." autocomplete="off"/>
+               </div>
+               <button type="submit" class="btn btn-xs btn-default">
+                  <span class="glyphicon glyphicon-search"></span>
+               </button>
+            </form>
          </div>
       </div>
    </nav>
