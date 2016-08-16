@@ -146,7 +146,7 @@
                      </a>&nbsp;
                      {/if}
                      {if="$fsc->noticias[0]->likes>0"}
-                     <a href='http://www.facebook.com/sharer.php?s=100&amp;p[title]={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}&amp;p[url]={function="urlencode($url)"}' target="_blank" class="label label-primary">
+                     <a href="#facebook" data-href='http://www.facebook.com/sharer.php?s=100&amp;p[title]={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}&amp;p[url]={function="urlencode($url)"}' target="_blank" class="label label-primary fake_link">
                         <i class="fa fa-facebook" aria-hidden="true"></i> {$fsc->noticias[0]->likes}
                      </a>&nbsp;
                      {/if}
