@@ -42,16 +42,18 @@
       }
       $(document).ready(function() {
          setTimeout(picar, 1000);
-         $(".fake_link").mousedown(function(event) {
+         $(".fake_link").click(function(event) {
             if(event.which === 1)
             {
                event.preventDefault();
                parent.document.location = $(this).attr("data-href");
             }
-            else if(event.which === 2)
+         });
+         $(".fake_link").mousedown(function(event) {
+            if(event.which === 2)
             {
                event.preventDefault();
-               window.open($( this).attr("data-href"), '_blank' );
+               window.open( $(this).attr("data-href"), '_blank' );
             }
          });
       });

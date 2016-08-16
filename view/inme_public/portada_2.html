@@ -130,7 +130,7 @@
                         {else}
                         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticias[0]->fecha} &nbsp;
                         {/if}
-                        <a href="#" data-toggle="modal" data-target="#modal_popularidad">
+                        <a href="#popularidad" data-toggle="modal" data-target="#modal_popularidad">
                            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
                            <span class="hidden-xs">Popularidad:</span>
                            {$fsc->noticias[0]->popularidad()}
@@ -151,7 +151,7 @@
                      </a>&nbsp;
                      {/if}
                      {if="$fsc->noticias[0]->meneame_link"}
-                     <a href="#" data-href="{$fsc->noticias[0]->meneame_link}" class="label label-warning fake_link">
+                     <a href="#meneame" data-href="{$fsc->noticias[0]->meneame_link}" class="label label-warning fake_link">
                         Menéame: {$fsc->noticias[0]->meneos}
                      </a>
                      {/if}
@@ -162,10 +162,10 @@
                   <div class="col-sm-6 text-right">
                   {loop="$fsc->noticias[0]->keywords()"}
                      {if="$counter<4"}
-                     <a href="#" data-href="{$fsc->url()}&keyword={$value}" class="label label-default fake_link">{$value}</a>
+                     <a href="#{$value}" data-href="{$fsc->url()}&keyword={$value}" class="label label-default fake_link">{$value}</a>
                      {/if}
                   {else}
-                  <a href="#" data-href="{$fsc->url()}&codfuente={$fsc->noticias[0]->codfuente}" class="label label-info fake_link" title="Fuente del artículo">
+                  <a href="#fuente" data-href="{$fsc->url()}&codfuente={$fsc->noticias[0]->codfuente}" class="label label-info fake_link" title="Fuente del artículo">
                      <span class="glyphicon glyphicon-import"></span> {$fsc->noticias[0]->codfuente}
                   </a>
                   {/loop}
@@ -197,7 +197,7 @@
          {if="$value->imagen AND $max>0"}
          <div class="col-sm-2">
             <div class="thumbnail">
-               <a href="#" data-href="{$fsc->url()}&keyword={$value->codtema}" class="fake_link">
+               <a href="#{$value->codtema}" data-href="{$fsc->url()}&keyword={$value->codtema}" class="fake_link">
                   <img src="{$value->imagen}" alt="{$value->codtema}"/>
                </a>
                <div class="caption">
@@ -230,7 +230,7 @@
          {if="$max>0"}
          <div class="col-sm-4">
             <div class="list-group">
-               <a href="#" data-href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item fake_link">
+               <a href="#{$value->codtema}" data-href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item fake_link">
                   <span class="badge">{$value->popularidad}</span>
                   {$value->titulo}
                </a>
@@ -344,12 +344,12 @@
                <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()} &nbsp;
                {loop="$value->keywords()"}
                   {if="$counter1<20 AND $counter2<4"}
-                  <a href="#" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
+                  <a href="#{$value2}" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
                   {/if}
                {/loop}
                {if="$value->meneame_link"}
                &nbsp;
-               <a href="#" data-href="{$value->meneame_link}" class="label label-default fake_link">
+               <a href="#meneame" data-href="{$value->meneame_link}" class="label label-default fake_link">
                   <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
                </a>
                {/if}
@@ -375,12 +375,12 @@
                <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()} &nbsp;
                {loop="$value->keywords()"}
                   {if="$counter1<20 AND $counter2<4"}
-                  <a href="#" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
+                  <a href="#{$value2}" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
                   {/if}
                {/loop}
                {if="$value->meneame_link"}
                &nbsp;
-               <a href="#" data-href="{$value->meneame_link}" class="label label-default fake_link">
+               <a href="#meneame" data-href="{$value->meneame_link}" class="label label-default fake_link">
                   <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
                </a>
                {/if}
