@@ -827,21 +827,29 @@ class inme_picar extends fs_controller
             }
             else if($preview->type == 'youtube')
             {
-               $noti->preview = $preview->preview();
-               $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
-                       .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
-                       .'</div><br/>'.$noti->texto;
-               $noti->editada = TRUE;
-               $noti->save();
+               $imagen = $preview->preview();
+               if($imagen)
+               {
+                  $noti->preview = $imagen;
+                  $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                          .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
+                          .'</div><br/>'.$noti->texto;
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
             }
             else if($preview->type == 'vimeo')
             {
-               $noti->preview = $preview->preview();
-               $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
-                       .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
-                       .'</div><br/>'.$noti->texto;
-               $noti->editada = TRUE;
-               $noti->save();
+               $imagen = $preview->preview();
+               if($imagen)
+               {
+                  $noti->preview = $imagen;
+                  $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                          .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                          .'</div><br/>'.$noti->texto;
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
             }
          }
          else if( is_null($noti->preview) )

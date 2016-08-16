@@ -40,13 +40,20 @@ class inme_cron
       
       /// procesamos noticias aleatorias
       $order = 'popularidad DESC';
-      if( mt_rand(0, 1) == 0 )
+      $opcion = mt_rand(0, 2);
+      if($opcion == 0)
       {
          $order = 'fecha DESC';
       }
+      else if($opcion == 1)
+      {
+         $order = 'publicada DESC';
+      }
+      
+      echo "\nExaminamos noticias: ".$order."...\n";
       
       $noti0 = new inme_noticia_fuente();
-      foreach($noti0->all( mt_rand(0, 50), $order ) as $noti)
+      foreach($noti0->all(0, $order) as $noti)
       {
          $popularidad = $noti->popularidad();
          switch( mt_rand(0, 2) )
@@ -143,6 +150,7 @@ class inme_cron
       if($noti->editada)
       {
          /// si está editada, no hacemos nada
+         echo 'E';
       }
       else if( is_null($noti->preview) )
       {
@@ -157,6 +165,7 @@ class inme_cron
                {
                   $noti->preview = $tema->imagen;
                   $noti->save();
+                  echo 'T';
                   break;
                }
             }
@@ -180,21 +189,29 @@ class inme_cron
             }
             else if($preview->type == 'youtube')
             {
-               $noti->preview = $preview->preview();
-               $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
-                       .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
-                       .'</div><br/>'.$noti->texto;
-               $noti->editada = TRUE;
-               $noti->save();
+               $imagen = $preview->preview();
+               if($imagen)
+               {
+                  $noti->preview = $imagen;
+                  $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                          .'<iframe class="embed-responsive-item" src="//www.youtube-nocookie.com/embed/'.$preview->filename.'"></iframe>'
+                          .'</div><br/>'.$noti->texto;
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
             }
             else if($preview->type == 'vimeo')
             {
-               $noti->preview = $preview->preview();
-               $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
-                       .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
-                       .'</div><br/>'.$noti->texto;
-               $noti->editada = TRUE;
-               $noti->save();
+               $imagen = $preview->preview();
+               if($imagen)
+               {
+                  $noti->preview = $imagen;
+                  $noti->texto = '<div class="embed-responsive embed-responsive-16by9">'
+                          .'<iframe class="embed-responsive-item" src="//player.vimeo.com/video/'.$preview->filename.'"></iframe>'
+                          .'</div><br/>'.$noti->texto;
+                  $noti->editada = TRUE;
+                  $noti->save();
+               }
             }
          }
          else if( is_null($noti->preview) )
@@ -270,6 +287,11 @@ class inme_cron
                $noti->save();
             }
          }
+         
+         if( !is_null($noti->preview) )
+         {
+            echo 'I';
+         }
       }
    }
    
@@ -329,7 +351,7 @@ class inme_cron
          {
             break;
          }
-         else if( mb_strtolower($tema->texto, 'UTF8') == mb_strtolower($tema->titulo, 'UTF8') )
+         else if( $tema->activo AND mb_strtolower($tema->texto, 'UTF8') == mb_strtolower($tema->titulo, 'UTF8') )
          {
             /// buscamos en la wikipedia
             $url = 'https://es.wikipedia.org/w/api.php?format=json&action=query&prop=extracts'
@@ -376,7 +398,7 @@ class inme_cron
          {
             break;
          }
-         else if( is_null($tema->imagen) )
+         else if( $tema->activo AND is_null($tema->imagen) )
          {
             $tema->imagen = $this->get_image_from_bing($tema->titulo);
             if($tema->imagen)

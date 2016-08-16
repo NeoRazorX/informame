@@ -384,6 +384,18 @@ class inme_noticia_preview
       {
          $status = TRUE;
       }
+      else if( mb_substr($url, 0, 24) == 'http://tse3.mm.bing.net/' )
+      {
+         $status = TRUE;
+      }
+      else if( mb_substr($url, 0, 24) == 'http://tse2.mm.bing.net/' )
+      {
+         $status = TRUE;
+      }
+      else if( mb_substr($url, 0, 24) == 'http://tse1.mm.bing.net/' )
+      {
+         $status = TRUE;
+      }
       else if( mb_substr($url, 0, 4) != 'http' )
       {
          $status = FALSE;

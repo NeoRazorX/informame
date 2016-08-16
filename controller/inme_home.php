@@ -208,6 +208,11 @@ class inme_home extends fs_controller
          }
       }
       
+      if( substr($url, -1) == '/' )
+      {
+         $url = substr($url, 0, -1);
+      }
+      
       return $url;
    }
    

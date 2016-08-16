@@ -4,6 +4,9 @@
 <div class="container-fluid">
    <div class="row">
       <div class="col-sm-6">
+         <a href="{$fsc->full_url()}" class="btn btn-sm btn-default">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Portada
+         </a>
          <div class="page-header">
             <h1>
                <a href="{$fsc->noticia->url}" rel="nofollow">{$fsc->noticia->titulo}</a>
@@ -12,19 +15,16 @@
                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticia->fecha} &nbsp;
                <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->noticia->popularidad()} &nbsp;
                {if="!$fsc->noticia->nativa"}
-               <span class="label label-info"><s>Español</s></span>
+               <span class="label label-danger"><s>Español</s></span>
                {/if}
                {if="$fsc->noticia->parodia"}
-               <span class="label label-warning">Parodia</span>
+               <span class="label label-danger">Parodia</span>
                {/if}
             </small>
          </div>
          <p>{$fsc->noticia->texto}</p>
          <p class="help-block">
             <a href="{$fsc->empresa->web}/index.php?page=inme_home&codfuente={$fsc->noticia->codfuente}">{$fsc->noticia->codfuente}</a> &nbsp;
-            {loop="$fsc->noticia->keywords()"}
-            <a href="{$fsc->empresa->web}/index.php?page=inme_home&keyword={$value}" class="label label-default">{$value}</a>
-            {/loop}
          </p>
          <br/>
          <br/>
@@ -48,10 +48,10 @@
       </div>
       <div class="col-sm-6">
          <a rel="nofollow" href="{$fsc->twitter_url()}" class="btn btn-sm btn-info">
-            Twitter: {$fsc->noticia->tweets}
+            <i class="fa fa-twitter" aria-hidden="true"></i> {$fsc->noticia->tweets}
          </a>
          <a rel="nofollow" href="{$fsc->facebook_url()}" class="btn btn-sm btn-primary">
-            Facebook: {$fsc->noticia->likes}
+            <i class="fa fa-facebook" aria-hidden="true"></i> {$fsc->noticia->likes}
          </a>
          {if="$fsc->noticia->meneame_link"}
          <a rel="nofollow" href="{$fsc->noticia->meneame_link}" class="btn btn-sm btn-warning">
@@ -106,6 +106,7 @@
                   <div class="row">
                      <div class="col-xs-12">
                         <h4 style="margin-bottom: 0px;">
+                           <span class="badge">{$value->popularidad()}</span>
                            {if="$value->editada"}
                            <a href="{$fsc->empresa->web}/{$value->url($fsc->modrewrite)}">{$value->titulo}</a>
                            {else}

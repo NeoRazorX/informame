@@ -12,6 +12,8 @@
          <div class="col-sm-10">
             <h1>{$fsc->mostrar_tema->titulo}</h1>
             <p class="help-block">{$fsc->mostrar_tema->texto}</p>
+            <script src="https://apis.google.com/js/platform.js" async defer></script>
+            <g:plusone></g:plusone>
          </div>
       </div>
       {/if}
@@ -90,7 +92,7 @@
                   <div class="col-sm-10">
                      <h2><a href="{$url}" target="_blank">{$fsc->noticias[0]->titulo}</a></h2>
                      <p>{$fsc->noticias[0]->resumen}</p>
-                     <small>
+                     <small class="inme_small">
                         {if="!$fsc->noticias[0]->nativa"}
                         <span class="label label-danger"><s>Español</s></span> &nbsp;
                         {/if}
@@ -102,21 +104,24 @@
                         {else}
                         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticias[0]->fecha} &nbsp;
                         {/if}
-                        <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Popularidad: {$fsc->noticias[0]->popularidad()}
+                        <a href="#" data-toggle="modal" data-target="#modal_popularidad">
+                           <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                           Popularidad: {$fsc->noticias[0]->popularidad()}
+                        </a>
                      </small>
                   </div>
                </div>
                <div class="row">
                   <div class="col-sm-6">
                      {if="$fsc->noticias[0]->tweets>0"}
-                     <span class="label label-info">
-                        Twitter: {$fsc->noticias[0]->tweets}
-                     </span>&nbsp;
+                     <a href="#" class="label label-info" data-toggle="modal" data-target="#modal_popularidad">
+                        <i class="fa fa-twitter" aria-hidden="true"></i> {$fsc->noticias[0]->tweets}
+                     </a>&nbsp;
                      {/if}
                      {if="$fsc->noticias[0]->likes>0"}
-                     <span class="label label-primary">
-                        Facebook: {$fsc->noticias[0]->likes}
-                     </span>&nbsp;
+                     <a href="#" class="label label-primary" data-toggle="modal" data-target="#modal_popularidad">
+                        <i class="fa fa-facebook" aria-hidden="true"></i> {$fsc->noticias[0]->likes}
+                     </a>&nbsp;
                      {/if}
                      {if="$fsc->noticias[0]->meneame_link"}
                      <a href="{$fsc->noticias[0]->meneame_link}" target="_blank" rel="nofollow" class="label label-warning">
@@ -152,7 +157,7 @@
          </div>
       </div>
    </div>
-   <div class="row">
+   <div class="row visible-lg">
       <!--{$max=5}-->
       {loop="$fsc->temas_populares"}
          {if="$value->imagen AND $max>0"}
@@ -185,6 +190,42 @@
          </div>
       </div>
    </div>
+   <div class="row hidden-lg">
+      <!--{$max=9}-->
+      {loop="$fsc->temas_populares"}
+         {if="$max>0"}
+         <div class="col-sm-4">
+            <div class="list-group">
+               <a href="#" data-href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item fake_link">
+                  <span class="badge">{$value->popularidad}</span>
+                  {$value->titulo}
+               </a>
+            </div>
+         </div>
+         <!--{$max=$max-1}-->
+         {/if}
+      {/loop}
+   </div>
+   {elseif="$fsc->mostrar=='portada' AND !$fsc->mostrar_tema"}
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h3>
+               <span class="glyphicon glyphicon-thumbs-up"></span>
+               ¿Te gusta {$fsc->empresa->nombre}?
+            </h3>
+         </div>
+         <div class="alert bg-claro">
+            <p>
+               Pues ayúdanos a crecer <b>con un sólo clic</b>. Es todo lo que necesitamos para
+               ganar relevancia en Internet.
+            </p>
+            <br/>
+            <script src="https://apis.google.com/js/platform.js" async defer></script>
+            <g:plusone></g:plusone>
+         </div>
+      </div>
+   </div>
    {elseif="$fsc->mostrar=='populares' AND mt_rand(0,2)==0"}
    <div class="row">
       <div class="col-sm-12">
@@ -208,6 +249,8 @@
                   <b>top {#FS_ITEM_LIMIT#}</b> se publica, de forma que ya solamente puede
                   moverse hacia abajo en la portada.
                </p>
+               <script src="https://apis.google.com/js/platform.js" async defer></script>
+               <g:plusone></g:plusone>
             </div>
          </div>
       </div>
@@ -232,6 +275,8 @@
                   Eso si, los enlaces conducen directamente a la fuente original. Esta
                   web solamente indexa y cataloga, no roba tráfico.
                </p>
+               <script src="https://apis.google.com/js/platform.js" async defer></script>
+               <g:plusone></g:plusone>
             </div>
          </div>
       </div>
@@ -253,7 +298,7 @@
          <div class='col-sm-5{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
             <h3>{$value->titulo}</h3>
             <p class="help-block">{$value->resumen}</p>
-            <p class="help-block">
+            <p class="help-block inme_small">
                {if="!$value->nativa"}
                <span class="label label-danger"><s>Español</s></span>&nbsp;
                {/if}
@@ -284,7 +329,7 @@
                <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h3>
             <p class="help-block">{$value->resumen}</p>
-            <p class="help-block">
+            <p class="help-block inme_small">
                {if="!$value->nativa"}
                <span class="label label-danger"><s>Español</s></span>&nbsp;
                {/if}
@@ -341,6 +386,45 @@
             </li>
             {/if}
          </ul>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modal_popularidad" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Popularidad
+            </h4>
+         </div>
+         <div class="modal-body">
+            <p>
+               {$fsc->empresa->nombre} es un agregador de noticias <b>totalmente automatizado</b>.
+               La portada se genera a partir de los artículos más populares del día.
+               Y para calcular la popularidad de un artículo se emplean los siguientes
+               parámetros:
+            </p>
+            <ul>
+               <li>Las menciones en <b>twitter</b> al artículo.</li>
+               <li>Las menciones en <b>facebook</b> al artículo.</li>
+               <li>Los clic en <b>menéame</b> al artículo.</li>
+               <li>La edad del artículo. Cuanto más antiguo, más edad.</li>
+            </ul>
+            <p>
+               Este sistema nos permite calcular el interés de un artículo, sin
+               que un grupo de usuarios pueda distorsionarlo con <b>votos negativos</b>.
+            </p>
+            <p>
+               Y si tienes más interés, puedes ver nuestro algoritmo en github.
+            </p>
+            <a href="https://github.com/NeoRazorX/informame" target="_blank" class="btn btn-sm btn-default">
+               <i class="fa fa-git" aria-hidden="true"></i>&nbsp; código fuente
+            </a>
+         </div>
       </div>
    </div>
 </div>
