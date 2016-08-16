@@ -128,6 +128,7 @@ class inme_editar_noticia extends fs_controller
             if( $this->noticia->save() )
             {
                $this->new_message('Datos modificados correctamente.');
+               $this->cache->delete('inme_portada');
             }
             else
                $this->new_error_msg('Error al guardar los datos.');

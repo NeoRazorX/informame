@@ -220,6 +220,11 @@ class inme_tema extends fs_model
    {
       if( strlen($this->codtema) > 1 AND strlen($this->codtema) <= 50 )
       {
+         if(!$this->activo)
+         {
+            $this->popularidad = 0;
+         }
+         
          if( $this->exists() )
          {
             $sql = "UPDATE inme_temas SET titulo = ".$this->var2str($this->titulo)

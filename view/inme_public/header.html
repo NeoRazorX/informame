@@ -42,10 +42,16 @@
       }
       $(document).ready(function() {
          setTimeout(picar, 1000);
-         $(".fake_link").click(function(event) {
+         $(".fake_link").mousedown(function(event) {
             if(event.which === 1)
             {
+               event.preventDefault();
                parent.document.location = $(this).attr("data-href");
+            }
+            else if(event.which === 2)
+            {
+               event.preventDefault();
+               window.open($( this).attr("data-href"), '_blank' );
             }
          });
       });
@@ -128,17 +134,17 @@
                <br/>
                <div class="row">
                   <div class="col-sm-4">
-                     <a href="https://www.facturascripts.com/preguntas" target="_blank" class="btn btn-sm btn-block btn-warning">
+                     <a href="https://www.facturascripts.com/plugin/informame#preguntas" target="_blank" class="btn btn-sm btn-block btn-warning">
                         Preguntas
                      </a>
                   </div>
                   <div class="col-sm-4">
-                     <a href="https://www.facturascripts.com/errores" target="_blank" class="btn btn-sm btn-block btn-danger">
+                     <a href="https://www.facturascripts.com/plugin/informame#errores" target="_blank" class="btn btn-sm btn-block btn-danger">
                         Errores
                      </a>
                   </div>
                   <div class="col-sm-4">
-                     <a href="https://www.facturascripts.com/ideas" target="_blank" class="btn btn-sm btn-block btn-success">
+                     <a href="https://www.facturascripts.com/plugin/informame#ideas" target="_blank" class="btn btn-sm btn-block btn-success">
                         Sugerencias
                      </a>
                   </div>

@@ -70,6 +70,27 @@
             {/if}
          </ul>
          <br/>
+         {if="$fsc->buscar"}
+         <p class='help-block'>
+            Estás viendo los artículos relacionados con la búsqueda <u>{$fsc->buscar}</u>.
+            En amarillo los artículos de humor, en verde las ediciones.
+         </p>
+         {elseif="$fsc->codfuente"}
+         <p class='help-block'>
+            Estás viendo los artículos de la fuente <u>{$fsc->codfuente}</u> que tenemos indexados.
+            En amarillo los artículos de humor, en verde las ediciones.
+         </p>
+         {elseif="$fsc->keyword"}
+         <p class='help-block'>
+            Estás viendo los artículos relacionados con la etiqueta <u>{$fsc->keyword}</u>.
+            En amarillo los artículos de humor, en verde las ediciones.
+         </p>
+         {elseif="$fsc->mostrar=='todo'"}
+         <p class='help-block'>
+            Estás viendo los últimos artículos indexados. En amarillo los artículos de humor,
+            en verde las ediciones. Disculpa si algunos todavía no tienen una imagen relacionada.
+         </p>
+         {/if}
       </div>
    </div>
    {if="isset($fsc->noticias[0])"}
@@ -90,7 +111,11 @@
                      </a>
                   </div>
                   <div class="col-sm-10">
+                     {if="$fsc->mostrar_tema"}
                      <h2><a href="{$url}" target="_blank">{$fsc->noticias[0]->titulo}</a></h2>
+                     {else}
+                     <h1>{$fsc->noticias[0]->titulo}</h1>
+                     {/if}
                      <p>{$fsc->noticias[0]->resumen}</p>
                      <small class="inme_small">
                         {if="!$fsc->noticias[0]->nativa"}
@@ -100,13 +125,15 @@
                         <span class="label label-danger">Parodia</span> &nbsp;
                         {/if}
                         {if="$fsc->noticias[0]->publicada"}
-                        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Publicada el {$fsc->noticias[0]->fecha} &nbsp;
+                        <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                        <span class="hidden-xs">Publicada el</span> {$fsc->noticias[0]->fecha} &nbsp;
                         {else}
                         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticias[0]->fecha} &nbsp;
                         {/if}
                         <a href="#" data-toggle="modal" data-target="#modal_popularidad">
                            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-                           Popularidad: {$fsc->noticias[0]->popularidad()}
+                           <span class="hidden-xs">Popularidad:</span>
+                           {$fsc->noticias[0]->popularidad()}
                         </a>
                      </small>
                   </div>
@@ -114,26 +141,33 @@
                <div class="row">
                   <div class="col-sm-6">
                      {if="$fsc->noticias[0]->tweets>0"}
-                     <a href="#" class="label label-info" data-toggle="modal" data-target="#modal_popularidad">
+                     <a href='https://twitter.com/share?url={function="urlencode($url)"}&amp;text={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}' target="_blank" class="label label-info">
                         <i class="fa fa-twitter" aria-hidden="true"></i> {$fsc->noticias[0]->tweets}
                      </a>&nbsp;
                      {/if}
                      {if="$fsc->noticias[0]->likes>0"}
-                     <a href="#" class="label label-primary" data-toggle="modal" data-target="#modal_popularidad">
+                     <a href='http://www.facebook.com/sharer.php?s=100&amp;p[title]={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}&amp;p[url]={function="urlencode($url)"}' target="_blank" class="label label-primary">
                         <i class="fa fa-facebook" aria-hidden="true"></i> {$fsc->noticias[0]->likes}
                      </a>&nbsp;
                      {/if}
                      {if="$fsc->noticias[0]->meneame_link"}
-                     <a href="{$fsc->noticias[0]->meneame_link}" target="_blank" rel="nofollow" class="label label-warning">
+                     <a href="#" data-href="{$fsc->noticias[0]->meneame_link}" class="label label-warning fake_link">
                         Menéame: {$fsc->noticias[0]->meneos}
                      </a>
                      {/if}
+                     <div class="visible-xs">
+                        <br/>
+                     </div>
                   </div>
                   <div class="col-sm-6 text-right">
                   {loop="$fsc->noticias[0]->keywords()"}
                      {if="$counter<4"}
                      <a href="#" data-href="{$fsc->url()}&keyword={$value}" class="label label-default fake_link">{$value}</a>
                      {/if}
+                  {else}
+                  <a href="#" data-href="{$fsc->url()}&codfuente={$fsc->noticias[0]->codfuente}" class="label label-info fake_link" title="Fuente del artículo">
+                     <span class="glyphicon glyphicon-import"></span> {$fsc->noticias[0]->codfuente}
+                  </a>
                   {/loop}
                   </div>
                </div>
@@ -163,7 +197,7 @@
          {if="$value->imagen AND $max>0"}
          <div class="col-sm-2">
             <div class="thumbnail">
-               <a href="{$fsc->url()}&keyword={$value->codtema}">
+               <a href="#" data-href="{$fsc->url()}&keyword={$value->codtema}" class="fake_link">
                   <img src="{$value->imagen}" alt="{$value->codtema}"/>
                </a>
                <div class="caption">
@@ -217,12 +251,13 @@
          </div>
          <div class="alert bg-claro">
             <p>
-               Pues ayúdanos a crecer <b>con un sólo clic</b>. Es todo lo que necesitamos para
-               ganar relevancia en Internet.
+               Pon tu granito de arena. Con tan solo un clic puedes hacer que más
+               gente conozca {$fsc->empresa->nombre}. Ayúdanos a construir una web mejor
+               y líbranos de la mafia de menéame ;-)
             </p>
             <br/>
-            <script src="https://apis.google.com/js/platform.js" async defer></script>
-            <g:plusone></g:plusone>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="neorazorx" data-size="large" data-hashtags="informame">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
          </div>
       </div>
    </div>
@@ -314,7 +349,7 @@
                {/loop}
                {if="$value->meneame_link"}
                &nbsp;
-               <a href="{$value->meneame_link}" target="_blank" rel="nofollow" class="label label-default">
+               <a href="#" data-href="{$value->meneame_link}" class="label label-default fake_link">
                   <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
                </a>
                {/if}
@@ -345,7 +380,7 @@
                {/loop}
                {if="$value->meneame_link"}
                &nbsp;
-               <a href="{$value->meneame_link}" target="_blank" rel="nofollow" class="label label-default">
+               <a href="#" data-href="{$value->meneame_link}" class="label label-default fake_link">
                   <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
                </a>
                {/if}

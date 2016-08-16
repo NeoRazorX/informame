@@ -43,6 +43,9 @@ h3, h4 {
    max-width: 100px;
    margin-left: 10px;
 }
+.jumbotron h1 {
+   font-size: 2.2em;
+}
 .jumbotron p {
    margin-bottom: 0px;
 }
@@ -51,4 +54,13 @@ h3, h4 {
 }
 .bg-claro {
    background-color: #FAFAFA;
+}
+#div_cookies {
+   margin: 0px;
+}
+.inme_footer {
+   margin-bottom: 90px;
+}
+.inme_footer hr {
+   margin-top: 50px;
 }

@@ -491,6 +491,23 @@ class inme_picar extends fs_controller
                }
             }
          }
+         
+         /// si esta fuente afirma que la fechal de la noticia es anterior a la que tenemos, usamos estos datos
+         $fecha2 = date('d-m-Y H:i:s');
+         if( $item->pubDate )
+         {
+            $fecha2 = date('d-m-Y H:i:s', min( array( strtotime( (string)$item->pubDate ), time() ) ) );
+         }
+         else if( $item->published )
+         {
+            $fecha2 = date('d-m-Y H:i:s', min( array( strtotime( (string)$item->published ), time() ) ) );
+         }
+         
+         if( strtotime($fecha2) < $noticia->fecha )
+         {
+            $noticia->fecha = $fecha2;
+            $noticia->codfuente = $fuente->codfuente;
+         }
       }
       else
       {

@@ -81,6 +81,7 @@ class inme_editar_tema extends fs_controller
             if( $this->tema->save() )
             {
                $this->new_message('Datos guardadados correctamente.');
+               $this->cache->delete('inme_temas_populares');
             }
             else
             {

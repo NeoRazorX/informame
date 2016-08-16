@@ -1,5 +1,5 @@
    {if="$fsc->analytics AND !isset($_GET['ok_cookies']) AND !isset($_COOKIE['ok_cookies'])"}
-   <nav id="div_cookies" class="navbar navbar-inverse navbar-fixed-bottom" style="margin: 0px;">
+   <nav id="div_cookies" class="navbar navbar-inverse navbar-fixed-bottom">
       <div class="container-fluid">
          <p class='navbar-text'>
             <i class="fa fa-exclamation-circle"></i>&nbsp;
@@ -11,10 +11,10 @@
       </div>
    </nav>
    {/if}
-   <div class="container-fluid hidden-print" style="margin-bottom: 90px;">
+   <div class="container-fluid hidden-print inme_footer">
       <div class="row">
          <div class="col-xs-12">
-            <hr style="margin-top: 50px;"/>
+            <hr/>
          </div>
       </div>
       {if="FS_DB_HISTORY"}
