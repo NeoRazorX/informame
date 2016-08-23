@@ -381,7 +381,7 @@ class inme_tema extends fs_model
                   $dias = (time() - strtotime($tema->fecha)) / 86400;
                   if($dias > 0)
                   {
-                     $tema->popularidad = intval($data[0]['total']) / $dias;
+                     $tema->popularidad = intval($data[0]['total'] / $dias);
                   }
                   else
                   {

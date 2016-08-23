@@ -43,6 +43,9 @@ h3, h4 {
    max-width: 100px;
    margin-left: 10px;
 }
+.jumbotron {
+   margin-bottom: 10px;
+}
 .jumbotron h1 {
    font-size: 2.2em;
 }
@@ -63,4 +66,11 @@ h3, h4 {
 }
 .inme_footer hr {
    margin-top: 50px;
+}
+#inme_tab {
+   margin-bottom: 10px;
+}
+.page-header {
+   margin-top: 10px;
+   margin-bottom: 10px;
 }

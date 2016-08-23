@@ -88,6 +88,10 @@ class inme_editar_tema extends fs_controller
                $this->new_error_msg('Error al guardar los datos.');
             }
          }
+         else if( isset($_GET['bad_image']) )
+         {
+            $this->cambiar_imagen();
+         }
          
          $noti = new inme_noticia_fuente();
          $this->noticias = $noti->all_from_keyword($this->tema->codtema);
@@ -131,5 +135,45 @@ class inme_editar_tema extends fs_controller
       }
       
       return $text;
+   }
+   
+   private function cambiar_imagen()
+   {
+      $this->tema->imagen = NULL;
+      $txt = $this->tema->titulo;
+      $num = mt_rand(0, 3);
+      
+      $url = "http://www.bing.com/images/search?pq=".urlencode( mb_strtolower($txt) )."&count=50&q=".urlencode($txt);
+      $data = file_get_contents($url);
+      if($data)
+      {
+         preg_match_all('@<img.+src="(.*)".*>@Uims', $data, $matches);
+         foreach($matches[1] as $m)
+         {
+            if( substr($m, 0, 4) == 'http' )
+            {
+               $this->tema->imagen = $m;
+               
+               if($num == 0)
+               {
+                  break;
+               }
+               else
+               {
+                  $num--;
+               }
+            }
+         }
+      }
+      
+      if( $this->tema->save() )
+      {
+         $this->new_message('Imagen cambiada correctamente.');
+         $this->cache->delete('inme_temas_populares');
+      }
+      else
+      {
+         $this->new_error_msg('Error al cambiar la imagen.');
+      }
    }
 }

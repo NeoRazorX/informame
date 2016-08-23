@@ -162,6 +162,7 @@ class inme_noticia_fuente extends fs_model
          $tclics++;
       }
       
+      $this->popularidad = 0;
       if($tclics > 0)
       {
          /// la popularidad debe bajar con el paso del tiempo
@@ -174,8 +175,6 @@ class inme_noticia_fuente extends fs_model
             $this->popularidad = intval($this->popularidad / $semanas);
          }
       }
-      else
-         $this->popularidad = 0;
       
       return $this->popularidad;
    }

@@ -4,21 +4,23 @@
    {if="$fsc->mostrar_tema"}
       {if="$fsc->mostrar_tema->imagen"}
       <div class="row">
-         <div class="col-sm-1">
+         <div class="col-sm-2">
             <div class="thumbnail">
                <img src="{$fsc->mostrar_tema->imagen}" alt="{$fsc->mostrar_tema->codtema}"/>
             </div>
          </div>
-         <div class="col-sm-11">
+         <div class="col-sm-10">
             <h1>{$fsc->mostrar_tema->titulo}</h1>
             <p class="help-block">{$fsc->mostrar_tema->texto}</p>
+            <script src="https://apis.google.com/js/platform.js" async defer></script>
+            <g:plusone></g:plusone>
          </div>
       </div>
       {/if}
    {/if}
    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12">
-         <ul class="nav nav-tabs">
+      <div class="col-sm-12">
+         <ul id="inme_tab" class="nav nav-tabs">
             {if="$fsc->buscar=='' AND $fsc->codfuente=='' AND $fsc->keyword==''"}
             <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
                <a href="{$fsc->url()}">
@@ -67,124 +69,147 @@
             </li>
             {/if}
          </ul>
+         {if="$fsc->buscar"}
+         <p class='help-block'>
+            Estás viendo los artículos relacionados con la búsqueda <u>{$fsc->buscar}</u>.
+            En amarillo los artículos de humor, en verde las ediciones.
+         </p>
+         {elseif="$fsc->codfuente"}
+         <p class='help-block'>
+            Estás viendo los artículos de la fuente <u>{$fsc->codfuente}</u> que tenemos indexados.
+            En amarillo los artículos de humor, en verde las ediciones.
+         </p>
+         {elseif="$fsc->keyword"}
+         <p class='help-block'>
+            Estás viendo los artículos relacionados con la etiqueta <u>{$fsc->keyword}</u>.
+            En amarillo los artículos de humor, en verde las ediciones.
+         </p>
+         {elseif="$fsc->mostrar=='todo'"}
+         <p class='help-block'>
+            Estás viendo los últimos artículos indexados. En amarillo los artículos de humor,
+            en verde las ediciones. Disculpa si algunos todavía no tienen una imagen relacionada.
+         </p>
+         {/if}
       </div>
    </div>
+   {if="isset($fsc->noticias[0])"}
    <div class="row">
-      <div class="col-sm-12 col-md-5 col-lg-6">
-      {loop="$fsc->noticias"}
-         <!--{$url=$value->url($fsc->modrewrite)}-->
-         <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter<22"}
-         <div class="noticia">
-            {if="$fsc->preview->type AND ($fsc->preview->type != 'image' OR $counter<10)"}
-            <div class="pull-left">
-               <a href="{$url}" target="_blank">
-                  <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-left">
-               </a>
-            </div>
-            {/if}
-            {if="$counter==0"}
-            <h1><a href="{$url}" target="_blank">{$value->titulo}</a></h1>
-            {elseif="$counter==1"}
-            <h2><a href="{$url}" target="_blank">{$value->titulo}</a></h2>
-            {else}
-            <h3><a href="{$url}" target="_blank">{$value->titulo}</a></h3>
-            {/if}
-            <p class="text-justify">
-               {$value->resumen}
-               <br/>
-               <span class="small">
-                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
-                  &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-                  &nbsp; <a href="#" data-href="{$fsc->url()}&codfuente={$value->codfuente}" class="fake_link">{$value->codfuente}</a>
-                  {if="$value->meneame_link"}
-                  &nbsp;
-                  <a href="{$value->meneame_link}" target="_blank" rel="nofollow" class="label label-default">
-                     <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
-                  </a>
-                  {/if}
-                  &nbsp;
-                  {if="!$value->nativa"}
-                  <span class="label label-info"><s>Español</s></span>
-                  {/if}
-                  {if="$value->parodia"}
-                  <span class="label label-warning">Parodia</span>
-                  {/if}
-                  {loop="$value->keywords()"}
-                     {if="$counter<4"}
-                     <a href="#" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
+      <div class="col-sm-12">
+         <div class="jumbotron">
+            <div class="container-fluid">
+               <div class="row">
+                  <!--{$url=$fsc->noticias[0]->url($fsc->modrewrite)}-->
+                  <!--{$fsc->preview->load($fsc->noticias[0]->url, $fsc->noticias[0]->preview)}-->
+                  <div class="col-sm-2">
+                     <a href="{$url}" target="_blank" class="thumbnail">
+                        {if="$fsc->preview->type"}
+                        <img src="{$fsc->preview->preview()}" alt="{$fsc->noticias[0]->titulo}">
+                        {else}
+                        <img src="plugins/informame/view/img/newspaper.jpg" alt="{$fsc->noticias[0]->titulo}">
+                        {/if}
+                     </a>
+                  </div>
+                  <div class="col-sm-10">
+                     {if="$fsc->mostrar_tema"}
+                     <h2><a href="{$url}" target="_blank">{$fsc->noticias[0]->titulo}</a></h2>
+                     {else}
+                     <h1>{$fsc->noticias[0]->titulo}</h1>
                      {/if}
-                  {/loop}
-               </span>
-            </p>
-         </div>
-         <hr/>
-         {/if}
-      {else}
-         <div>
-            <h2>Vas a tener que picar</h2>
-            <p>No se ha encontrado ninguna noticia, vas a tener que picar un rato :D</p>
-            <small>
-                <a href="index.php?page=inme_picar">Picando, que es gerundio...</a>
-            </small>
-         </div>
-      {/loop}
-      </div>
-      <div class="col-sm-8 col-md-4 col-lg-4">
-      {loop="$fsc->noticias"}
-         <!--{$url=$value->url($fsc->modrewrite)}-->
-         <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$counter>=22"}
-         <div class="noticia2">
-            {if="$fsc->preview->type AND $fsc->preview->type != 'image'"}
-            <div class="pull-right">
-               <img src="{$fsc->preview->preview()}" alt="{$value->titulo}" class="imagen-right">
-            </div>
-            {/if}
-            <h4><a href="{$url}" target="_blank">{$value->titulo}</a></h4>
-            <p class="help-block">
-               {$value->resumen}
-               <br/>
-               <span>
-                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
-                  &nbsp; <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$value->popularidad()}
-                  &nbsp; <a href="#" data-href="{$fsc->url()}&codfuente={$value->codfuente}" class="fake_link">{$value->codfuente}</a>
-                  {if="$value->meneame_link"}
-                  &nbsp;
-                  <a href="{$value->meneame_link}" target="_blank" rel="nofollow" class="label label-default">
-                     <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+                     <p>{$fsc->noticias[0]->resumen}</p>
+                     <small class="inme_small">
+                        {if="!$fsc->noticias[0]->nativa"}
+                        <span class="label label-danger"><s>Español</s></span> &nbsp;
+                        {/if}
+                        {if="$fsc->noticias[0]->parodia"}
+                        <span class="label label-danger">Parodia</span> &nbsp;
+                        {/if}
+                        {if="$fsc->noticias[0]->publicada"}
+                        <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                        <span class="hidden-xs">Publicada el</span> {$fsc->noticias[0]->fecha} &nbsp;
+                        {else}
+                        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticias[0]->fecha} &nbsp;
+                        {/if}
+                        <a href="#popularidad" data-toggle="modal" data-target="#modal_popularidad">
+                           <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                           <span class="hidden-xs">Popularidad:</span>
+                           {$fsc->show_numero($fsc->noticias[0]->popularidad(), 0)}
+                        </a>
+                     </small>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm-6">
+                     {if="$fsc->noticias[0]->tweets>0"}
+                     <a href='https://twitter.com/share?url={function="urlencode($url)"}&amp;text={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}' target="_blank" class="label label-info">
+                        <i class="fa fa-twitter" aria-hidden="true"></i> {$fsc->show_numero($fsc->noticias[0]->tweets, 0)}
+                     </a>&nbsp;
+                     {/if}
+                     {if="$fsc->noticias[0]->likes>0"}
+                     <a href="#facebook" data-href='http://www.facebook.com/sharer.php?s=100&amp;p[title]={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}&amp;p[url]={function="urlencode($url)"}' target="_blank" class="label label-primary fake_link">
+                        <i class="fa fa-facebook" aria-hidden="true"></i> {$fsc->show_numero($fsc->noticias[0]->likes, 0)}
+                     </a>&nbsp;
+                     {/if}
+                     {if="$fsc->noticias[0]->meneame_link"}
+                     <a href="#meneame" data-href="{$fsc->noticias[0]->meneame_link}" class="label label-warning fake_link">
+                        Menéame: {$fsc->show_numero($fsc->noticias[0]->meneos, 0)}
+                     </a>
+                     {/if}
+                     <div class="visible-xs">
+                        <br/>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 text-right">
+                  {loop="$fsc->noticias[0]->keywords()"}
+                     {if="$counter<4"}
+                     <a href="#{$value}" data-href="{$fsc->url()}&keyword={$value}" class="label label-default fake_link">{$value}</a>
+                     {/if}
+                  {else}
+                  <a href="#fuente" data-href="{$fsc->url()}&codfuente={$fsc->noticias[0]->codfuente}" class="label label-info fake_link" title="Fuente del artículo">
+                     <span class="glyphicon glyphicon-import"></span> {$fsc->noticias[0]->codfuente}
                   </a>
-                  {/if}
-                  &nbsp;
-                  {if="!$value->nativa"}
-                  <span class="label label-info"><s>Español</s></span>
-                  {/if}
-                  {if="$value->parodia"}
-                  <span class="label label-warning">Parodia</span>
-                  {/if}
-               </span>
-            </p>
-         </div>
-         <hr class="visible-xs"/>
-         {/if}
-      {/loop}
-      </div>
-      <div class="col-sm-4 col-md-3 col-lg-2">
-         <br/>
-         {if="mt_rand(0,1)==0"}
-         <div class="thumbnail">
-            <a rel="nofollow" href="https://m.do.co/c/f9fd92108615" target="_blank">
-               <img src="https://i.imgur.com/uphKsli.png" alt="digitalocean"/>
-            </a>
-            <div class="caption">
-               <h4>DigitalOcean</h4>
-               <p class="help-block">
-                  Servidores Cluod con SSD desde $5/mes y desplegados en 55 segundos.
-                  Pruebalo gratis con este bono de $10.
-               </p>
+                  {/loop}
+                  </div>
+               </div>
             </div>
          </div>
-         {else}
+      </div>
+   </div>
+   {/if}
+   {if="$fsc->mostrar=='portada' AND !$fsc->mostrar_tema AND mt_rand(0,2)>0"}
+   <div class="row">
+      <div class="col-sm-10">
+         <div class="page-header">
+            <h3>
+               <span class="glyphicon glyphicon-book"></span>
+               Temas populares en {$fsc->empresa->nombre}
+            </h3>
+            <p class="help-block">
+               La popularidad de los temas se calcula a partir de su edad (primera aparición)
+               y la suma de la popularidad de todos los artículos relacionados.
+            </p>
+         </div>
+         <div class="container-fluid">
+            <div class="row">
+               <div class="col-sm-3">
+                  <div class="list-group">
+                     <!--{$max=16}-->
+                     {loop="$fsc->temas_populares"}
+                        {if="$max>0 AND $max%4==0 AND $max<16"}
+                        </div></div><div class="col-sm-3 hidden-xs"><div class="list-group">
+                        {/if}
+                        {if="$max>0"}
+                        <a href="#{$value->codtema}" data-href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item fake_link">
+                           <span class="badge">{$fsc->show_numero($value->popularidad, 0)}</span> {$value->titulo}
+                        </a>
+                        {/if}
+                        <!--{$max=$max-1}-->
+                     {/loop}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-2">
          <div class="thumbnail">
             <a rel="nofollow" href="https://www.facturascripts.com" target="_blank">
                <img src="plugins/informame/view/img/facturascripts.png" alt="FacturaScripts"/>
@@ -197,44 +222,228 @@
                </p>
             </div>
          </div>
-         {/if}
-         <br/>
-         <div class="list-group">
-            <a href="#" class="list-group-item">
-               <h4 class="list-group-item-heading">
-                  <span class="glyphicon glyphicon-bookmark"></span>&nbsp; TOP
-               </h4>
-               <p class="list-group-item-text">
-                  Estos son los temas más populares de {$fsc->empresa->nombre}
-               </p>
-            </a>
-            {loop="$fsc->temas_populares"}
-            <a href="#" data-href="{$fsc->url()}&keyword={$value->codtema}" class="list-group-item fake_link">
-               <span class="badge">{$value->popularidad}</span>
-               {$value->titulo}
-            </a>
-            {/loop}
+      </div>
+   </div>
+   {elseif="$fsc->mostrar=='portada' AND !$fsc->mostrar_tema"}
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h3>
+               <span class="glyphicon glyphicon-thumbs-up"></span>
+               ¿Te gusta {$fsc->empresa->nombre}?
+            </h3>
+         </div>
+         <div class="alert bg-claro">
+            <p>
+               Pon tu granito de arena. Con tan solo un clic puedes hacer que más
+               gente conozca {$fsc->empresa->nombre}. Ayúdanos a construir una web mejor
+               y líbranos de la mafia de menéame ;-)
+            </p>
+            <br/>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="neorazorx" data-size="large" data-hashtags="informame">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
          </div>
       </div>
    </div>
+   {elseif="$fsc->mostrar=='populares' AND mt_rand(0,2)==0"}
    <div class="row">
-      <div class="col-sm-12 col-lg-12">
+      <div class="col-sm-12">
+         <div class="panel panel-info">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  <span class="glyphicon glyphicon-question-sign"></span> ¿Sabías que...?
+               </h3>
+            </div>
+            <div class="panel-body">
+               <p class="help-block">
+                  La popularidad de los artículos de {$fsc->empresa->nombre} se
+                  <b>calcula automáticamente</b> a partir de sus menciones en redes sociales.
+                  Así cada mención cuenta. Además, al no haber votos negativos, se evita
+                  que un grupo de usuarios pueda tumbar noticias que no les interesen,
+                  como sucede en <b>menéame</b>.
+                  <br/>
+                  Esta lista de artículos populares es cambiante, puesto que la edad también
+                  influye en la popularidad. Cuanto más tiempo tiene un artículo, más reduce
+                  su popularidad. Por esos existe la portada. Cuando un artículo entra en el
+                  <b>top {#FS_ITEM_LIMIT#}</b> se publica, de forma que ya solamente puede
+                  moverse hacia abajo en la portada.
+               </p>
+               <script src="https://apis.google.com/js/platform.js" async defer></script>
+               <g:plusone></g:plusone>
+            </div>
+         </div>
+      </div>
+   </div>
+   {elseif="$fsc->mostrar=='todo' AND mt_rand(0,2)==0"}
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="panel panel-info">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  <span class="glyphicon glyphicon-question-sign"></span> ¿Sabías que...?
+               </h3>
+            </div>
+            <div class="panel-body">
+               <p class="help-block">
+                  Los artículos de {$fsc->empresa->nombre} se <b>añaden automáticamente</b>
+                  a partir de las fuentes configuradas. Se calcula su popularidad, temas
+                  relacionados, imagen, etc... de forma que en esta web encontrarás una
+                  selección de artículos populares plenamente objetiva. Ningún editor,
+                  ni grupo de usuarios puede penalizar un artículo.
+                  <br/>
+                  Eso si, los enlaces conducen directamente a la fuente original. Esta
+                  web solamente indexa y cataloga, no roba tráfico.
+               </p>
+               <script src="https://apis.google.com/js/platform.js" async defer></script>
+               <g:plusone></g:plusone>
+            </div>
+         </div>
+      </div>
+   </div>
+   {/if}
+   <div class="row">
+   <!--{$clase=' bg-claro'}-->
+   {loop="$fsc->noticias"}
+      {if="$counter>0"}
+         <!--{$url=$value->url($fsc->modrewrite)}-->
+         <!--{$fsc->preview->load($value->url, $value->preview)}-->
+         {if="$fsc->preview->type AND $counter<20"}
+         <div class='col-sm-1{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
+            <br/>
+            <a href="{$url}" target="_blank" class="thumbnail">
+               <img src="{$fsc->preview->preview()}" alt="{$value->titulo}">
+            </a>
+         </div>
+         <div class='col-sm-5{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
+            <h3>{$value->titulo}</h3>
+            <p class="help-block">{$value->resumen}</p>
+            <p class="help-block inme_small">
+               {if="!$value->nativa"}
+               <span class="label label-danger"><s>Español</s></span>&nbsp;
+               {/if}
+               {if="$value->parodia"}
+               <span class="label label-danger">Parodia</span>&nbsp;
+               {/if}
+               <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha} &nbsp;
+               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)} &nbsp;
+               {loop="$value->keywords()"}
+                  {if="$counter1<20 AND $counter2<4"}
+                  <a href="#{$value2}" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
+                  {/if}
+               {/loop}
+               {if="$value->meneame_link"}
+               &nbsp;
+               <a href="#meneame" data-href="{$value->meneame_link}" class="label label-default fake_link">
+                  <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+               </a>
+               {/if}
+            </p>
+            <div class="visible-xs">
+               <hr/>
+            </div>
+         </div>
+         {else}
+         <div class='col-sm-6{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
+            <h3>
+               <a href="{$url}" target="_blank">{$value->titulo}</a>
+            </h3>
+            <p class="help-block">{$value->resumen}</p>
+            <p class="help-block inme_small">
+               {if="!$value->nativa"}
+               <span class="label label-danger"><s>Español</s></span>&nbsp;
+               {/if}
+               {if="$value->parodia"}
+               <span class="label label-danger">Parodia</span>&nbsp;
+               {/if}
+               <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha} &nbsp;
+               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)} &nbsp;
+               {loop="$value->keywords()"}
+                  {if="$counter1<20 AND $counter2<4"}
+                  <a href="#{$value2}" data-href="{$fsc->url()}&keyword={$value2}" class="label label-default fake_link">{$value2}</a>
+                  {/if}
+               {/loop}
+               {if="$value->meneame_link"}
+               &nbsp;
+               <a href="#meneame" data-href="{$value->meneame_link}" class="label label-default fake_link">
+                  <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+               </a>
+               {/if}
+            </p>
+            <div class="visible-xs">
+               <hr/>
+            </div>
+         </div>
+         {/if}
+      {/if}
+      {if="$counter%2==0 AND $counter>0"}
+         </div><div class="row{$clase}">
+         {if="$clase==' bg-claro'"}
+         <!--{$clase=''}-->
+         {else}
+         <!--{$clase=' bg-claro'}-->
+         {/if}
+      {/if}
+   {/loop}
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
          <ul class="pager">
             {if="$fsc->offset>0"}
             <li class="previous">
                <a href="{$fsc->anterior_url()}" rel="prev">
-                  <span class="glyphicon glyphicon-chevron-left"></span>&nbsp; Anteriores
+                  <span class="glyphicon glyphicon-chevron-left"></span>
+                  <span class="hidden-xs">&nbsp; Anteriores</span>
                </a>
             </li>
             {/if}
             {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
             <li class="next">
                <a href="{$fsc->siguiente_url()}" rel="next">
-                  Siguientes &nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
+                  <span class="hidden-xs">Siguientes &nbsp;</span>
+                  <span class="glyphicon glyphicon-chevron-right"></span>
                </a>
             </li>
             {/if}
          </ul>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modal_popularidad" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Popularidad
+            </h4>
+         </div>
+         <div class="modal-body">
+            <p>
+               {$fsc->empresa->nombre} es un agregador de noticias <b>totalmente automatizado</b>.
+               La portada se genera a partir de los artículos más populares del día.
+               Y para calcular la popularidad de un artículo se emplean los siguientes
+               parámetros:
+            </p>
+            <ul>
+               <li>Las menciones en <b>twitter</b> al artículo.</li>
+               <li>Las menciones en <b>facebook</b> al artículo.</li>
+               <li>Los clic en <b>menéame</b> al artículo.</li>
+               <li>La edad del artículo. Cuanto más antiguo, más edad.</li>
+            </ul>
+            <p>
+               Este sistema nos permite calcular el interés de un artículo, sin
+               que un grupo de usuarios pueda distorsionarlo con <b>votos negativos</b>.
+            </p>
+            <p>
+               Y si tienes más interés, puedes ver nuestro algoritmo en github.
+            </p>
+            <a href="https://github.com/NeoRazorX/informame" target="_blank" class="btn btn-sm btn-default">
+               <i class="fa fa-git" aria-hidden="true"></i>&nbsp; código fuente
+            </a>
+         </div>
       </div>
    </div>
 </div>

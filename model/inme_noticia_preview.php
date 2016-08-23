@@ -63,7 +63,7 @@ class inme_noticia_preview
       
       /// extraemos urls del texto
       $aux = array();
-      if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', $text, $aux) )
+      if( preg_match_all('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.,]*(\?\S+)?)?)*)@', $text, $aux) )
       {
          foreach($aux[0] as $a)
          {
@@ -74,6 +74,17 @@ class inme_noticia_preview
       foreach($links as $link)
       {
          if( mb_substr($link, 0, 19) == 'http://i.imgur.com/' )
+         {
+            $parts = explode('/', $link);
+            if( count($parts) >= 4 )
+            {
+               $this->filename = $parts[3];
+               $this->type = 'imgur';
+               $this->link = $link;
+            }
+            break;
+         }
+         else if( mb_substr($link, 0, 20) == 'https://i.imgur.com/' )
          {
             $parts = explode('/', $link);
             if( count($parts) >= 4 )

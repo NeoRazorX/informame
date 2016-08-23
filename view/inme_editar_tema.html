@@ -17,21 +17,37 @@
             <h1>
                {$fsc->tema->titulo}
                <small>
-                  <a href="index.php?page=inme_home&keyword={$fsc->tema->codtema}">{$fsc->show_numero($fsc->tema->articulos, 0)}</a>
+                  <a href="index.php?page=inme_home&keyword={$fsc->tema->codtema}" class="badge">{$fsc->show_numero($fsc->tema->articulos, 0)}</a>
                </small>
             </h1>
+            <p class="help-block">
+               Creado el {$fsc->tema->fecha}, este tema tiene un total de {$fsc->show_numero($fsc->tema->articulos, 0)}
+               artículos relacionados, y una popularidad de {$fsc->show_numero($fsc->tema->popularidad, 0)} puntos.
+            </p>
          </div>
       </div>
    </div>
    <div class="row">
-      <div class="col-sm-6">
+      {if="$fsc->tema->imagen"}
+      <div class="col-sm-2">
+         <div class="thumbnail">
+            <img src="{$fsc->tema->imagen}" alt="{$fsc->tema->titulo}"/>
+            <a href="{$fsc->tema->url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
+               <i class="fa fa-thumbs-down" aria-hidden="true"></i> incorrecta
+            </a>
+         </div>
+      </div>
+      <div class="col-sm-5">
+         <p class="text-justify">{$fsc->tema->texto()}</p>
+      </div>
+      {else}
+      <div class="col-sm-7">
+         <p class="text-justify">{$fsc->tema->texto()}</p>
+      </div>
+      {/if}
+      <div class="col-sm-5">
          <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
-               <a href="#tema" aria-controls="tema" role="tab" data-toggle="tab">
-                  <span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp; Tema
-               </a>
-            </li>
-            <li role="presentation">
                <a href="#editar" aria-controls="editar" role="tab" data-toggle="tab">
                   <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                   <span class="hidden-xs">&nbsp; Editar</span>
@@ -45,15 +61,7 @@
          </ul>
          <br/>
          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="tema">
-               <p class="text-justify">{$fsc->tema->texto()}</p>
-               {if="$fsc->tema->imagen"}
-               <a href="#" class="thumbnail">
-                  <img src="{$fsc->tema->imagen}" alt="{$fsc->tema->titulo}"/>
-               </a>
-               {/if}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="editar">
+            <div role="tabpanel" class="tab-pane active" id="editar">
                <form action="{$fsc->tema->url()}" method="post" class="form">
                   <div class="form-group">
                      <div class="input-group">
@@ -117,10 +125,19 @@
             </div>
          </div>
       </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <hr/>
+      </div>
+   </div>
+   <div class="row">
       <div class="col-sm-6">
       {loop="$fsc->noticias"}
          {if="$counter>0"}
          <hr/>
+      </div>
+      <div class="col-sm-6">
          {/if}
          <div class="media">
             <!--{$url=$value->url()}-->

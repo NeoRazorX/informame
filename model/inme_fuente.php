@@ -158,7 +158,9 @@ class inme_fuente extends fs_model
       if($data)
       {
          foreach($data as $d)
+         {
             $tlist[] = new inme_fuente($d);
+         }
       }
       
       return $tlist;
