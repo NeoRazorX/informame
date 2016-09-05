@@ -242,17 +242,6 @@ class inme_editar_noticia extends fs_controller
                $this->new_error_msg('Tema '.$key.' no encontrado.');
             }
          }
-         
-         /**
-          * Ya que no podemos volver a calcular el nº de menciones en twitter,
-          * usaremos esa variable para ir aumentándola aleatoriamente con cada
-          * visita. Eso nos permite premiar a las noticias más vistas aquí.
-          */
-         if( mt_rand(0, 2) == 0 )
-         {
-            $this->noticia->tweets++;
-            $this->noticia->save();
-         }
       }
       else
          $this->new_error_msg('Noticia no encontrada.');

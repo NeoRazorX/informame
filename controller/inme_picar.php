@@ -735,38 +735,61 @@ class inme_picar extends fs_controller
       }
    }
    
-   /**
-    * Debería devolver el nº de menciones en Twitter de dicho enlace, pero eso ya no
-    * es posible por culpa de los estúpidos cambios en la API de Twitter. Así que
-    * en lugar de no hacer nada, devolvemos el nº de menciones en google+.
-    * @param type $link
-    * @return type
-    */
    private function tweet_count($link)
    {
-      $curl = curl_init();
-      curl_setopt($curl, CURLOPT_URL, "https://clients6.google.com/rpc");
-      curl_setopt($curl, CURLOPT_POST, TRUE);
-      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, '[{"method":"pos.plusones.get","id":"p","params":{"nolog":true,"id":"'.
-              rawurldecode($link).'","source":"widget","userId":"@viewer","groupId":"@self"},"jsonrpc":"2.0","key":"p","apiVersion":"v1"}]');
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-      curl_setopt($curl, CURLOPT_TIMEOUT, 3);
-      $curl_results = curl_exec($curl);
-      curl_close ($curl);
-      $json = json_decode($curl_results, TRUE);
+      $json_string = $this->curl_download('https://count.donreach.com/?url='.rawurlencode($link), FALSE);
+      $json = json_decode($json_string, TRUE);
       
-      return isset($json[0]['result']['metadata']['globalCounts']['count']) ? intval( $json[0]['result']['metadata']['globalCounts']['count'] ) : 0;
+      if( isset($json['shares']['twitter']) )
+      {
+         return intval($json['shares']['twitter']);
+      }
+      else if( isset($json['total']) )
+      {
+         $total = -1;
+         if( isset($json['shares']['google']) )
+         {
+            $total += intval($json['shares']['google']);
+         }
+         
+         if( isset($json['shares']['linkedin']) )
+         {
+            $total += intval($json['shares']['linkedin']);
+         }
+         
+         if( isset($json['shares']['reddit']) )
+         {
+            $total += intval($json['shares']['reddit']);
+         }
+         
+         if($total >= 0)
+         {
+            return $total;
+         }
+         else
+         {
+            return intval($json['total']);
+         }
+      }
+      else
+      {
+         return 0;
+      }
    }
    
    private function facebook_count($link)
    {
-      $json_string = $this->curl_download('http://api.facebook.com/restserver.php?method=links.getStats&format=json&urls='.
-              rawurlencode($link), FALSE);
+      $json_string = $this->curl_download('http://graph.facebook.com/?id='.rawurlencode($link), FALSE);
       $json = json_decode($json_string, TRUE);
       
-      return isset($json[0]['total_count']) ? intval($json[0]['total_count']) : 0;
+      if( isset($json['share']['share_count']) )
+      {
+         return intval($json['share']['share_count']);
+      }
+      else
+      {
+         return 0;
+      }
    }
    
    private function meneame_count($link)

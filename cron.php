@@ -94,19 +94,86 @@ class inme_cron
    
    private function tweet_count($link)
    {
-      $json_string = $this->curl_download('http://urls.api.twitter.com/1/urls/count.json?url='.rawurlencode($link), FALSE);
+      $json_string = $this->curl_download('https://count.donreach.com/?url='.rawurlencode($link), FALSE);
       $json = json_decode($json_string, TRUE);
       
-      return isset($json['count']) ? intval($json['count']) : 0;
+      if( isset($json['shares']['twitter']) )
+      {
+         return intval($json['shares']['twitter']);
+      }
+      else if( isset($json['total']) )
+      {
+         $total = -1;
+         if( isset($json['shares']['google']) )
+         {
+            $total += intval($json['shares']['google']);
+         }
+         
+         if( isset($json['shares']['linkedin']) )
+         {
+            $total += intval($json['shares']['linkedin']);
+         }
+         
+         if( isset($json['shares']['reddit']) )
+         {
+            $total += intval($json['shares']['reddit']);
+         }
+         
+         if($total >= 0)
+         {
+            return $total;
+         }
+         else
+         {
+            return intval($json['total']);
+         }
+      }
+      else
+      {
+         return 0;
+      }
    }
    
    private function facebook_count($link)
    {
-      $json_string = $this->curl_download('http://api.facebook.com/restserver.php?method=links.getStats&format=json&urls='.
-              rawurlencode($link), FALSE);
+      $json_string = $this->curl_download('https://count.donreach.com/?url='.rawurlencode($link), FALSE);
       $json = json_decode($json_string, TRUE);
       
-      return isset($json[0]['total_count']) ? intval($json[0]['total_count']) : 0;
+      if( isset($json['shares']['facebook']) )
+      {
+         return intval($json['shares']['facebook']);
+      }
+      else if( isset($json['total']) )
+      {
+         $total = -1;
+         if( isset($json['shares']['pinterest']) )
+         {
+            $total += intval($json['shares']['pinterest']);
+         }
+         
+         if( isset($json['shares']['stumbleupon']) )
+         {
+            $total += intval($json['shares']['stumbleupon']);
+         }
+         
+         if( isset($json['shares']['delicious']) )
+         {
+            $total += intval($json['shares']['delicious']);
+         }
+         
+         if($total >= 0)
+         {
+            return $total;
+         }
+         else
+         {
+            return intval($json['total']);
+         }
+      }
+      else
+      {
+         return 0;
+      }
    }
    
    private function meneame_count($link)

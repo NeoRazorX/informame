@@ -96,7 +96,8 @@
                         <img src="plugins/informame/view/img/newspaper.jpg" alt="{$fsc->noticias[0]->titulo}">
                         {/if}
                         <a href="{$fsc->noticias[0]->edit_url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
-                           <i class="fa fa-thumbs-down" aria-hidden="true"></i> incorrecta
+                           <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                           <span class="hidden-sm">incorrecta</span>
                         </a>
                      </div>
                   </div>
@@ -175,7 +176,8 @@
             <div class="thumbnail">
                <img src="{$fsc->preview->preview()}" alt="{$value->titulo}">
                <a href="{$value->edit_url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
-                  <i class="fa fa-thumbs-down" aria-hidden="true"></i> incorrecta
+                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                  <span class="hidden-sm hidden-md">incorrecta</span>
                </a>
             </div>
          </div>
