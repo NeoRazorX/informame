@@ -491,10 +491,10 @@ class inme_cron
             
             $max--;
          }
-         else if( substr($tema->preview, 0, 18) == 'http://i.imgur.com' )
+         else if( substr($tema->imagen, 0, 18) == 'http://i.imgur.com' )
          {
             /// cambiamos http por https para las imágenes de imgur
-            $tema->preview = str_replace('http://i.imgur.com', 'https://i.imgur.com', $tema->preview);
+            $tema->imagen = str_replace('http://i.imgur.com', 'https://i.imgur.com', $tema->imagen);
             $tema->save();
          }
       }
