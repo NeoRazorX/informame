@@ -491,12 +491,6 @@ class inme_cron
             
             $max--;
          }
-         else if( substr($tema->imagen, 0, 18) == 'http://i.imgur.com' )
-         {
-            /// cambiamos http por https para las imágenes de imgur
-            $tema->imagen = str_replace('http://i.imgur.com', 'https://i.imgur.com', $tema->imagen);
-            $tema->save();
-         }
       }
       
       /**
@@ -545,14 +539,14 @@ class inme_cron
    {
       $imagen = NULL;
       
-      $url = "http://www.bing.com/images/search?pq=".urlencode( mb_strtolower($search) )."&count=50&q=".urlencode($search);
+      $url = "https://www.bing.com/images/search?pq=".urlencode( mb_strtolower($search) )."&count=50&q=".urlencode($search);
       $data = file_get_contents($url);
       if($data)
       {
          preg_match_all('@<img.+src="(.*)".*>@Uims', $data, $matches);
          foreach($matches[1] as $m)
          {
-            if( substr($m, 0, 4) == 'http' )
+            if( substr($m, 0, 5) == 'https' )
             {
                $imagen = $m;
                break;

@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2017  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -77,27 +77,27 @@ class inme_tema extends fs_model
    protected function install()
    {
       return "INSERT INTO inme_temas (codtema,titulo,texto,keywords,imagen,activo) VALUES"
-              . " ('espanya','España','España (Reino de España)','[espanya],[spain]','http://i.imgur.com/nDoxKF3.jpg',true)"
-              . ",('corrupcion','Corrupción','Corrupción','[corrupcion]','http://i.imgur.com/wYe54PC.jpg',true)"
-              . ",('ee-uu','EE.UU','Estados Unidos de América','[estados-unidos],[usa],[ee-uu],[eeuu]','http://i.imgur.com/MsZyxdq.jpg',true)"
-              . ",('alemania','Alemania','Alemania','[alemania]','http://i.imgur.com/I8f9WXM.jpg',true)"
-              . ",('china','China','China','[china]','http://i.imgur.com/T5KsW3L.jpg',true)"
-              . ",('grafeno','Grafeno','Grafeno','[grafeno]','http://i.imgur.com/jjlcWYu.jpg',true)"
-              . ",('grecia','Grecia','Grecia','[grecia]','http://i.imgur.com/FyyQJho.jpg',true)"
-              . ",('isis','ISIS','ISIS','[isis]','http://i.imgur.com/qXgdYox.jpg',true)"
-              . ",('israel','Israel','Israel','[israel]','http://i.imgur.com/2uRAhdA.png',true)"
-              . ",('linux','Linux','Linux','[linux]','http://i.imgur.com/zF5yVoQ.png',true)"
-              . ",('rusia','Rusia','Rusia','[rusia]','http://i.imgur.com/7WZu7fl.jpg',true)"
-              . ",('venezuela','Venezuela','Venezuela','[venezuela]','http://i.imgur.com/jAB2UDd.jpg',true)"
-              . ",('microsoft','Microsoft','Microsoft','[microsoft]','http://i.imgur.com/LLX8ddu.jpg',true)"
-              . ",('google','Google','Google','[google]','http://i.imgur.com/Gh7Ib2o.png',true)"
-              . ",('apple','Apple','Apple','[apple]','http://i.imgur.com/Qttksz6.jpg',true)"
-              . ",('nazis','Nazismo','Nazismo','[nazis],[nazismo],[hitler]','http://i.imgur.com/WYdIkd8.png',true)"
-              . ",('pp','Partido Popular','Partido Popular','[pp]','http://i.imgur.com/IjmbCcA.jpg',true)"
-              . ",('psoe','PSOE','Partido Socialista Obrero Español','[psoe]','https://epolitic.s3.amazonaws.com/uploads/group/avatar/5/logo-psoe.jpg',true)"
+              . " ('espanya','España','España (Reino de España)','[espanya],[spain]','https://i.imgur.com/nDoxKF3.jpg',true)"
+              . ",('corrupcion','Corrupción','Corrupción','[corrupcion]','https://i.imgur.com/wYe54PC.jpg',true)"
+              . ",('ee-uu','EE.UU','Estados Unidos de América','[estados-unidos],[usa],[ee-uu],[eeuu]','https://i.imgur.com/MsZyxdq.jpg',true)"
+              . ",('alemania','Alemania','Alemania','[alemania]','https://i.imgur.com/I8f9WXM.jpg',true)"
+              . ",('china','China','China','[china]','https://i.imgur.com/T5KsW3L.jpg',true)"
+              . ",('grafeno','Grafeno','Grafeno','[grafeno]','https://i.imgur.com/jjlcWYu.jpg',true)"
+              . ",('grecia','Grecia','Grecia','[grecia]','https://i.imgur.com/FyyQJho.jpg',true)"
+              . ",('isis','ISIS','ISIS','[isis]','https://i.imgur.com/qXgdYox.jpg',true)"
+              . ",('israel','Israel','Israel','[israel]','https://i.imgur.com/2uRAhdA.png',true)"
+              . ",('linux','Linux','Linux','[linux]','https://i.imgur.com/zF5yVoQ.png',true)"
+              . ",('rusia','Rusia','Rusia','[rusia]','https://i.imgur.com/7WZu7fl.jpg',true)"
+              . ",('venezuela','Venezuela','Venezuela','[venezuela]','https://i.imgur.com/jAB2UDd.jpg',true)"
+              . ",('microsoft','Microsoft','Microsoft','[microsoft]','https://i.imgur.com/LLX8ddu.jpg',true)"
+              . ",('google','Google','Google','[google]','https://i.imgur.com/Gh7Ib2o.png',true)"
+              . ",('apple','Apple','Apple','[apple]','https://i.imgur.com/Qttksz6.jpg',true)"
+              . ",('nazis','Nazismo','Nazismo','[nazis],[nazismo],[hitler]','https://i.imgur.com/WYdIkd8.png',true)"
+              . ",('pp','Partido Popular','Partido Popular','[pp]','https://i.imgur.com/IjmbCcA.jpg',true)"
+              . ",('psoe','PSOE','Partido Socialista Obrero Español','[psoe]','https://tse1.mm.bing.net/th?id=OIP.M6c9b84c4b1a61d81117823f84adbf69ao0&w=230&h=170&rs=1&pcl=dddddd&pid=1.1',true)"
               . ",('podemos','Podemos','Podemos','[podemos]','https://pbs.twimg.com/profile_images/478483096598097920/4lnBU17e_bigger.jpeg',true)"
-              . ",('raspberry-pi','raspberry-pi','raspberry-pi','[raspberry]','http://i.imgur.com/RZ7iexA.jpg',true)"
-              . ",('ubuntu','Ubuntu','Ubuntu','[ubuntu]','http://i.imgur.com/3Sz1WVo.png',true)"
+              . ",('raspberry-pi','raspberry-pi','raspberry-pi','[raspberry]','https://i.imgur.com/RZ7iexA.jpg',true)"
+              . ",('ubuntu','Ubuntu','Ubuntu','[ubuntu]','https://i.imgur.com/3Sz1WVo.png',true)"
               . ";";
    }
    
@@ -223,6 +223,17 @@ class inme_tema extends fs_model
          if(!$this->activo)
          {
             $this->popularidad = 0;
+         }
+         
+         if( substr($this->imagen, 0, 18) == 'http://i.imgur.com' )
+         {
+            /// cambiamos http por https para las imágenes de imgur
+            $this->imagen = str_replace('http://i.imgur.com', 'https://i.imgur.com', $this->imagen);
+         }
+         else if( substr($this->imagen, 0, 7) == 'http://' )
+         {
+            $this->imagen = NULL;
+            $this->new_error_msg('Ya no se admiten imágenes http. Imagen eliminada.');
          }
          
          if( $this->exists() )

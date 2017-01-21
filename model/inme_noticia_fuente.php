@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2017  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -327,7 +327,15 @@ class inme_noticia_fuente extends fs_model
       $this->titulo = $this->no_html($this->titulo);
       $this->resumen = $this->no_html($this->resumen);
       
-      if($this->preview == '')
+      if($this->preview)
+      {
+         if( substr($this->preview, 0, 7) == 'http://' )
+         {
+            $this->preview = NULL;
+            $this->new_error_msg('Ya no se admiten imágenes http. Imagen eliminada.');
+         }
+      }
+      else
       {
          $this->preview = NULL;
       }
