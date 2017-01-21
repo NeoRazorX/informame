@@ -2,7 +2,7 @@
 
 /*
  * This file is part of informame
- * Copyright (C) 2015-2016  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2015-2017  Carlos Garcia Gomez  neorazorx@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -465,7 +465,7 @@ class inme_cron
          {
             break;
          }
-         else if( $tema->activo AND is_null($tema->imagen) )
+         else if( is_null($tema->imagen) AND $tema->activo AND $tema->articulos > 10 )
          {
             $tema->imagen = $this->get_image_from_bing($tema->titulo);
             if($tema->imagen)
@@ -490,6 +490,12 @@ class inme_cron
             }
             
             $max--;
+         }
+         else if( substr($tema->preview, 0, 18) == 'http://i.imgur.com' )
+         {
+            /// cambiamos http por https para las imágenes de imgur
+            $tema->preview = str_replace('http://i.imgur.com', 'https://i.imgur.com', $tema->preview);
+            $tema->save();
          }
       }
       
