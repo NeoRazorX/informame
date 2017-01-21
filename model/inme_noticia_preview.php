@@ -80,7 +80,7 @@ class inme_noticia_preview
             {
                $this->filename = $parts[3];
                $this->type = 'imgur';
-               $this->link = $link;
+               $this->link = str_replace('http://', '//', $link);
             }
             break;
          }
