@@ -143,14 +143,14 @@ class inme_editar_tema extends fs_controller
       $txt = $this->tema->titulo;
       $num = mt_rand(0, 3);
       
-      $url = "http://www.bing.com/images/search?pq=".urlencode( mb_strtolower($txt) )."&count=50&q=".urlencode($txt);
+      $url = "https://www.bing.com/images/search?pq=".urlencode( mb_strtolower($txt) )."&count=50&q=".urlencode($txt);
       $data = file_get_contents($url);
       if($data)
       {
          preg_match_all('@<img.+src="(.*)".*>@Uims', $data, $matches);
          foreach($matches[1] as $m)
          {
-            if( substr($m, 0, 4) == 'http' )
+            if( substr($m, 0, 6) == 'https:' )
             {
                $this->tema->imagen = $m;
                

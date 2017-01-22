@@ -372,14 +372,14 @@ class inme_editar_noticia extends fs_controller
          $txt = $keywords[0];
       }
       
-      $url = "http://www.bing.com/images/search?pq=".urlencode( mb_strtolower($txt) )."&count=50&q=".urlencode($txt);
+      $url = "https://www.bing.com/images/search?pq=".urlencode( mb_strtolower($txt) )."&count=50&q=".urlencode($txt);
       $data = file_get_contents($url);
       if($data)
       {
          preg_match_all('@<img.+src="(.*)".*>@Uims', $data, $matches);
          foreach($matches[1] as $m)
          {
-            if( substr($m, 0, 4) == 'http' )
+            if( substr($m, 0, 6) == 'https:' )
             {
                $this->noticia->preview = $m;
                

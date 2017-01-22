@@ -198,7 +198,7 @@ class inme_home extends fs_controller
       {
          if($_SERVER['SERVER_NAME'] == 'localhost')
          {
-            $url = 'http://'.$_SERVER['SERVER_NAME'];
+            $url = '//'.$_SERVER['SERVER_NAME'];
             
             if( isset($_SERVER['REQUEST_URI']) )
             {

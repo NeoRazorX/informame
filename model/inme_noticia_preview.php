@@ -349,16 +349,16 @@ class inme_noticia_preview
             $parts2 = explode('.', $this->filename);
             if( substr($parts2[0], -1) == 'b' )
             {
-               $thumbnail = 'http://i.imgur.com/'.$parts2[0].'.'.$parts2[1];
+               $thumbnail = '//i.imgur.com/'.$parts2[0].'.'.$parts2[1];
             }
             else
             {
-               $thumbnail = 'http://i.imgur.com/'.$parts2[0].'b.'.$parts2[1];
+               $thumbnail = '//i.imgur.com/'.$parts2[0].'b.'.$parts2[1];
             }
             break;
          
          case 'youtube':
-            $thumbnail = 'http://img.youtube.com/vi/'.$this->filename.'/0.jpg';
+            $thumbnail = '//img.youtube.com/vi/'.$this->filename.'/0.jpg';
             break;
          
          case 'vimeo':
