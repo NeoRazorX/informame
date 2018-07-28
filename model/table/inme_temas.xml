@@ -5,49 +5,49 @@
         Estructura de la tabla inme_temas.
 -->
 <tabla>
-   <columna>
-      <nombre>codtema</nombre>
-      <tipo>character varying(50)</tipo>
-      <nulo>NO</nulo>
-   </columna>
-   <columna>
-      <nombre>titulo</nombre>
-      <tipo>character varying(100)</tipo>
-   </columna>
-   <columna>
-      <nombre>texto</nombre>
-      <tipo>text</tipo>
-   </columna>
-   <columna>
-      <nombre>keywords</nombre>
-      <tipo>character varying(300)</tipo>
-   </columna>
-   <columna>
-      <nombre>imagen</nombre>
-      <tipo>character varying(255)</tipo>
-   </columna>
-   <columna>
-      <nombre>articulos</nombre>
-      <tipo>integer</tipo>
-   </columna>
-   <columna>
-      <nombre>popularidad</nombre>
-      <tipo>integer</tipo>
-   </columna>
-   <columna>
-      <nombre>activo</nombre>
-      <tipo>boolean</tipo>
-   </columna>
-   <columna>
-      <nombre>busqueda</nombre>
-      <tipo>character varying(50)</tipo>
-   </columna>
-   <columna>
-      <nombre>fecha</nombre>
-      <tipo>date</tipo>
-   </columna>
-   <restriccion>
-      <nombre>inme_temas_pkey</nombre>
-      <consulta>PRIMARY KEY (codtema)</consulta>
-   </restriccion>
+    <columna>
+        <nombre>codtema</nombre>
+        <tipo>character varying(50)</tipo>
+        <nulo>NO</nulo>
+    </columna>
+    <columna>
+        <nombre>titulo</nombre>
+        <tipo>character varying(100)</tipo>
+    </columna>
+    <columna>
+        <nombre>texto</nombre>
+        <tipo>text</tipo>
+    </columna>
+    <columna>
+        <nombre>keywords</nombre>
+        <tipo>character varying(300)</tipo>
+    </columna>
+    <columna>
+        <nombre>imagen</nombre>
+        <tipo>character varying(255)</tipo>
+    </columna>
+    <columna>
+        <nombre>articulos</nombre>
+        <tipo>integer</tipo>
+    </columna>
+    <columna>
+        <nombre>popularidad</nombre>
+        <tipo>integer</tipo>
+    </columna>
+    <columna>
+        <nombre>activo</nombre>
+        <tipo>boolean</tipo>
+    </columna>
+    <columna>
+        <nombre>busqueda</nombre>
+        <tipo>character varying(50)</tipo>
+    </columna>
+    <columna>
+        <nombre>fecha</nombre>
+        <tipo>date</tipo>
+    </columna>
+    <restriccion>
+        <nombre>inme_temas_pkey</nombre>
+        <consulta>PRIMARY KEY (codtema)</consulta>
+    </restriccion>
 </tabla>

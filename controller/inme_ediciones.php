@@ -1,8 +1,7 @@
 <?php
-
-/*
+/**
  * This file is part of informame
- * Copyright (C) 2016  Carlos Garcia Gomez  neorazorx@gmail.com
+ * Copyright (C) 2016-2018 Carlos Garcia Gomez <neorazorx@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -18,36 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_model('inme_noticia_fuente.php');
-require_model('inme_noticia_preview.php');
-
 /**
  * Description of inme_ediciones
  *
- * @author carlos
+ * @author Carlos García Gómez <neorazorx@gmail.com>
  */
 class inme_ediciones extends fs_controller
 {
-   public $preview;
-   public $resultados;
-   
-   public function __construct()
-   {
-      parent::__construct(__CLASS__, 'Ediciones', 'informame');
-   }
-   
-   protected function private_core()
-   {
-      $this->preview = new inme_noticia_preview();
-      
-      $this->resultados = array();
-      $noti = new inme_noticia_fuente();
-      foreach($noti->all(0, 'editada DESC, publicada DESC') as $no)
-      {
-         if($no->editada)
-         {
-            $this->resultados[] = $no;
-         }
-      }
-   }
+
+    public $preview;
+    public $resultados;
+
+    public function __construct()
+    {
+        parent::__construct(__CLASS__, 'Ediciones', 'informame');
+    }
+
+    protected function private_core()
+    {
+        $this->preview = new inme_noticia_preview();
+
+        $this->resultados = array();
+        $noti = new inme_noticia_fuente();
+        foreach ($noti->all(0, 'editada DESC, publicada DESC') as $no) {
+            if ($no->editada) {
+                $this->resultados[] = $no;
+            }
+        }
+    }
 }
