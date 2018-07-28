@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__.'/../lib/social_share_count.php';
+
 /**
  * Description of inme_picar
  *
@@ -29,10 +31,11 @@ class inme_picar extends fs_controller
     public $buscar;
     public $log;
     public $modrewrite;
+    private $noticia;
     public $page_description;
     public $page_title;
     public $recargar;
-    private $noticia;
+    private $social_share_count;
     private $tema;
 
     public function __construct()
@@ -47,6 +50,7 @@ class inme_picar extends fs_controller
         $this->log = array();
         $this->noticia = new inme_noticia_fuente();
         $this->recargar = 0;
+        $this->social_share_count = new social_share_count();
         $this->tema = new inme_tema();
 
         if (isset($_GET['hidden'])) {
@@ -181,13 +185,17 @@ class inme_picar extends fs_controller
                     foreach ($this->noticia->all($offset) as $noti) {
                         $popularidad = $noti->popularidad();
 
-                        switch (mt_rand(0, 2)) {
+                        switch (mt_rand(0, 3)) {
                             case 0:
-                                $noti->likes = max(array($noti->likes, $this->facebook_count($noti->url)));
+                                $noti->likes = max(array($noti->likes, $this->social_share_count->get_count($noti->url)));
                                 break;
 
                             case 1:
-                                $noti->meneos = max(array($noti->meneos, $this->meneame_count($noti->url)));
+                                $noti->meneos = max(array($noti->meneos, $this->social_share_count->get_count($noti->url)));
+                                break;
+
+                            case 2:
+                                $noti->tweets = max(array($noti->tweets, $this->social_share_count->get_count($noti->url)));
                                 break;
 
                             default:
@@ -530,31 +538,6 @@ class inme_picar extends fs_controller
         } else {
             $this->log[] = 'Error al procesar la noticia: ' . $noticia->url;
         }
-    }
-
-    private function facebook_count($link)
-    {
-        $json_string = fs_file_get_contents('http://graph.facebook.com/?id=' . rawurlencode($link));
-        $json = json_decode($json_string, TRUE);
-
-        if (isset($json['share']['share_count'])) {
-            return intval($json['share']['share_count']);
-        }
-
-        return 0;
-    }
-
-    private function meneame_count($link)
-    {
-        $string = fs_file_get_contents('http://www.meneame.net/api/url.php?url=' . rawurlencode($link));
-        $vars = explode(' ', $string);
-
-        $meneos = 0;
-        if (count($vars) == 4) {
-            $meneos = intval($vars[2]);
-        }
-
-        return $meneos;
     }
 
     private function total_noticias()

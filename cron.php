@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__.'/lib/social_share_count.php';
+
 /**
  * 
  */
@@ -41,15 +43,20 @@ class inme_cron
         echo "\nExaminamos noticias: " . $order . "...\n";
 
         $noti0 = new inme_noticia_fuente();
+        $social_share_count = new social_share_count();
         foreach ($noti0->all(0, $order) as $noti) {
             $popularidad = $noti->popularidad();
-            switch (mt_rand(0, 1)) {
+            switch (mt_rand(0, 2)) {
                 default:
-                    $noti->likes = max(array($noti->likes, $this->facebook_count($noti->url)));
+                    $noti->likes = max(array($noti->likes, $social_share_count->get_count($noti->url)));
                     break;
 
                 case 1:
-                    $noti->meneos = max(array($noti->meneos, $this->meneame_count($noti->url)));
+                    $noti->meneos = max(array($noti->meneos, $social_share_count->get_count($noti->url)));
+                    break;
+
+                case 1:
+                    $noti->tweets = max(array($noti->tweets, $social_share_count->get_count($noti->url)));
                     break;
             }
 
@@ -69,31 +76,6 @@ class inme_cron
 
         /// Por último forzamos una llamada web para picar
         fs_file_get_contents($empresa->web . '/index.php?page=inme_picar&hidden=TRUE');
-    }
-
-    private function facebook_count($link)
-    {
-        $json_string = fs_file_get_contents('http://graph.facebook.com/?id=' . rawurlencode($link));
-        $json = json_decode($json_string, TRUE);
-
-        if (isset($json['share']['share_count'])) {
-            return intval($json['share']['share_count']);
-        }
-        
-        return 0;
-    }
-
-    private function meneame_count($link)
-    {
-        $string = fs_file_get_contents('http://www.meneame.net/api/url.php?url=' . rawurlencode($link));
-        $vars = explode(' ', $string);
-
-        $meneos = 0;
-        if (count($vars) == 4) {
-            $meneos = intval($vars[2]);
-        }
-
-        return $meneos;
     }
 
     /**

@@ -290,8 +290,9 @@ class inme_editar_noticia extends fs_controller
         if ($this->noticia) {
             return 'https://twitter.com/share?url=' . urlencode($this->empresa->web . '/' . $this->noticia->url($this->modrewrite)) .
                 '&amp;text=' . urlencode(html_entity_decode($this->noticia->titulo));
-        } else
-            return 'https://twitter.com/share';
+        }
+        
+        return 'https://twitter.com/share';
     }
 
     public function facebook_url()
@@ -299,8 +300,9 @@ class inme_editar_noticia extends fs_controller
         if ($this->noticia) {
             return 'http://www.facebook.com/sharer.php?s=100&amp;p[title]=' . urlencode(html_entity_decode($this->noticia->titulo)) .
                 '&amp;p[url]=' . urlencode($this->empresa->web . '/' . $this->noticia->url($this->modrewrite));
-        } else
-            return 'http://www.facebook.com/sharer.php';
+        }
+        
+        return 'http://www.facebook.com/sharer.php';
     }
 
     private function cambiar_imagen()
