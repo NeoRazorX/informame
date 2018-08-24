@@ -1,287 +1,257 @@
 {include="header"}
 
 <div class="container-fluid">
-   {if="$fsc->mostrar_tema"}
-      {if="$fsc->mostrar_tema->imagen"}
-      <div class="row">
-         <div class="col-sm-2">
+    {if="$fsc->mostrar_tema && $fsc->mostrar_tema->imagen"}
+    <div class="row">
+        <div class="col-sm-2">
             <a href="{$fsc->mostrar_tema->url()}" class="thumbnail">
-               <img src="{$fsc->mostrar_tema->imagen}" alt="{$fsc->mostrar_tema->codtema}"/>
+                <img src="{$fsc->mostrar_tema->imagen}" alt="{$fsc->mostrar_tema->codtema}"/>
             </a>
-         </div>
-         <div class="col-sm-10">
+        </div>
+        <div class="col-sm-10">
             <h1>{$fsc->mostrar_tema->titulo}</h1>
             <p class="help-block">{$fsc->mostrar_tema->texto}</p>
-         </div>
-      </div>
-      {/if}
-   {/if}
-   <div class="row">
-      <div class="col-sm-9 col-lg-10">
-         <ul class="nav nav-tabs">
-            {if="$fsc->buscar=='' AND $fsc->codfuente=='' AND $fsc->keyword==''"}
-            <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
-               <a href="{$fsc->url()}">
-                  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp; Portada
-               </a>
-            </li>
-            <li role="presentation"{if="$fsc->mostrar=='populares'"} class="active"{/if}>
-               <a href="{$fsc->url()}&mostrar=populares" title="Populares">
-                  <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-               </a>
-            </li>
-            <li role="presentation"{if="$fsc->mostrar=='todo'"} class="active"{/if}>
-               <a href="{$fsc->url()}&mostrar=todo">
-                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp; Lo último
-                  <span class="badge">{$fsc->total_noticias()}</span>
-               </a>
-            </li>
-            {else}
-            <li role="presentation" class="active">
-               <a href="{$fsc->url()}">
-                  {if="$fsc->buscar"}
-                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp; <b>{$fsc->buscar}</b>
-                  {elseif="$fsc->codfuente"}
-                  <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp; <b>{$fsc->codfuente}</b>
-                  {elseif="$fsc->keyword"}
-                  <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>&nbsp; <b>{$fsc->keyword}</b>
-                  {/if}
-               </a>
-            </li>
-            <li role="presentation">
-               <a href="{$fsc->url()}" title="Portada">
-                  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-               </a>
-            </li>
-            <li role="presentation">
-               <a href="{$fsc->url()}&mostrar=populares" title="Populares">
-                  <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-               </a>
-            </li>
-            <li role="presentation">
-               <a href="{$fsc->url()}&mostrar=todo" title="Lo último">
-                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-               </a>
-            </li>
-            {/if}
-         </ul>
-      </div>
-      <div class="col-sm-3 col-lg-2">
-         <form action="{$fsc->url()}" method="post" class="form">
-            <div class="input-group">
-               <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar" autocomplete="off"/>
-               <span class="input-group-btn">
-                  <button class="btn btn-primary" type="submit">
-                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                  </button>
-               </span>
-            </div>
-         </form>
-      </div>
-   </div>
-   {if="isset($fsc->noticias[0])"}
-   <div class="row">
-      <div class="col-sm-12">
-         <br/>
-         <div class="jumbotron">
-            <div class="container-fluid">
-               <div class="row">
-                  <!--{$url=$fsc->noticias[0]->url($fsc->modrewrite)}-->
-                  <!--{$fsc->preview->load($fsc->noticias[0]->url, $fsc->noticias[0]->preview)}-->
-                  <div class="col-sm-2">
-                     <div class="thumbnail">
-                        {if="$fsc->preview->type"}
-                        <img src="{$fsc->preview->preview()}" alt="{$fsc->noticias[0]->titulo}">
-                        {else}
-                        <img src="plugins/informame/view/img/newspaper.jpg" alt="{$fsc->noticias[0]->titulo}">
-                        {/if}
-                        <a href="{$fsc->noticias[0]->edit_url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
-                           <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-                           <span class="hidden-sm">incorrecta</span>
-                        </a>
-                     </div>
-                  </div>
-                  <div class="col-sm-10">
-                     <h2><a href="{$url}" target="_blank">{$fsc->noticias[0]->titulo}</a></h2>
-                     <p>{$fsc->noticias[0]->resumen}</p>
-                     <small class="inme_small">
-                        {if="!$fsc->noticias[0]->nativa"}
-                        <span class="label label-danger"><s>Español</s></span> &nbsp;
-                        {/if}
-                        {if="$fsc->noticias[0]->parodia"}
-                        <span class="label label-danger">Parodia</span> &nbsp;
-                        {/if}
-                        {if="$fsc->noticias[0]->publicada"}
-                        <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
-                        <span class="hidden-xs">Publicada el</span> {$fsc->noticias[0]->fecha} &nbsp;
-                        {else}
-                        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$fsc->noticias[0]->fecha} &nbsp;
-                        {/if}
+        </div>
+    </div>
+    {/if}
+    <div class="row">
+        <div class="col-sm-9 col-lg-10">
+            <ul class="nav nav-tabs">
+                {if="$fsc->buscar=='' && $fsc->codfuente=='' && $fsc->keyword==''"}
+                <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
+                    <a href="{$fsc->url()}">
+                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp; Portada
+                    </a>
+                </li>
+                <li role="presentation"{if="$fsc->mostrar=='populares'"} class="active"{/if}>
+                    <a href="{$fsc->url()}&mostrar=populares" title="Populares">
                         <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-                        <span class="hidden-xs">Popularidad:</span>
-                        {$fsc->show_numero($fsc->noticias[0]->popularidad(), 0)}
-                     </small>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-sm-6">
-                     {if="$fsc->noticias[0]->tweets>0"}
-                     <a href='https://twitter.com/share?url={function="urlencode($url)"}&amp;text={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}' target="_blank" class="label label-info">
-                        <i class="fa fa-twitter" aria-hidden="true"></i> {$fsc->show_numero($fsc->noticias[0]->tweets, 0)}
-                     </a>&nbsp;
-                     {/if}
-                     {if="$fsc->noticias[0]->likes>0"}
-                     <a href='http://www.facebook.com/sharer.php?s=100&amp;p[title]={function="urlencode(html_entity_decode($fsc->noticias[0]->titulo))"}&amp;p[url]={function="urlencode($url)"}' target="_blank" class="label label-primary">
-                        <i class="fa fa-facebook" aria-hidden="true"></i> {$fsc->show_numero($fsc->noticias[0]->likes, 0)}
-                     </a>&nbsp;
-                     {/if}
-                     {if="$fsc->noticias[0]->meneame_link"}
-                     <a href="{$fsc->noticias[0]->meneame_link}" class="label label-warning">
-                        Menéame: {$fsc->show_numero($fsc->noticias[0]->meneos, 0)}
-                     </a>
-                     {/if}
-                     <div class="visible-xs">
-                        <br/>
-                     </div>
-                  </div>
-                  <div class="col-sm-6 text-right">
-                  {loop="$fsc->noticias[0]->keywords()"}
-                     {if="$counter<4"}
-                     <a href="index.php?page=inme_editar_tema&cod={$value}" class="label label-default">{$value}</a>
-                     {/if}
-                  {else}
-                  <a href="{$fsc->url()}&codfuente={$fsc->noticias[0]->codfuente}" class="label label-info" title="Fuente del artículo">
-                     <span class="glyphicon glyphicon-import"></span> {$fsc->noticias[0]->codfuente}
-                  </a>
-                  {/loop}
-                  <a href="{$fsc->noticias[0]->edit_url()}" class="label label-success" title="Editar artículo">
-                     <span class="glyphicon glyphicon-edit"></span>
-                  </a>
-                  </div>
-               </div>
+                    </a>
+                </li>
+                <li role="presentation"{if="$fsc->mostrar=='todo'"} class="active"{/if}>
+                    <a href="{$fsc->url()}&mostrar=todo">
+                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp; Lo último
+                        <span class="badge">{$fsc->total_noticias()}</span>
+                    </a>
+                </li>
+                {else}
+                <li role="presentation" class="active">
+                    <a href="{$fsc->url()}">
+                        {if="$fsc->buscar"}
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp; <b>{$fsc->buscar}</b>
+                        {elseif="$fsc->codfuente"}
+                        <span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp; <b>{$fsc->codfuente}</b>
+                        {elseif="$fsc->keyword"}
+                        <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>&nbsp; <b>{$fsc->keyword}</b>
+                        {/if}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="{$fsc->url()}" title="Portada">
+                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="{$fsc->url()}&mostrar=populares" title="Populares">
+                        <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="{$fsc->url()}&mostrar=todo" title="Lo último">
+                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                    </a>
+                </li>
+                {/if}
+            </ul>
+        </div>
+        <div class="col-sm-3 col-lg-2">
+            <form action="{$fsc->url()}" method="post" class="form">
+                <div class="input-group">
+                    <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar" autocomplete="off"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <br/>
+        </div>
+    </div>
+    <div class="row">
+        {loop="$fsc->get_noticias(0, 0)"}
+        <!--{$url=$value->url($fsc->modrewrite)}-->
+        <!--{$fsc->preview->load($value->url, $value->preview)}-->
+        <div class="col-sm-2">
+            <div class="thumbnail">
+                {if="$fsc->preview->type"}
+                <img src="{$fsc->preview->preview()}" alt="{$value->titulo}"/>
+                <a href="{$value->edit_url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
+                    <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                    <span class="hidden-sm">incorrecta</span>
+                </a>
+                {else}
+                <img src="plugins/informame/view/img/newspaper.jpg" alt="{$value->titulo}"/>
+                {/if}
             </div>
-         </div>
-      </div>
-   </div>
-   {/if}
-   <div class="row">
-   <!--{$clase=' bg-claro'}-->
-   {loop="$fsc->noticias"}
-      {if="$counter>0"}
-         <!--{$url=$value->url($fsc->modrewrite)}-->
-         <!--{$fsc->preview->load($value->url, $value->preview)}-->
-         {if="$fsc->preview->type AND $counter<20"}
-         <div class='col-sm-1{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
+        </div>
+        <div class="col-sm-10">
+            <h1 class="h3">
+                <a href="{$url}" target="_blank">{$value->titulo}</a>
+            </h1>
+            <p>{$value->resumen}</p>
+            <small class="inme_small">
+                {if="!$value->nativa"}
+                <span class="label label-danger"><s>Español</s></span> &nbsp;
+                {/if}
+                {if="$value->parodia"}
+                <span class="label label-danger">Parodia</span> &nbsp;
+                {/if}
+                {if="$value->publicada"}
+                <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                <span class="hidden-xs">Publicada el</span> {$value->fecha} &nbsp;
+                {else}
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha} &nbsp;
+                {/if}
+                <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                <span class="hidden-xs">Popularidad:</span>
+                {$fsc->show_numero($value->popularidad(), 0)}
+                &nbsp;
+                {loop="$value->keywords()"}
+                <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
+                {/loop}
+            </small>
+        </div>
+        {/loop}
+    </div>
+    {if="$fsc->buscar=='' && $fsc->codfuente=='' && $fsc->keyword=='' && $fsc->offset == 0 && $fsc->mostrar=='portada'"}
+    <div class="row">
+        {loop="$fsc->split_temas()"}
+        <div class="col-sm-3">
+            <div class="list-group">
+                {loop="$value"}
+                <a href="{$fsc->url()}&keyword={$value2->codtema}" class="list-group-item">
+                    <span class="badge">{$fsc->show_numero($value2->popularidad, 0)}</span> {$value2->titulo}
+                </a>
+                {/loop}
+            </div>
+        </div>
+        {/loop}
+    </div>
+    {/if}
+    <div class="row">
+        {loop="$fsc->get_noticias(1, 8)"}
+        {if="$counter % 4 == 0"}</div><div class="row bg-info">{elseif="$counter % 2 == 0"}</div><div class="row">{/if}
+        <!--{$url=$value->url($fsc->modrewrite)}-->
+        <!--{$fsc->preview->load($value->url, $value->preview)}-->
+        <div class='col-sm-1'>
             <br/>
             <div class="thumbnail">
-               <img src="{$fsc->preview->preview()}" alt="{$value->titulo}">
-               <a href="{$value->edit_url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
-                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-                  <span class="hidden-sm hidden-md">incorrecta</span>
-               </a>
+                {if="$fsc->preview->type"}
+                <img src="{$fsc->preview->preview()}" alt="{$value->titulo}"/>
+                <a href="{$value->edit_url()}&bad_image=TRUE" class="btn btn-xs btn-block btn-default" title="imagen incorrecta">
+                    <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                    <span class="hidden-sm hidden-md">incorrecta</span>
+                </a>
+                {else}
+                <img src="plugins/informame/view/img/newspaper.jpg" alt="{$value->titulo}"/>
+                {/if}
             </div>
-         </div>
-         <div class='col-sm-5{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
-            <h3>
-               <a href="{$url}" target="_blank">{$value->titulo}</a>
+        </div>
+        <div class='col-sm-5'>
+            <h2 class='h4{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
+                <a href="{$url}" target="_blank">{$value->titulo}</a>
+            </h2>
+            <p class="help-block">{$value->resumen}</p>
+            <p class="help-block inme_small">
+                {if="!$value->nativa"}
+                <span class="label label-danger"><s>Español</s></span>&nbsp;
+                {/if}
+                {if="$value->parodia"}
+                <span class="label label-danger">Parodia</span>&nbsp;
+                {/if}
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha} &nbsp;
+                <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)} &nbsp;
+                {loop="$value->keywords()"}
+                {if="$counter2<4"}
+                <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
+                {/if}
+                {/loop}
+                {if="$value->meneame_link"}
+                &nbsp;
+                <a href="{$value->meneame_link}" class="label label-default">
+                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
+                </a>
+                {/if}
+                &nbsp;
+                <a href="{$value->edit_url()}" class="label label-default">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </a>
+            </p>
+            <div class="visible-xs">
+                <hr/>
+            </div>
+        </div>
+        {/loop}
+    </div>
+    <div class="row">
+        {loop="$fsc->get_noticias(9, 50)"}
+        {if="$counter % 3 == 0"}</div><div class="row">{/if}
+        <!--{$url=$value->url($fsc->modrewrite)}-->
+        <div class='col-sm-4'>
+            <hr/>
+            <h3 class='h4{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
+                <a href="{$url}" target="_blank">{$value->titulo}</a>
             </h3>
             <p class="help-block">{$value->resumen}</p>
             <p class="help-block inme_small">
-               {if="!$value->nativa"}
-               <span class="label label-danger"><s>Español</s></span>&nbsp;
-               {/if}
-               {if="$value->parodia"}
-               <span class="label label-danger">Parodia</span>&nbsp;
-               {/if}
-               <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha} &nbsp;
-               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)} &nbsp;
-               {loop="$value->keywords()"}
-                  {if="$counter1<20 AND $counter2<4"}
-                  <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
-                  {/if}
-               {/loop}
-               {if="$value->meneame_link"}
-               &nbsp;
-               <a href="{$value->meneame_link}" class="label label-default">
-                  <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
-               </a>
-               {/if}
-               &nbsp;
-               <a href="{$value->edit_url()}" class="label label-default">
-                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-               </a>
+                {if="!$value->nativa"}
+                <span class="label label-danger"><s>Español</s></span>&nbsp;
+                {/if}
+                {if="$value->parodia"}
+                <span class="label label-danger">Parodia</span>&nbsp;
+                {/if}
+                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha}
+                &nbsp;
+                <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)}
+                &nbsp;
+                {if="$value->meneame_link"}
+                <a href="{$value->meneame_link}" title="meneame">
+                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                </a>
+                &nbsp;
+                {/if}
+                <a href="{$value->edit_url()}">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </a>
             </p>
-            <div class="visible-xs">
-               <hr/>
-            </div>
-         </div>
-         {else}
-         <div class='col-sm-6{if="$value->parodia"} bg-warning{elseif="$value->editada"} bg-success{/if}'>
-            <h3>
-               <a href="{$url}" target="_blank">{$value->titulo}</a>
-            </h3>
-            <p class="help-block">{$value->resumen}</p>
-            <p class="help-block inme_small">
-               {if="!$value->nativa"}
-               <span class="label label-danger"><s>Español</s></span>&nbsp;
-               {/if}
-               {if="$value->parodia"}
-               <span class="label label-danger">Parodia</span>&nbsp;
-               {/if}
-               <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {$value->fecha} &nbsp;
-               <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)} &nbsp;
-               {loop="$value->keywords()"}
-                  {if="$counter1<20 AND $counter2<4"}
-                  <a href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default">{$value2}</a>
-                  {/if}
-               {/loop}
-               {if="$value->meneame_link"}
-               &nbsp;
-               <a href="{$value->meneame_link}" class="label label-default">
-                  <span class="glyphicon glyphicon-share" aria-hidden="true"></span>&nbsp; menéame
-               </a>
-               {/if}
-               &nbsp;
-               <a href="{$value->edit_url()}" class="label label-default">
-                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-               </a>
-            </p>
-            <div class="visible-xs">
-               <hr/>
-            </div>
-         </div>
-         {/if}
-      {/if}
-      {if="$counter%2==0 AND $counter>0"}
-         </div><div class="row{$clase}">
-         {if="$clase==' bg-claro'"}
-         <!--{$clase=''}-->
-         {else}
-         <!--{$clase=' bg-claro'}-->
-         {/if}
-      {/if}
-   {/loop}
-   </div>
-   <div class="row">
-      <div class="col-sm-12">
-         <ul class="pager">
-            {if="$fsc->offset>0"}
-            <li class="previous">
-               <a href="{$fsc->anterior_url()}">
-                  <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
-               </a>
-            </li>
-            {/if}
-            {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
-            <li class="next">
-               <a href="{$fsc->siguiente_url()}">
-                  Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
-               </a>
-            </li>
-            {/if}
-         </ul>
-      </div>
-   </div>
+        </div>
+        {/loop}
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="pager">
+                {if="$fsc->offset > 0"}
+                <li class="previous">
+                    <a href="{$fsc->anterior_url()}">
+                        <span class="glyphicon glyphicon-chevron-left"></span> &nbsp; Anteriores
+                    </a>
+                </li>
+                {/if}
+                {if="count($fsc->noticias)==FS_ITEM_LIMIT"}
+                <li class="next">
+                    <a href="{$fsc->siguiente_url()}">
+                        Siguientes &nbsp; <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </li>
+                {/if}
+            </ul>
+        </div>
+    </div>
 </div>
 
 {include="footer"}

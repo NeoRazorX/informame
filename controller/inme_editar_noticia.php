@@ -160,12 +160,7 @@ class inme_editar_noticia extends fs_controller
 
         if (isset($_GET['ok_cookies'])) {
             setcookie('ok_cookies', 'TRUE', time() + FS_COOKIES_EXPIRE, '/');
-
-            $fslog = new fs_log();
-            $fslog->tipo = 'cookies';
-            $fslog->detalle = 'Se han aceptado las cookies';
-            $fslog->ip = $_SERVER['REMOTE_ADDR'];
-            $fslog->save();
+            $this->core_log->save('Se han aceptado las cookies', 'cookies');
         }
 
         $this->noticia = FALSE;
@@ -291,7 +286,7 @@ class inme_editar_noticia extends fs_controller
             return 'https://twitter.com/share?url=' . urlencode($this->empresa->web . '/' . $this->noticia->url($this->modrewrite)) .
                 '&amp;text=' . urlencode(html_entity_decode($this->noticia->titulo));
         }
-        
+
         return 'https://twitter.com/share';
     }
 
@@ -301,7 +296,7 @@ class inme_editar_noticia extends fs_controller
             return 'http://www.facebook.com/sharer.php?s=100&amp;p[title]=' . urlencode(html_entity_decode($this->noticia->titulo)) .
                 '&amp;p[url]=' . urlencode($this->empresa->web . '/' . $this->noticia->url($this->modrewrite));
         }
-        
+
         return 'http://www.facebook.com/sharer.php';
     }
 

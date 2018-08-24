@@ -164,7 +164,7 @@ class inme_noticia_fuente extends fs_model
 
     public function keywords($plain = FALSE)
     {
-        $keys = array();
+        $keys = [];
 
         $aux = explode(',', $this->keywords);
         if ($aux) {
@@ -366,7 +366,7 @@ class inme_noticia_fuente extends fs_model
      */
     public function all($offset = 0, $order = 'fecha DESC')
     {
-        $nlist = array();
+        $nlist = [];
 
         $data = $this->db->select_limit("SELECT * FROM " . $this->table_name . " ORDER BY " . $order, FS_ITEM_LIMIT, $offset);
         if ($data) {
@@ -380,7 +380,7 @@ class inme_noticia_fuente extends fs_model
 
     public function all_from_fuente($codfuente, $offset = 0)
     {
-        $nlist = array();
+        $nlist = [];
         $sql = "SELECT * FROM " . $this->table_name . " WHERE codfuente = " . $this->var2str($codfuente)
             . " ORDER BY fecha DESC";
 
@@ -396,7 +396,7 @@ class inme_noticia_fuente extends fs_model
 
     public function all_from_keyword($key, $offset = 0)
     {
-        $nlist = array();
+        $nlist = [];
         $sql = "SELECT * FROM " . $this->table_name . " WHERE keywords LIKE '%[" . $key . "]%'"
             . " ORDER BY popularidad DESC";
 
@@ -418,7 +418,7 @@ class inme_noticia_fuente extends fs_model
      */
     public function search($query, $offset = 0, $order = 'popularidad DESC')
     {
-        $nlist = array();
+        $nlist = [];
         $query = $this->no_html(mb_strtolower($query, 'UTF8'));
         $sql = "SELECT * FROM " . $this->table_name . " WHERE lower(titulo) LIKE '%" . $query . "%'"
             . " OR lower(resumen) LIKE '%" . $query . "%'"

@@ -56,12 +56,7 @@ class inme_stats extends fs_controller
 
         if (isset($_GET['ok_cookies'])) {
             setcookie('ok_cookies', 'TRUE', time() + FS_COOKIES_EXPIRE, '/');
-
-            $fslog = new fs_log();
-            $fslog->tipo = 'cookies';
-            $fslog->detalle = 'Se han aceptado las cookies';
-            $fslog->ip = $_SERVER['REMOTE_ADDR'];
-            $fslog->save();
+            $this->core_log->save('Se han aceptado las cookies', 'cookies');
         }
     }
 

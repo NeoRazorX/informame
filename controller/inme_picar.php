@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once __DIR__.'/../lib/social_share_count.php';
+require_once __DIR__ . '/../lib/social_share_count.php';
 
 /**
  * Description of inme_picar
@@ -223,16 +222,7 @@ class inme_picar extends fs_controller
 
         /// guardamos el log
         foreach ($this->log as $l) {
-            $fslog = new fs_log();
-            $fslog->tipo = 'picar';
-            $fslog->detalle = $l;
-            $fslog->ip = $_SERVER['REMOTE_ADDR'];
-
-            if ($this->user) {
-                $fslog->usuario = $this->user->nick;
-            }
-
-            $fslog->save();
+            $this->core_log->save($l, 'picar');
         }
     }
 
