@@ -140,25 +140,6 @@ class inme_home extends fs_controller
         $this->procesar_portada();
     }
 
-    protected function public_core()
-    {
-        $this->template = 'inme_public/portada';
-        $this->page_title = $this->empresa->nombrecorto;
-        $this->page_description = 'Portal de noticias colaborativo, para los que huyen de la mafia de menéame.'
-            . ' Exploramos la web para mostrarte los temas de actualidad.';
-
-        $fsvar = new fs_var();
-        $this->analytics = $fsvar->simple_get('inme_analytics');
-        $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
-
-        if (isset($_GET['ok_cookies'])) {
-            setcookie('ok_cookies', 'TRUE', time() + FS_COOKIES_EXPIRE, '/');
-            $this->core_log->save('Se han aceptado las cookies', 'cookies');
-        }
-
-        $this->procesar_portada();
-    }
-
     protected function procesar_portada()
     {
         $this->mostrar = isset($_GET['mostrar']) ? $_GET['mostrar'] : 'portada';
@@ -199,5 +180,24 @@ class inme_home extends fs_controller
             $this->temas_populares = $tema->populares();
             $this->cache->set('inme_temas_populares', $this->temas_populares, 300);
         }
+    }
+
+    protected function public_core()
+    {
+        $this->template = 'inme_public/portada';
+        $this->page_title = $this->empresa->nombrecorto;
+        $this->page_description = 'Portal de noticias colaborativo, para los que huyen de la mafia de menéame.'
+            . ' Exploramos la web para mostrarte los temas de actualidad.';
+
+        $fsvar = new fs_var();
+        $this->analytics = $fsvar->simple_get('inme_analytics');
+        $this->modrewrite = $fsvar->simple_get('inme_modrewrite');
+
+        if (isset($_GET['ok_cookies'])) {
+            setcookie('ok_cookies', 'TRUE', time() + FS_COOKIES_EXPIRE, '/');
+            $this->core_log->save('Se han aceptado las cookies', 'cookies');
+        }
+
+        $this->procesar_portada();
     }
 }

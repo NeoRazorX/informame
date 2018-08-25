@@ -112,6 +112,10 @@
                 {/loop}
             </small>
         </div>
+        {else}
+        <div class="col-sm-12">
+            <div class="alert alert-warning">Sin resultados.</div>
+        </div>
         {/loop}
     </div>
     {if="$fsc->buscar=='' && $fsc->codfuente=='' && $fsc->keyword=='' && $fsc->offset == 0 && $fsc->mostrar=='portada'"}
@@ -160,7 +164,7 @@
                 <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> {$fsc->show_numero($value->popularidad(), 0)} &nbsp;
                 {loop="$value->keywords()"}
                 {if="$counter2<4"}
-                <a href="#{$value2}" data-href="index.php?page=inme_editar_tema&cod={$value2}" class="label label-default fake_link">{$value2}</a>
+                <a href="#{$value2}" data-href="index.php?keyword={$value2}" class="label label-default fake_link">{$value2}</a>
                 {/if}
                 {/loop}
                 {if="$value->meneame_link"}

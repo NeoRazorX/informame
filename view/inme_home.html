@@ -126,6 +126,10 @@
                 {/loop}
             </small>
         </div>
+        {else}
+        <div class="col-sm-12">
+            <div class="alert alert-warning">Sin resultados.</div>
+        </div>
         {/loop}
     </div>
     {if="$fsc->buscar=='' && $fsc->codfuente=='' && $fsc->keyword=='' && $fsc->offset == 0 && $fsc->mostrar=='portada'"}
