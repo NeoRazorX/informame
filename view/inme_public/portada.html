@@ -230,43 +230,4 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal_popularidad" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">
-                    <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Popularidad
-                </h4>
-            </div>
-            <div class="modal-body">
-                <p>
-                    {$fsc->empresa->nombre} es un agregador de noticias <b>totalmente automatizado</b>.
-                    La portada se genera a partir de los artículos más populares del día.
-                    Y para calcular la popularidad de un artículo se emplean los siguientes
-                    parámetros:
-                </p>
-                <ul>
-                    <li>Las menciones en <b>twitter</b> al artículo.</li>
-                    <li>Las menciones en <b>facebook</b> al artículo.</li>
-                    <li>Los clic en <b>menéame</b> al artículo.</li>
-                    <li>La edad del artículo. Cuanto más antiguo, más edad.</li>
-                </ul>
-                <p>
-                    Este sistema nos permite calcular el interés de un artículo, sin
-                    que un grupo de usuarios pueda distorsionarlo con <b>votos negativos</b>.
-                </p>
-                <p>
-                    Y si tienes más interés, puedes ver nuestro algoritmo en github.
-                </p>
-                <a href="https://github.com/NeoRazorX/informame" target="_blank" class="btn btn-sm btn-default">
-                    <i class="fa fa-git" aria-hidden="true"></i>&nbsp; código fuente
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
 {include="inme_public/footer"}

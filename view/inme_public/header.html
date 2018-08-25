@@ -1,204 +1,208 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es" >
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-   <title>{$fsc->page_title}</title>
-   <meta name="description" content="{$fsc->page_description}" />
-   {if condition="$fsc->get_keywords()!=''"}
-   <meta name="keywords" content="{$fsc->get_keywords()}" />
-   {/if}
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <meta name="generator" content="FacturaScripts" />
-   <link rel="Publisher" href="https://www.google.com/+Neorazorx"/>
-   <link rel="shortcut icon" href="{$fsc->full_url()}/plugins/informame/view/img/favicon.ico" />
-   <link rel="stylesheet" href="{$fsc->full_url()}/view/css/bootstrap-yeti.min.css" />
-   <link rel="stylesheet" href="{$fsc->full_url()}/view/css/font-awesome.min.css" />
-   <link rel="stylesheet" href="{$fsc->full_url()}/plugins/informame/view/css/custom.css" />
-   <script type="text/javascript" src="{$fsc->full_url()}/view/js/jquery.min.js"></script>
-   <script type="text/javascript" src="{$fsc->full_url()}/view/js/bootstrap.min.js"></script>
-   {if="$fsc->analytics AND isset($_COOKIE['ok_cookies'])"}
-   <script>
-     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-     
-     ga('create', '{$fsc->analytics}', 'auto');
-     ga('require', 'displayfeatures');
-     ga('send', 'pageview');
-   </script>
-   {/if}
-   <script type="text/javascript">
-      function picar()
-      {
-         $.ajax({
-            type: 'GET',
-            url: 'index.php?page=inme_picar&hidden=TRUE',
-            dataType: 'html',
-            success: function() {
-               setTimeout(picar, 300000);
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>{$fsc->page_title}</title>
+        <meta name="description" content="{$fsc->page_description}" />
+        {if condition="$fsc->get_keywords()!=''"}
+        <meta name="keywords" content="{$fsc->get_keywords()}" />
+        {/if}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="FacturaScripts" />
+        <link rel="Publisher" href="https://www.google.com/+Neorazorx"/>
+        <link rel="shortcut icon" href="{$fsc->full_url()}/plugins/informame/view/img/favicon.ico" />
+        <link rel="stylesheet" href="{$fsc->full_url()}/view/css/bootstrap-yeti.min.css" />
+        <link rel="stylesheet" href="{$fsc->full_url()}/view/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="{$fsc->full_url()}/plugins/informame/view/css/custom.css" />
+        <script type="text/javascript" src="{$fsc->full_url()}/view/js/jquery.min.js"></script>
+        <script type="text/javascript" src="{$fsc->full_url()}/view/js/bootstrap.min.js"></script>
+        {if="$fsc->analytics AND isset($_COOKIE['ok_cookies'])"}
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', '{$fsc->analytics}', 'auto');
+            ga('require', 'displayfeatures');
+            ga('send', 'pageview');
+        </script>
+        {/if}
+        <script type="text/javascript">
+            function picar() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'index.php?page=inme_picar&hidden=TRUE',
+                    dataType: 'html',
+                    success: function () {
+                        setTimeout(picar, 300000);
+                    }
+                });
             }
-         });
-      }
-      $(document).ready(function() {
-         setTimeout(picar, 1000);
-         $(".fake_link").click(function(event) {
-            if(event.which === 1)
-            {
-               event.preventDefault();
-               parent.document.location = $(this).attr("data-href");
-            }
-         });
-         $(".fake_link").mousedown(function(event) {
-            if(event.which === 2)
-            {
-               event.preventDefault();
-               window.open( $(this).attr("data-href"), '_blank' );
-            }
-         });
-      });
-   </script>
-</head>
-<body>
-   <nav class="navbar navbar-default">
-      <div class="container-fluid">
-         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-               <span class="sr-only">Menú</span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{$fsc->full_url()}">{$fsc->empresa->nombre}</a>
-         </div>
-         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-               <li{if="$fsc->page->name!='inme_stats'"} class="active"{/if}>
-                  <a href="{$fsc->full_url()}">
-                     <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                  </a>
-               </li>
-               <li{if="$fsc->page->name=='inme_stats'"} class="active"{/if}>
-                  {if="$fsc->modrewrite"}
-                  <a href="{$fsc->empresa->web}/stats">
-                     <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-                  </a>
-                  {else}
-                  <a href="{$fsc->full_url()}/index.php?page=inme_stats">
-                     <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-                  </a>
-                  {/if}
-               </li>
-               <li>
-                  <a href="#" data-toggle="modal" data-target="#modal_ayuda">
-                     <span class="glyphicon glyphicon-question-sign hidden-xs"></span>
-                     <span class="visible-xs">Ayuda</span>
-                  </a>
-               </li>
-               <li>
-                  <a href="#" data-toggle="modal" data-target="#modal_login">
-                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                     <span class="visible-xs">Login</span>
-                  </a>
-               </li>
-            </ul>
-            <form class="navbar-form navbar-right" role="search" action="{$fsc->url()}" method="post" name="f_search">
-               <div class="form-group">
-                  <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar..." autocomplete="off"/>
-               </div>
-               <button type="submit" class="btn btn-xs btn-default">
-                  <span class="glyphicon glyphicon-search"></span>
-               </button>
-            </form>
-         </div>
-      </div>
-   </nav>
-   
-   <div class="modal" id="modal_ayuda" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-               </button>
-               <h4 class="modal-title">
-                  <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                  Ayuda
-               </h4>
+            $(document).ready(function () {
+                setTimeout(picar, 1000);
+                $(".fake_link").click(function (event) {
+                    if (event.which === 1) {
+                        event.preventDefault();
+                        parent.document.location = $(this).attr("data-href");
+                    }
+                });
+                $(".fake_link").mousedown(function (event) {
+                    if (event.which === 2) {
+                        event.preventDefault();
+                        window.open($(this).attr("data-href"), '_blank');
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Menú</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{$fsc->full_url()}">{$fsc->empresa->nombre}</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li{if="$fsc->page->name!='inme_stats'"} class="active"{/if}>
+                            <a href="{$fsc->full_url()}">
+                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                            </a>
+                        </li>
+                        <li{if="$fsc->page->name=='inme_stats'"} class="active"{/if}>
+                            {if="$fsc->modrewrite"}
+                            <a href="{$fsc->empresa->web}/stats">
+                                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                            </a>
+                            {else}
+                            <a href="{$fsc->full_url()}/index.php?page=inme_stats">
+                                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                            </a>
+                            {/if}
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#modal_ayuda">
+                                <span class="glyphicon glyphicon-question-sign hidden-xs"></span>
+                                <span class="visible-xs">Ayuda</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#modal_login">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span class="visible-xs">Login</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search" action="{$fsc->url()}" method="post" name="f_search">
+                        <div class="form-group">
+                            <input type="text" name="buscar" value="{$fsc->buscar}" class="form-control" placeholder="Buscar..." autocomplete="off"/>
+                        </div>
+                        <button type="submit" class="btn btn-xs btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="modal-body">
-               <p class='help-block'>
-                  {$fsc->empresa->nombrecorto} es un agregador de noticias automatizado
-                  que funciona con el plugin <u>informame</u> de <b>FacturaScripts</b>.
-                  Lee las últimas noticias de las fuentes configuradas por el administrador,
-                  las agrupa, calcula su popularidad y genera esta portada.
-               </p>
-               <br/>
-               <div class="row">
-                  <div class="col-sm-4">
-                     <a href="https://www.facturascripts.com/plugin/informame#preguntas" target="_blank" class="btn btn-sm btn-block btn-warning">
-                        Preguntas
-                     </a>
-                  </div>
-                  <div class="col-sm-4">
-                     <a href="https://www.facturascripts.com/plugin/informame#errores" target="_blank" class="btn btn-sm btn-block btn-danger">
-                        Errores
-                     </a>
-                  </div>
-                  <div class="col-sm-4">
-                     <a href="https://www.facturascripts.com/plugin/informame#ideas" target="_blank" class="btn btn-sm btn-block btn-success">
-                        Sugerencias
-                     </a>
-                  </div>
-               </div>
+        </nav>
+
+        <div class="modal" id="modal_ayuda" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            Ayuda
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class='help-block'>
+                            {$fsc->empresa->nombrecorto} es un agregador de noticias automatizado
+                            que funciona con el plugin <u>informame</u> de <b>FacturaScripts</b>.
+                            Lee las últimas noticias de las fuentes configuradas por el administrador,
+                            las agrupa, calcula su popularidad y genera esta portada.
+                        </p>
+                        <br/>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <a href="https://www.facturascripts.com/plugin/informame#preguntas" target="_blank" class="btn btn-sm btn-block btn-warning">
+                                    Preguntas
+                                </a>
+                            </div>
+                            <div class="col-sm-4">
+                                <a href="https://www.facturascripts.com/plugin/informame#errores" target="_blank" class="btn btn-sm btn-block btn-danger">
+                                    Errores
+                                </a>
+                            </div>
+                            <div class="col-sm-4">
+                                <a href="https://www.facturascripts.com/plugin/informame#ideas" target="_blank" class="btn btn-sm btn-block btn-success">
+                                    Sugerencias
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-         </div>
-      </div>
-   </div>
-   
-   <form action="{$fsc->full_url()}/" method="post" class="form">
-      <div class="modal" id="modal_login" tabindex="-1" role="dialog">
-         <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4 class="modal-title">
-                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                     Iniciar sesión
-                  </h4>
-               </div>
-               <div class="modal-body">
-                  <div class="form-group">
-                     <input type="text" name="user" class="form-control" placeholder="Usuario" autocomplete="off" autofocus/>
-                  </div>
-                  <div class="form-group">
-                     <input type="password" class="form-control" name="password" placeholder="Contraseña"/>
-                  </div>
-                  <div class="text-right">
-                     <button class="btn btn-block btn-primary" type="submit" id="login" onclick="this.disabled=true;this.form.submit();">
-                        <span class="glyphicon glyphicon-log-in"></span>&nbsp; Iniciar sesión
-                     </button>
-                  </div>
-               </div>
+        </div>
+
+        <form action="{$fsc->full_url()}/" method="post" class="form">
+            <div class="modal" id="modal_login" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                Iniciar sesión
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="text" name="user" class="form-control" placeholder="Usuario" autocomplete="off" autofocus=""/>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="Contraseña"/>
+                            </div>
+                            <div class="text-right">
+                                <button class="btn btn-block btn-primary" type="submit" id="login" onclick="this.disabled = true;this.form.submit();">
+                                    <span class="glyphicon glyphicon-log-in"></span>&nbsp; Iniciar sesión
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-         </div>
-      </div>
-   </form>
-   
-   {if="$fsc->get_errors()"}
-   <div class="alert alert-danger">
-      <ul>{loop="$fsc->get_errors()"}<li>{$value}</li>{/loop}</ul>
-   </div>
-   {/if}
-   {if="$fsc->get_messages()"}
-   <div class="alert alert-success">
-      <ul>{loop="$fsc->get_messages()"}<li>{$value}</li>{/loop}</ul>
-   </div>
-   {/if}
-   {if="$fsc->get_advices()"}
-   <div class="alert alert-info">
-      <ul>{loop="$fsc->get_advices()"}<li>{$value}</li>{/loop}</ul>
-   </div>
-   {/if}
+        </form>
+
+        {if="$fsc->get_errors()"}
+        <div class="alert alert-danger">
+            <ul>{loop="$fsc->get_errors()"}<li>{$value}</li>{/loop}</ul>
+        </div>
+        {/if}
+        {if="$fsc->get_messages()"}
+        <div class="alert alert-success">
+            <ul>{loop="$fsc->get_messages()"}<li>{$value}</li>{/loop}</ul>
+        </div>
+        {/if}
+        {if="$fsc->get_advices()"}
+        <div class="alert alert-info">
+            <ul>{loop="$fsc->get_advices()"}<li>{$value}</li>{/loop}</ul>
+        </div>
+        {/if}
