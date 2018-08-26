@@ -79,30 +79,43 @@
                     <ul class="nav navbar-nav">
                         <li{if="$fsc->page->name!='inme_stats'"} class="active"{/if}>
                             <a href="{$fsc->full_url()}">
-                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                                <span class="hidden-xs hidden-md hidden-lg">
+                                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                                </span>
+                                <span class="hidden-sm">Portada</span>
                             </a>
                         </li>
                         <li{if="$fsc->page->name=='inme_stats'"} class="active"{/if}>
                             {if="$fsc->modrewrite"}
                             <a href="{$fsc->empresa->web}/stats">
-                                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                                <span class="hidden-xs hidden-md hidden-lg">
+                                    <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                                </span>
+                                <span class="hidden-sm">Estadísticas</span>
                             </a>
                             {else}
                             <a href="{$fsc->full_url()}/index.php?page=inme_stats">
-                                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                                <span class="hidden-xs hidden-md hidden-lg">
+                                    <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                                </span>
+                                <span class="hidden-sm">Estadísticas</span>
                             </a>
                             {/if}
                         </li>
                         <li>
                             <a href="#" data-toggle="modal" data-target="#modal_ayuda">
-                                <span class="glyphicon glyphicon-question-sign hidden-xs"></span>
-                                <span class="visible-xs">Ayuda</span>
+                                <span class="hidden-xs hidden-md hidden-lg">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </span>
+                                <span class="hidden-sm">Ayuda</span>
                             </a>
                         </li>
                         <li>
                             <a href="#" data-toggle="modal" data-target="#modal_login">
-                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                <span class="visible-xs">Login</span>
+                                <span class="hidden-xs hidden-md hidden-lg">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                </span>
+                                <span class="hidden-sm">Login</span>
                             </a>
                         </li>
                     </ul>

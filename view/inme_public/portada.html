@@ -22,7 +22,8 @@
                 {if="$fsc->buscar=='' && $fsc->codfuente=='' && $fsc->keyword==''"}
                 <li role="presentation"{if="$fsc->mostrar=='portada'"} class="active"{/if}>
                     <a href="{$fsc->url()}">
-                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp; Portada
+                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                        <span class="hidden-xs">&nbsp;Portada</span>
                     </a>
                 </li>
                 <li role="presentation"{if="$fsc->mostrar=='populares'"} class="active"{/if}>
@@ -32,7 +33,8 @@
                 </li>
                 <li role="presentation"{if="$fsc->mostrar=='todo'"} class="active"{/if}>
                     <a href="{$fsc->url()}&mostrar=todo">
-                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp; Lo último
+                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                        <span class="hidden-xs">&nbsp;Lo último</span>
                         <span class="badge">{$fsc->total_noticias()}</span>
                     </a>
                 </li>
@@ -111,6 +113,7 @@
                 <a href="#{$value2}" data-href="index.php?keyword={$value2}" class="label label-default fake_link">{$value2}</a>
                 {/loop}
             </small>
+            <br/><br/>
         </div>
         {else}
         <div class="col-sm-12">
